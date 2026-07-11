@@ -1,0 +1,9 @@
+{
+    "indentSize": 4,
+    "wrapLineLength": 100,
+    "wrapAttributes": "auto",
+    "endWithNewLine": true,
+    "noMultipleEmptyLines": true,
+    "sortHtmlAttributes": "none",
+    "noPhpSyntaxCheck": false
+}
