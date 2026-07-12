@@ -33,24 +33,35 @@ new class extends Component
 
         {{-- Dashboard --}}
         @hasrole('karyawan')
-            <x-menu-item title="Dashboard" icon="o-home" link="/dashboard" />
+        <x-menu-item title="Dashboard" icon="o-home" link="/dashboard" />
         @else
-            <x-menu-item title="Dashboard" icon="o-home" link="/" />
+        <x-menu-item title="Dashboard" icon="o-home" link="/" />
         @endhasrole
 
-        {{-- Manajemen Users: admin/super-admin only --}}
-        @hasanyrole('admin|super-admin')
+        {{-- Manajemen Users: admin/super-admin|operator|manager only --}}
+        @hasanyrole('admin|super-admin|operator|manager')
         <x-menu-sub title="Manajemen Users" icon="o-cog-6-tooth">
             @haspermission('lihat-admin')
-                <x-menu-item title="Data Users" icon="o-user" icon-classes="text-primary"
-                    link="/users" :exact="true" />
+            <x-menu-item title="Data Users" icon="o-user" icon-classes="text-primary"
+                link="/users" :exact="true" />
             @endhaspermission
             @haspermission('lihat-user-karyawan')
-                <x-menu-item title="Users Karyawan" icon="o-users" icon-classes="text-warning"
-                    link="/users-karyawan" />
+            <x-menu-item title="Users Karyawan" icon="o-users" icon-classes="text-warning"
+                link="/users-karyawan" />
             @endhaspermission
         </x-menu-sub>
+
+        <x-menu-sub title="Roles & Permissions" icon="o-shield-check">
+           
+            <x-menu-item title="Data Roles" icon="o-shield-check" icon-classes="text-primary"
+                link="/roles" />
+          
+            <x-menu-item title="Data Permissions" icon="o-shield-exclamation"
+                icon-classes="text-warning" link="/permissions" />
+           
+        </x-menu-sub>
         @endhasanyrole
+
 
         <x-menu-separator />
 
