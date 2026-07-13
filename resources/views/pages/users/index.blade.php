@@ -13,6 +13,9 @@ new class extends Component {
     use Toast, WithFileUploads;
 
     use WithPagination;
+
+    protected $listeners = ['refreshUsers' => '$refresh'];
+
     public string $search = '';
 
     public function updatingSearch(): void
@@ -97,6 +100,12 @@ new class extends Component {
     {
         $this->reset();
         $this->success('Filters cleared.', position: 'toast-bottom');
+    }
+
+    // Open permission modal
+    public function permission(int $id): void
+    {
+        $this->dispatch('openUserPermissionModal', userId: $id);
     }
 
     // Delete action
@@ -266,6 +275,9 @@ new class extends Component {
                 <x-button icon="o-pencil" wire:click="edit({{ $row->id }})"
                     wire:target="edit({{ $row->id }})" spinner
                     class="btn-ghost btn-sm text-primary" />
+                <x-button icon="o-shield-check" wire:click="permission({{ $row->id }})"
+                    wire:target="permission({{ $row->id }})" spinner
+                    class="btn-ghost btn-sm text-warning" />
                 <x-button icon="o-trash" wire:click="delete({{ $row->id }})"
                     wire:confirm="Are you sure? " spinner class="btn-ghost btn-sm text-error" />
             </div>
@@ -393,4 +405,6 @@ new class extends Component {
             </x-slot:actions>
         </x-form>
     </x-modal>
+
+    <livewire:user-permission-modal />
 </div>

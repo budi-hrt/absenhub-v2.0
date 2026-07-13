@@ -9,6 +9,7 @@ new class extends Component {
 
     use Toast;
 
+    protected $listeners = ['refreshRoles' => '$refresh'];
 
 
     public string $roleName = '';
@@ -77,6 +78,11 @@ new class extends Component {
         $this->closeModal();
     }
 
+    public function permission(int $id): void
+    {
+        $this->dispatch('openPermissionModal', roleId: $id);
+    }
+
     public function resetForm(): void
     {
         $this->reset(['roleName', 'roleId']);
@@ -122,4 +128,6 @@ new class extends Component {
             </x-slot:actions>
         </x-form>
     </x-modal>
+
+    <livewire:permission-modal />
 </div>

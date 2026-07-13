@@ -50,16 +50,12 @@ new class extends Component
                 link="/users-karyawan" />
             @endhaspermission
         </x-menu-sub>
+        @endhasanyrole
 
-        <x-menu-sub title="Roles & Permissions" icon="o-shield-check">
-           
-            <x-menu-item title="Data Roles" icon="o-shield-check" icon-classes="text-primary"
-                link="/roles" />
-          
-            <x-menu-item title="Data Permissions" icon="o-shield-exclamation"
-                icon-classes="text-warning" link="/permissions" />
-           
-        </x-menu-sub>
+        {{-- Manajemen Karyawan --}}
+        @hasanyrole('admin|super-admin|operator|manager')
+        <x-menu-item title="Data Karyawan" icon="o-users" icon-classes="text-success"
+            link="/karyawan" :exact="true" />
         @endhasanyrole
 
 

@@ -55,10 +55,10 @@ class RoleAndUserSeeder extends Seeder
         Permission::create(['name' => 'ubah-user-karyawan', 'group' => 'Manajemen User']);
         Permission::create(['name' => 'hapus-user-karyawan', 'group' => 'Manajemen User']);
 
-        Permission::create(['name' => 'karyawan-list', 'group' => 'Manajemen Karyawan']);
-        Permission::create(['name' => 'karyawan-create', 'group' => 'Manajemen Karyawan']);
-        Permission::create(['name' => 'karyawan-edit', 'group' => 'Manajemen Karyawan']);
-        Permission::create(['name' => 'karyawan-delete', 'group' => 'Manajemen Karyawan']);
+        Permission::create(['name' => 'lihat-karyawan', 'group' => 'Manajemen Karyawan']);
+        Permission::create(['name' => 'tambah-karyawan', 'group' => 'Manajemen Karyawan']);
+        Permission::create(['name' => 'ubah-karyawan', 'group' => 'Manajemen Karyawan']);
+        Permission::create(['name' => 'hapus-karyawan', 'group' => 'Manajemen Karyawan']);
 
         Permission::create(['name' => 'absen-list', 'group' => 'Manajemen Absensi']);
         Permission::create(['name' => 'absen-update', 'group' => 'Manajemen Absensi']);

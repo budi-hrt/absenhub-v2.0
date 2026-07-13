@@ -12,6 +12,12 @@ class Karyawan extends Model
     // Mengizinkan mass-assignment (penting untuk fitur Tambah/Edit Karyawan nanti)
     protected $guarded = [];
 
+    protected $casts = [
+        'tanggal_lahir' => 'date',
+        'tanggal_masuk' => 'date',
+        'is_active' => 'boolean',
+    ];
+
     /**
      * RELASI KE TABEL JABATAN
      * Ini yang membuat $this->jabatan->nama_jabatan bisa berfungsi di Resource
