@@ -1,0 +1,359 @@
+<!DOCTYPE html><html class="light" lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Tambah Karyawan Baru | WorkforcePro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#271902",
+                        "tertiary": "#1e1200",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#45474c",
+                        "inverse-surface": "#2c3134",
+                        "outline": "#75777d",
+                        "surface-tint": "#545f73",
+                        "secondary-container": "#6cf8bb",
+                        "surface-variant": "#dfe3e7",
+                        "on-secondary-fixed": "#002113",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-surface": "#171c1f",
+                        "surface-dim": "#d6dade",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#111c2d",
+                        "primary-container": "#1e293b",
+                        "primary-fixed-dim": "#bcc7de",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#c5c6cd",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#ddc39d",
+                        "on-background": "#171c1f",
+                        "primary-fixed": "#d8e3fb",
+                        "tertiary-fixed": "#fadfb8",
+                        "surface": "#f6fafe",
+                        "on-secondary-container": "#00714d",
+                        "secondary-fixed": "#6ffbbe",
+                        "secondary-fixed-dim": "#4edea3",
+                        "background": "#f6fafe",
+                        "secondary": "#006c49",
+                        "inverse-primary": "#bcc7de",
+                        "on-primary-container": "#8590a6",
+                        "surface-container-high": "#e4e9ed",
+                        "surface-container": "#eaeef2",
+                        "inverse-on-surface": "#edf1f5",
+                        "on-tertiary-fixed-variant": "#564427",
+                        "surface-bright": "#f6fafe",
+                        "surface-container-low": "#f0f4f8",
+                        "surface-container-highest": "#dfe3e7",
+                        "primary": "#091426",
+                        "tertiary-container": "#35260c",
+                        "on-tertiary-container": "#a38c6a",
+                        "on-primary-fixed-variant": "#3c475a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "gutter": "24px",
+                        "sm": "8px",
+                        "container-max": "1440px",
+                        "unit": "4px",
+                        "xl": "48px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .form-card {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            border-radius: 0.75rem;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col bg-background">
+<!-- TopNavBar -->
+
+<!-- Page Content -->
+<main class="flex-1 overflow-y-auto p-md lg:p-xl space-y-lg max-w-[1440px] mx-auto w-full">
+<!-- Header & Breadcrumbs -->
+<div class="flex flex-col gap-xs">
+<nav class="flex items-center gap-xs text-on-surface-variant font-label-sm">
+<a class="hover:text-primary transition-colors" href="#">Dashboard</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Karyawan</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-bold">Tambah</span>
+</nav>
+<h2 class="text-headline-lg font-headline-lg text-primary">Tambah Karyawan Baru</h2>
+<p class="text-body-md text-on-surface-variant">Lengkapi informasi di bawah ini untuk menambahkan anggota tim baru ke dalam sistem.</p>
+</div>
+<form class="space-y-lg pb-xl">
+<!-- Section 1: Data Pribadi -->
+<div class="form-card p-lg">
+<div class="flex items-center gap-sm mb-lg border-b border-outline-variant pb-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">person</span>
+<h3 class="text-headline-md font-headline-md text-primary">Data Pribadi</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
+<!-- Photo Upload -->
+<div class="md:col-span-3 flex flex-col items-center gap-md">
+<div class="w-40 h-40 rounded-xl border-2 border-dashed border-outline-variant bg-surface-container flex flex-col items-center justify-center overflow-hidden relative group" id="photoPreviewContainer">
+<div class="flex flex-col items-center text-on-surface-variant" id="emptyState">
+<span class="material-symbols-outlined text-4xl mb-sm">add_a_photo</span>
+<span class="text-label-sm text-center px-sm">Unggah Foto Karyawan</span>
+</div>
+<img class="hidden absolute inset-0 w-full h-full object-cover" data-alt="A clean, isolated studio portrait of a friendly professional employee placeholder. The lighting is bright and even, typical of a corporate ID photo. The background is a solid, light neutral grey." id="imagePreview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfymotLDJhifvVQfUj6akOBmE-YYH8Vs1rcYsjlKb2rKOYQ0HBns9dLFsCiWJHhptzPRCgqjvWrZbyJYuNht-C9Qn--T4PYzjbVaLPohp56NKo6koEAdJE9pnxdxKxHt8UqaDJeDZ22zmSBkb9SwYqFTI_GZLf7BsMgcIFqAFkxR8Fe5EvqAqlphWCdQ-PS8sJIWfqo-eNRpkN8IEfx7SXe9hX0cPMULFCgceZOl6x27CbbmE0SemlwA">
+<label class="absolute inset-0 cursor-pointer opacity-0 group-hover:opacity-100 bg-primary/20 transition-opacity flex items-center justify-center">
+<input accept="image/*" class="hidden" id="foto_karyawan" type="file">
+<span class="bg-white text-primary px-md py-sm rounded-lg font-bold text-label-sm shadow-md">Ubah Foto</span>
+</label>
+</div>
+<p class="text-label-sm text-on-surface-variant text-center">Format: JPG, PNG. Maks: 2MB.</p>
+</div>
+<!-- Input Fields -->
+<div class="md:col-span-9 grid grid-cols-1 sm:grid-cols-2 gap-md">
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">NIK (Nomor Induk Kependudukan)</label>
+<input class="px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="Masukkan 16 digit NIK" type="text">
+</div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Nama Lengkap</label>
+<input class="px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="Sesuai KTP" type="text">
+</div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Tempat Lahir</label>
+<input class="px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="Kota/Kabupaten" type="text">
+</div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Tanggal Lahir</label>
+<input class="px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" type="date">
+</div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Agama</label>
+<select class="px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-white">
+<option value="">Pilih Agama</option>
+<option>Islam</option>
+<option>Kristen Protestan</option>
+<option>Katolik</option>
+<option>Hindu</option>
+<option>Budha</option>
+<option>Khonghucu</option>
+</select>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Status Pernikahan</label>
+<select class="px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-white">
+<option value="">Pilih Status</option>
+<option>Belum Kawin</option>
+<option>Kawin</option>
+<option>Cerai Hidup</option>
+<option>Cerai Mati</option>
+</select>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Pendidikan Terakhir</label>
+<select class="px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-white">
+<option value="">Pilih Jenjang</option>
+<option>SMA/SMK</option>
+<option>Diploma (D3)</option>
+<option>Sarjana (S1)</option>
+<option>Magister (S2)</option>
+<option>Doktor (S3)</option>
+</select>
+</div>
+<div class="flex items-center gap-sm mt-md">
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value="">
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+<span class="ms-3 text-label-md font-label-md text-on-surface">Berijazah</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 2: Kepegawaian -->
+<div class="form-card p-lg">
+<div class="flex items-center gap-sm mb-lg border-b border-outline-variant pb-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">badge</span>
+<h3 class="text-headline-md font-headline-md text-primary">Kepegawaian</h3>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Jabatan</label>
+<select class="px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-white">
+<option value="">Pilih Jabatan</option>
+<option>Manager</option>
+<option>Senior Staff</option>
+<option>Junior Staff</option>
+<option>Specialist</option>
+<option>Intern</option>
+</select>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Status Karyawan</label>
+<select class="px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-white">
+<option selected="">Aktif</option>
+<option>Masa Percobaan</option>
+<option>Kontrak</option>
+<option>Resign</option>
+</select>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Tanggal Masuk</label>
+<input class="px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" type="date" value="2024-05-20">
+</div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">PIN Mesin Absensi</label>
+<input class="px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="4-6 digit angka" type="number">
+</div>
+<div class="flex flex-col gap-xs lg:col-span-2">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Nomor Rekening (Gaji)</label>
+<div class="flex gap-sm">
+<select class="w-32 px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">
+<option>BCA</option>
+<option>Mandiri</option>
+<option>BNI</option>
+<option>BRI</option>
+</select>
+<input class="flex-1 px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="Nomor Rekening" type="text">
+</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Kontak & Alamat -->
+<div class="form-card p-lg">
+<div class="flex items-center gap-sm mb-lg border-b border-outline-variant pb-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">contact_page</span>
+<h3 class="text-headline-md font-headline-md text-primary">Kontak &amp; Alamat</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Nomor Telepon/WA</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-body-sm font-bold text-on-surface-variant">+62</span>
+<input class="w-full pl-12 pr-4 py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="812xxxx" type="tel">
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Email Karyawan</label>
+<input class="px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="contoh@perusahaan.com" type="email">
+</div>
+<div class="flex flex-col gap-xs md:col-span-2">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Alamat Lengkap</label>
+<textarea class="px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="Nama Jalan, RT/RW, Kecamatan, Kota, Kode Pos" rows="3"></textarea>
+</div>
+</div>
+</div>
+<!-- Form Actions -->
+<div class="flex items-center justify-end gap-md pt-lg border-t border-outline-variant">
+<button class="px-xl py-md rounded-lg font-bold text-label-md text-on-surface-variant hover:bg-surface-container transition-all" type="button">
+                            Batal
+                        </button>
+<button class="px-xl py-md bg-primary text-on-primary rounded-lg font-bold text-label-md shadow-lg hover:opacity-90 active:scale-95 transition-all" type="submit">
+                            Simpan Karyawan
+                        </button>
+</div>
+</form>
+</main>
+<!-- Footer -->
+<footer class="flex flex-col md:flex-row justify-between items-center w-full py-md px-xl mt-auto bg-surface-container border-t border-outline-variant">
+<p class="text-body-sm font-body-sm text-on-surface-variant">© 2024 WorkforcePro Management Systems. All rights reserved.</p>
+<div class="flex gap-lg mt-md md:mt-0">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Security Compliance</a>
+</div>
+</footer>
+</div>
+</div>
+<!-- Mobile BottomNavBar -->
+
+<script>
+        // Photo Preview Interaction
+        const fileInput = document.getElementById('foto_karyawan');
+        const imagePreview = document.getElementById('imagePreview');
+        const emptyState = document.getElementById('emptyState');
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    imagePreview.src = event.target.result;
+                    imagePreview.classList.remove('hidden');
+                    emptyState.classList.add('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form Submit Interaction
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="flex items-center gap-sm"><svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Menyimpan...</span>';
+            
+            setTimeout(() => {
+                alert('Data Karyawan berhasil disimpan!');
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }, 1500);
+        });
+    </script>
+
+
+</body></html>

@@ -5,12 +5,13 @@ use App\Models\Status;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Mary\Traits\Toast;
+use Illuminate\Support\Facades\Storage;
 ?>
 
 <div>
     <?php if (isset($component)) { $__componentOriginal6f99ffca722ef3c8789c4087c5ac9f0d = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal6f99ffca722ef3c8789c4087c5ac9f0d = $attributes; } ?>
-<?php $component = Mary\View\Components\Header::resolve(['title' => 'Tambah Karyawan Baru','subtitle' => 'Lengkapi informasi di bawah ini untuk menambahkan anggota tim baru ke dalam sistem.','separator' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Mary\View\Components\Header::resolve(['title' => 'Edit Karyawan','subtitle' => 'Perbarui informasi karyawan di bawah ini.','separator' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('header'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -79,8 +80,10 @@ use Mary\Traits\Toast;
                     <div class="w-40 h-40 rounded-xl border-2 border-dashed border-base-300 overflow-hidden bg-base-200 flex flex-col items-center justify-center relative group">
                         <?php if($foto): ?>
                             <img src="<?php echo e($foto->temporaryUrl()); ?>" class="absolute inset-0 w-full h-full object-cover" />
+                        <?php elseif($existingFoto): ?>
+                            <img src="<?php echo e(Storage::url($existingFoto)); ?>" class="absolute inset-0 w-full h-full object-cover" />
                         <?php else: ?>
-                            <div class="flex flex-col items-center text-base-content/50" id="emptyState">
+                            <div class="flex flex-col items-center text-base-content/50">
                                 <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
 <?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-camera'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -640,7 +643,7 @@ unset($__errorArgs, $__bag); ?>
         </a>
         <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
-<?php $component = Mary\View\Components\Button::resolve(['label' => 'Simpan Karyawan','icon' => 'o-check','spinner' => 'save'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Mary\View\Components\Button::resolve(['label' => 'Simpan','icon' => 'o-check','spinner' => 'save'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -661,4 +664,4 @@ unset($__errorArgs, $__bag); ?>
 <?php unset($__componentOriginal602b228a887fab12f0012a3179e5b533); ?>
 <?php endif; ?>
     </div>
-</div><?php /**PATH C:\laragon\www\absenhub-v2.0\storage\framework\views/livewire/views/abc2b53a.blade.php ENDPATH**/ ?>
+</div><?php /**PATH C:\laragon\www\absenhub-v2.0\storage\framework\views/livewire/views/a7ab5e42.blade.php ENDPATH**/ ?>

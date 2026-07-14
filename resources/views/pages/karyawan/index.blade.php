@@ -7,11 +7,12 @@ use App\Models\Nonaktif;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
 use Mary\Traits\Toast;
 use Illuminate\Support\Facades\Storage;
 
 new class extends Component {
-    use Toast, WithPagination;
+    use Toast, WithPagination, WithFileUploads;
 
     public string $search = '';
     public string $filterJabatan = '';
@@ -22,8 +23,12 @@ new class extends Component {
     public bool $detailModal = false;
     public bool $nonaktifModal = false;
     public bool $aktifModal = false;
+    public bool $fotoModal = false;
     public ?int $karyawanId = null;
     public ?int $detailKaryawanId = null;
+    public ?int $fotoKaryawanId = null;
+    public $fotoUpload = null;
+    public ?string $existingFoto = null;
 
     public string $alasanNonaktif = '';
     public string $tanggalNonaktif = '';
@@ -156,13 +161,45 @@ new class extends Component {
         $this->karyawanId = null;
     }
 
+    public function editFoto(int $id): void
+    {
+        $k = Karyawan::findOrFail($id);
+        $this->fotoKaryawanId = $id;
+        $this->existingFoto = $k->foto_karyawan;
+        $this->fotoUpload = null;
+        $this->fotoModal = true;
+    }
+
+    public function saveFoto(): void
+    {
+        $this->validate(['fotoUpload' => 'required|image|max:2048']);
+
+        $k = Karyawan::findOrFail($this->fotoKaryawanId);
+
+        if ($k->foto_karyawan && Storage::disk('public')->exists($k->foto_karyawan)) {
+            Storage::disk('public')->delete($k->foto_karyawan);
+        }
+
+        $k->update(['foto_karyawan' => $this->fotoUpload->store('karyawan', 'public')]);
+
+        $this->success('Foto berhasil diperbarui.', position: 'toast-top toast-end');
+        $this->fotoModal = false;
+        $this->fotoKaryawanId = null;
+        $this->fotoUpload = null;
+        $this->existingFoto = null;
+    }
+
     public function closeModal(): void
     {
         $this->detailModal = false;
         $this->nonaktifModal = false;
         $this->aktifModal = false;
+        $this->fotoModal = false;
         $this->detailKaryawanId = null;
         $this->karyawanId = null;
+        $this->fotoKaryawanId = null;
+        $this->fotoUpload = null;
+        $this->existingFoto = null;
     }
 };
 ?>
@@ -182,41 +219,41 @@ new class extends Component {
 
     {{-- Filters --}}
     <div class="flex flex-wrap gap-3 mb-4">
-        <div class="form-control">
-            <label class="label py-1"><span class="label-text text-xs">Jabatan</span></label>
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend text-xs">Jabatan</legend>
             <select class="select select-bordered select-sm w-48" wire:model.live="filterJabatan">
                 <option value="">Semua Jabatan</option>
                 @foreach ($jabatans as $j)
                     <option value="{{ $j->id }}">{{ $j->nama_jabatan }}</option>
                 @endforeach
             </select>
-        </div>
-        <div class="form-control">
-            <label class="label py-1"><span class="label-text text-xs">Status Aktif</span></label>
+        </fieldset>
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend text-xs">Status Aktif</legend>
             <select class="select select-bordered select-sm w-40" wire:model.live="filterStatus">
                 <option value="">Semua</option>
                 <option value="aktif">Aktif</option>
                 <option value="nonaktif">Nonaktif</option>
             </select>
-        </div>
-        <div class="form-control">
-            <label class="label py-1"><span class="label-text text-xs">Status Kerja</span></label>
+        </fieldset>
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend text-xs">Status Kerja</legend>
             <select class="select select-bordered select-sm w-48" wire:model.live="filterKerja">
                 <option value="">Semua Status</option>
                 @foreach ($statuses as $s)
                     <option value="{{ $s->id }}">{{ $s->nama_status }}</option>
                 @endforeach
             </select>
-        </div>
-        <div class="form-control">
-            <label class="label py-1"><span class="label-text text-xs">Agama</span></label>
+        </fieldset>
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend text-xs">Agama</legend>
             <select class="select select-bordered select-sm w-48" wire:model.live="filterAgama">
                 <option value="">Semua Agama</option>
                 @foreach (\App\Models\Karyawan::where('is_active', true)->whereNotNull('agama_karyawan')->distinct()->pluck('agama_karyawan')->sort() as $a)
                     <option value="{{ $a }}">{{ $a }}</option>
                 @endforeach
             </select>
-        </div>
+        </fieldset>
     </div>
 
     {{-- Table --}}
@@ -228,7 +265,7 @@ new class extends Component {
 
             @scope('cell_karyawan', $row)
                 <div class="flex items-center gap-3">
-                    <div class="avatar">
+                    <div class="avatar cursor-pointer" wire:click="editFoto({{ $row->id }})" title="Klik untuk ganti foto">
                         <div class="mask mask-squircle w-10 h-10">
                             <img src="{{ $row->foto_karyawan ? Storage::url($row->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $row->nik }}" alt="{{ $row->nama_karyawan }}" />
                         </div>
@@ -309,7 +346,7 @@ new class extends Component {
         }
     @endphp
     <x-modal wire:model="detailModal" title="Detail Karyawan" subtitle="{{ $detail?->nama_karyawan ?? '' }}"
-        class="!max-w-3xl">
+        box-class="!max-w-xl">
         @if ($detail)
             {{-- Header: Foto + Nama + Jabatan --}}
             <div class="flex items-center gap-5 mb-5">
@@ -446,5 +483,42 @@ new class extends Component {
                 <x-button label="Aktifkan" class="btn-success" type="submit" />
             </x-slot:actions>
         </x-form>
+    </x-modal>
+
+    {{-- Modal Edit Foto --}}
+    @php $fotoK = $fotoKaryawanId ? \App\Models\Karyawan::find($fotoKaryawanId) : null; @endphp
+    <x-modal wire:model="fotoModal" title="Edit Foto Karyawan"
+        subtitle="{{ $fotoK?->nama_karyawan ?? '' }}" box-class="!max-w-sm">
+        @if ($fotoK)
+            <div class="flex flex-col items-center gap-4">
+                <div class="w-40 h-40 rounded-xl border-2 border-dashed border-base-300 overflow-hidden bg-base-200 flex flex-col items-center justify-center relative group">
+                    @if ($fotoUpload)
+                        <img src="{{ $fotoUpload->temporaryUrl() }}"
+                            class="absolute inset-0 w-full h-full object-cover" />
+                    @elseif ($fotoK->foto_karyawan)
+                        <img src="{{ Storage::url($fotoK->foto_karyawan) }}"
+                            class="absolute inset-0 w-full h-full object-cover" />
+                    @else
+                        <div class="flex flex-col items-center text-base-content/50">
+                            <x-icon name="o-camera" class="w-10 h-10 mb-1" />
+                            <span class="text-xs text-center px-2">Belum ada foto</span>
+                        </div>
+                    @endif
+                    <label
+                        class="absolute inset-0 cursor-pointer opacity-0 group-hover:opacity-100 bg-primary/20 transition-opacity flex items-center justify-center rounded-xl">
+                        <span class="badge badge-soft badge-primary px-4 py-3 text-xs font-bold shadow-md">Pilih Foto</span>
+                        <input type="file" accept="image/*" class="hidden" wire:model="fotoUpload" />
+                    </label>
+                </div>
+                @error('fotoUpload')
+                    <span class="text-error text-xs">{{ $message }}</span>
+                @enderror
+                <p class="text-xs text-base-content/50 text-center">Klik area foto untuk memilih file. Maksimal 2MB.</p>
+            </div>
+        @endif
+        <x-slot:actions>
+            <x-button label="Batal" wire:click="closeModal" />
+            <x-button label="Simpan" class="btn-primary" wire:click="saveFoto" spinner />
+        </x-slot:actions>
     </x-modal>
 </div>

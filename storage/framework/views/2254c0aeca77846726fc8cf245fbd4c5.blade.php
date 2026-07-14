@@ -1,0 +1,1 @@
+<x-mary-icon name='o-user' class='w-4 w-4' />

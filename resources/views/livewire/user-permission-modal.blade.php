@@ -2,7 +2,7 @@
     <x-modal wire:model="userModal"
         title="Permission: {{ $selectedUserName }}"
         subtitle="Role: {{ implode(', ', $selectedUserRoles) }}"
-        class="!w-11/12 !max-w-3xl">
+        box-class="!w-11/12 !max-w-xl">
 
         {{-- Header Stats --}}
         <div class="flex items-center gap-3 mb-4 p-3 bg-base-200 rounded-xl flex-wrap">

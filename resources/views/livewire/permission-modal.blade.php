@@ -2,7 +2,7 @@
     <x-modal wire:model="permissionModal"
         title="Kelola Permission: {{ $selectedRoleName }}"
         subtitle="Centang permission yang ingin diberikan ke role ini"
-        class="!w-11/12 !max-w-3xl">
+        box-class="!w-11/12 !max-w-xl">
 
         {{-- Header Stats --}}
         <div class="flex items-center justify-between mb-4 p-3 bg-base-200 rounded-xl">
