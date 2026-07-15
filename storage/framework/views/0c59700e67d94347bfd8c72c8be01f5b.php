@@ -241,6 +241,120 @@ use Livewire\Component;
 
         
         <?php if (\Illuminate\Support\Facades\Blade::check('hasanyrole', 'admin|super-admin|operator|manager')): ?>
+        <?php if (isset($component)) { $__componentOriginald82092fa13795886cb51cb7dc7d7b48e = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginald82092fa13795886cb51cb7dc7d7b48e = $attributes; } ?>
+<?php $component = Mary\View\Components\MenuSub::resolve(['title' => 'Master Data','icon' => 'o-circle-stack'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('menu-sub'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\MenuSub::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+            <?php if (isset($component)) { $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $attributes; } ?>
+<?php $component = Mary\View\Components\MenuItem::resolve(['title' => 'Jabatan','icon' => 'o-briefcase','exact' => true,'link' => '/master/jabatan'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('menu-item'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\MenuItem::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879)): ?>
+<?php $attributes = $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
+<?php unset($__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879)): ?>
+<?php $component = $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
+<?php unset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
+<?php endif; ?>
+            <?php if (isset($component)) { $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $attributes; } ?>
+<?php $component = Mary\View\Components\MenuItem::resolve(['title' => 'Status Kerja','icon' => 'o-check-badge','exact' => true,'link' => '/master/status-kerja'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('menu-item'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\MenuItem::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879)): ?>
+<?php $attributes = $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
+<?php unset($__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879)): ?>
+<?php $component = $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
+<?php unset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
+<?php endif; ?>
+            <?php if (isset($component)) { $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $attributes; } ?>
+<?php $component = Mary\View\Components\MenuItem::resolve(['title' => 'Masa Kontrak','icon' => 'o-clock','exact' => true,'link' => '/master/masa-kontrak'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('menu-item'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\MenuItem::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879)): ?>
+<?php $attributes = $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
+<?php unset($__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879)): ?>
+<?php $component = $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
+<?php unset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
+<?php endif; ?>
+            <?php if (isset($component)) { $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $attributes; } ?>
+<?php $component = Mary\View\Components\MenuItem::resolve(['title' => 'Penandatangan','icon' => 'o-pencil-square','exact' => true,'link' => '/master/penandatangan'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('menu-item'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\MenuItem::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879)): ?>
+<?php $attributes = $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
+<?php unset($__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879)): ?>
+<?php $component = $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
+<?php unset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
+<?php endif; ?>
+         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginald82092fa13795886cb51cb7dc7d7b48e)): ?>
+<?php $attributes = $__attributesOriginald82092fa13795886cb51cb7dc7d7b48e; ?>
+<?php unset($__attributesOriginald82092fa13795886cb51cb7dc7d7b48e); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginald82092fa13795886cb51cb7dc7d7b48e)): ?>
+<?php $component = $__componentOriginald82092fa13795886cb51cb7dc7d7b48e; ?>
+<?php unset($__componentOriginald82092fa13795886cb51cb7dc7d7b48e); ?>
+<?php endif; ?>
+        <?php endif; ?>
+
+        
+        <?php if (\Illuminate\Support\Facades\Blade::check('hasanyrole', 'admin|super-admin|operator|manager')): ?>
         <?php if (isset($component)) { $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $attributes; } ?>
 <?php $component = Mary\View\Components\MenuItem::resolve(['title' => 'Data Karyawan','icon' => 'o-users','iconClasses' => 'text-success','link' => '/karyawan','exact' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -265,80 +379,6 @@ use Livewire\Component;
 <?php endif; ?>
         <?php endif; ?>
 
-
-        <?php if (isset($component)) { $__componentOriginal254139bd69d0def79ecb6c40efbc400d = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal254139bd69d0def79ecb6c40efbc400d = $attributes; } ?>
-<?php $component = Mary\View\Components\MenuSeparator::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('menu-separator'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Mary\View\Components\MenuSeparator::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
-
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal254139bd69d0def79ecb6c40efbc400d)): ?>
-<?php $attributes = $__attributesOriginal254139bd69d0def79ecb6c40efbc400d; ?>
-<?php unset($__attributesOriginal254139bd69d0def79ecb6c40efbc400d); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal254139bd69d0def79ecb6c40efbc400d)): ?>
-<?php $component = $__componentOriginal254139bd69d0def79ecb6c40efbc400d; ?>
-<?php unset($__componentOriginal254139bd69d0def79ecb6c40efbc400d); ?>
-<?php endif; ?>
-
-        <li x-data="{ theme: localStorage.getItem('theme') || 'emerald' }"
-            x-init="$watch('theme', val => { localStorage.setItem('theme', val); document.documentElement.setAttribute('data-theme', val) })">
-            <a href="#" @click.prevent="theme = theme === 'emerald' ? 'dark' : 'emerald'">
-                <span x-show="theme === 'emerald'"><?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
-<?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-moon'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('icon'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Mary\View\Components\Icon::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['class' => 'w-5 h-5']); ?>
-<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
-
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalce0070e6ae017cca68172d0230e44821)): ?>
-<?php $attributes = $__attributesOriginalce0070e6ae017cca68172d0230e44821; ?>
-<?php unset($__attributesOriginalce0070e6ae017cca68172d0230e44821); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalce0070e6ae017cca68172d0230e44821)): ?>
-<?php $component = $__componentOriginalce0070e6ae017cca68172d0230e44821; ?>
-<?php unset($__componentOriginalce0070e6ae017cca68172d0230e44821); ?>
-<?php endif; ?></span>
-                <span x-show="theme !== 'emerald'"><?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
-<?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-sun'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('icon'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Mary\View\Components\Icon::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['class' => 'w-5 h-5']); ?>
-<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
-
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalce0070e6ae017cca68172d0230e44821)): ?>
-<?php $attributes = $__attributesOriginalce0070e6ae017cca68172d0230e44821; ?>
-<?php unset($__attributesOriginalce0070e6ae017cca68172d0230e44821); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalce0070e6ae017cca68172d0230e44821)): ?>
-<?php $component = $__componentOriginalce0070e6ae017cca68172d0230e44821; ?>
-<?php unset($__componentOriginalce0070e6ae017cca68172d0230e44821); ?>
-<?php endif; ?></span>
-                <span x-text="theme === 'emerald' ? 'Dark Mode' : 'Light Mode'"></span>
-            </a>
-        </li>
      <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal5a2f10112e92a9c01ae3ba423b1cc044)): ?>

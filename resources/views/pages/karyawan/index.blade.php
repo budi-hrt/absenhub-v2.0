@@ -60,8 +60,7 @@ new class extends Component {
         $this->resetPage();
     }
 
-    #[Computed]
-    public function karyawans()
+    protected function getFilteredQuery()
     {
         return Karyawan::with(['jabatan', 'status'])
             ->when($this->search, fn($q) => $q->where('nama_karyawan', 'like', "%{$this->search}%")
@@ -71,8 +70,13 @@ new class extends Component {
             ->when($this->filterStatus === 'nonaktif', fn($q) => $q->where('is_active', false))
             ->when($this->filterAgama, fn($q) => $q->where('agama_karyawan', $this->filterAgama))
             ->when($this->filterKerja, fn($q) => $q->where('status_id', $this->filterKerja))
-            ->orderBy('nama_karyawan')
-            ->paginate(10);
+            ->orderBy('nama_karyawan');
+    }
+
+    #[Computed]
+    public function karyawans()
+    {
+        return $this->getFilteredQuery()->paginate(10);
     }
 
     public function headers(): array
@@ -89,8 +93,12 @@ new class extends Component {
 
     public function with(): array
     {
+        $karyawans = $this->karyawans;
+        $start = $karyawans->firstItem();
+        $karyawans->getCollection()->transform(fn($item, $i) => tap($item)->setAttribute('row_no', $start + $i));
+
         return [
-            'karyawans' => $this->karyawans,
+            'karyawans' => $karyawans,
             'headers' => $this->headers(),
             'jabatans' => Jabatan::where('is_active', true)->orderBy('nama_jabatan')->get(),
             'statuses' => Status::where('is_active', true)->where('id', '!=', 3)->orderBy('nama_status')->get(),
@@ -254,13 +262,35 @@ new class extends Component {
                 @endforeach
             </select>
         </fieldset>
+
+        {{-- Export Buttons --}}
+        <div class="flex items-end gap-2 ml-auto">
+            <a x-bind:href="'/karyawan/export/excel?search=' + encodeURIComponent($wire.search)
+                + '&filterJabatan=' + encodeURIComponent($wire.filterJabatan)
+                + '&filterStatus=' + encodeURIComponent($wire.filterStatus)
+                + '&filterAgama=' + encodeURIComponent($wire.filterAgama)
+                + '&filterKerja=' + encodeURIComponent($wire.filterKerja)"
+                class="btn btn-success btn-outline btn-sm" target="_blank">
+                <x-icon name="o-table-cells" class="w-4 h-4" />
+                Export Excel
+            </a>
+            <a x-bind:href="'/karyawan/export/pdf?search=' + encodeURIComponent($wire.search)
+                + '&filterJabatan=' + encodeURIComponent($wire.filterJabatan)
+                + '&filterStatus=' + encodeURIComponent($wire.filterStatus)
+                + '&filterAgama=' + encodeURIComponent($wire.filterAgama)
+                + '&filterKerja=' + encodeURIComponent($wire.filterKerja)"
+                class="btn btn-error btn-outline btn-sm" target="_blank">
+                <x-icon name="o-document" class="w-4 h-4" />
+                Export PDF
+            </a>
+        </div>
     </div>
 
     {{-- Table --}}
     <x-card shadow>
         <x-table :headers="$headers" :rows="$karyawans" with-pagination>
             @scope('cell_no', $row)
-                <span class="text-sm text-base-content/50">{{ $loop->iteration }}</span>
+                <span class="text-sm text-base-content/50">{{ $row->row_no }}</span>
             @endscope
 
             @scope('cell_karyawan', $row)
@@ -320,13 +350,13 @@ new class extends Component {
 
         if ($detail) {
             if ($detail->is_active && $detail->tanggal_masuk) {
-                $lamaKerja = \Carbon\Carbon::parse($detail->tanggal_masuk)->diffForHumans(['parts' => 2]);
+                $lamaKerja = \Carbon\Carbon::parse($detail->tanggal_masuk)->locale('id')->diffForHumans(['parts' => 2, 'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE]);
             } elseif (!$detail->is_active) {
                 $lastNonaktif = \App\Models\Nonaktif::where('karyawan_id', $detail->id)
                     ->latest('tanggal_nonaktif')->first();
                 if ($lastNonaktif && $lastNonaktif->tanggal_aktif) {
                     $lamaKerja = \Carbon\Carbon::parse($lastNonaktif->tanggal_aktif)
-                        ->diffForHumans($lastNonaktif->tanggal_nonaktif, ['parts' => 2]);
+                        ->locale('id')->diffForHumans($lastNonaktif->tanggal_nonaktif, ['parts' => 2, 'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE]);
                 }
             }
 
@@ -345,29 +375,32 @@ new class extends Component {
             $riwayats = $riwayats->sortBy('tanggal')->values();
         }
     @endphp
-    <x-modal wire:model="detailModal" title="Detail Karyawan" subtitle="{{ $detail?->nama_karyawan ?? '' }}"
-        box-class="!max-w-xl">
+    <x-modal wire:model="detailModal" box-class="!max-w-xl !p-0">
         @if ($detail)
-            {{-- Header: Foto + Nama + Jabatan --}}
-            <div class="flex items-center gap-5 mb-5">
-                <div class="avatar">
-                    <div class="w-20 h-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                        <img src="{{ $detail->foto_karyawan ? Storage::url($detail->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $detail->nik }}" />
+            {{-- Header Gradient dengan Foto --}}
+            <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-5 rounded-t-xl">
+                <div class="flex items-center gap-5">
+                    <div class="avatar">
+                        <div class="w-20 h-20 rounded-full ring-2 ring-white/30 ring-offset-0">
+                            <img src="{{ $detail->foto_karyawan ? Storage::url($detail->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $detail->nik }}" />
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold">{{ $detail->nama_karyawan }}</h3>
-                    <p class="text-sm text-base-content/50">{{ $detail->jabatan?->nama_jabatan ?? '-' }}</p>
-                    <div class="flex items-center gap-2 mt-1 flex-wrap">
-                        <x-badge :value="$detail->is_active ? 'Aktif' : 'Nonaktif'" :class="$detail->is_active ? 'badge-success badge-sm' : 'badge-error badge-sm'" />
-                        <x-badge :value="$detail->status?->nama_status ?? '-'" class="badge-info badge-sm" />
-                        <span class="text-xs text-base-content/50">
-                            Lama Kerja: <span class="font-semibold text-base-content">{{ $lamaKerja }}</span>
-                        </span>
+                    <div>
+                        <h3 class="text-lg font-bold">{{ $detail->nama_karyawan }}</h3>
+                        <p class="text-sm text-white/70">{{ $detail->jabatan?->nama_jabatan ?? '-' }}</p>
+                        <div class="flex items-center gap-2 mt-2 flex-wrap">
+                            <x-badge :value="$detail->is_active ? 'Aktif' : 'Nonaktif'"
+                                :class="$detail->is_active ? 'badge-success badge-sm' : 'badge-error badge-sm'" />
+                            <x-badge :value="$detail->status?->nama_status ?? '-'" class="badge-info badge-sm" />
+                            <span class="text-xs text-white/60">
+                                Lama Kerja: <span class="font-semibold text-white">{{ $lamaKerja }}</span>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <div class="p-6">
             {{-- Data Penting --}}
             <div class="rounded-xl overflow-hidden text-sm">
                 @php
@@ -420,69 +453,80 @@ new class extends Component {
                     </div>
                 </div>
             @endif
+        </div>
         @endif
 
         <x-slot:actions>
-            <x-button label="Tutup" wire:click="closeModal" />
+            <div class="px-6 pb-6">
+                <x-button label="Tutup" wire:click="closeModal" />
+            </div>
         </x-slot:actions>
     </x-modal>
 
     {{-- Modal Nonaktif --}}
     @php $nk = $karyawanId ? \App\Models\Karyawan::find($karyawanId) : null; @endphp
-    <x-modal wire:model="nonaktifModal" title="Nonaktifkan Karyawan" subtitle="Pastikan data sudah benar">
+    <x-modal wire:model="nonaktifModal" box-class="!max-w-xl !p-0">
         @if ($nk)
-            <div class="flex flex-col items-center gap-2 mb-5">
-                <div class="avatar">
-                    <div class="w-16 h-16 rounded-full ring ring-error ring-offset-base-100 ring-offset-2">
-                        <img src="{{ $nk->foto_karyawan ? Storage::url($nk->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $nk->nik }}" />
+            <div class="bg-gradient-to-r from-red-500 to-rose-700 text-white px-6 py-5 rounded-t-xl">
+                <div class="flex items-center gap-4">
+                    <div class="avatar">
+                        <div class="w-16 h-16 rounded-full ring-2 ring-white/30 ring-offset-0">
+                            <img src="{{ $nk->foto_karyawan ? Storage::url($nk->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $nk->nik }}" />
+                        </div>
                     </div>
-                </div>
-                <div class="text-center">
-                    <div class="font-bold">{{ $nk->nama_karyawan }}</div>
-                    <div class="text-xs text-base-content/50">NIK: {{ $nk->nik }}</div>
+                    <div>
+                        <div class="font-bold text-lg">{{ $nk->nama_karyawan }}</div>
+                        <div class="text-xs text-white/70">NIK: {{ $nk->nik }}</div>
+                    </div>
                 </div>
             </div>
         @endif
-        <x-form wire:submit.prevent="nonaktifkan">
-            <x-input wire:model="tanggalNonaktif" label="Tanggal Nonaktif" type="date" required />
-            <x-input wire:model="alasanNonaktif" label="Alasan" placeholder="Alasan nonaktif" required />
-            <x-slot:actions>
-                <x-button label="Batal" wire:click="closeModal" type="button" />
-                <x-button label="Nonaktifkan" class="btn-error" type="submit" />
-            </x-slot:actions>
-        </x-form>
+        <div class="p-6">
+            <x-form wire:submit.prevent="nonaktifkan">
+                <x-input wire:model="tanggalNonaktif" label="Tanggal Nonaktif" type="date" required />
+                <x-input wire:model="alasanNonaktif" label="Alasan" placeholder="Alasan nonaktif" required />
+                <x-slot:actions>
+                    <x-button label="Batal" wire:click="closeModal" type="button" />
+                    <x-button label="Nonaktifkan" class="btn-error" type="submit" />
+                </x-slot:actions>
+            </x-form>
+        </div>
     </x-modal>
 
     {{-- Modal Aktifkan --}}
-    <x-modal wire:model="aktifModal" title="Aktifkan Karyawan" subtitle="Masukkan tanggal masuk (kontrak kerja)">
+    <x-modal wire:model="aktifModal" box-class="!max-w-xl !p-0">
         @if ($nk)
-            <div class="flex flex-col items-center gap-2 mb-5">
-                <div class="avatar">
-                    <div class="w-16 h-16 rounded-full ring ring-success ring-offset-base-100 ring-offset-2">
-                        <img src="{{ $nk->foto_karyawan ? Storage::url($nk->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $nk->nik }}" />
+            <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-5 rounded-t-xl">
+                <div class="flex items-center gap-4">
+                    <div class="avatar">
+                        <div class="w-16 h-16 rounded-full ring-2 ring-white/30 ring-offset-0">
+                            <img src="{{ $nk->foto_karyawan ? Storage::url($nk->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $nk->nik }}" />
+                        </div>
                     </div>
-                </div>
-                <div class="text-center">
-                    <div class="font-bold">{{ $nk->nama_karyawan }}</div>
-                    <div class="text-xs text-base-content/50">NIK: {{ $nk->nik }}</div>
+                    <div>
+                        <div class="font-bold text-lg">{{ $nk->nama_karyawan }}</div>
+                        <div class="text-xs text-white/70">NIK: {{ $nk->nik }}</div>
+                    </div>
                 </div>
             </div>
         @endif
-        <x-form wire:submit.prevent="aktifkan">
-            <x-input wire:model="tanggalAktif" label="Tanggal Masuk (Kontrak Kerja)" type="date" required />
-            <div class="form-control">
-                <label class="label"><span class="label-text">Status Kepegawaian</span></label>
-                <select class="select select-bordered" wire:model="statusIdAktif">
-                    @foreach (\App\Models\Status::where('is_active', true)->where('id', '!=', 3)->orderBy('nama_status')->get() as $s)
-                        <option value="{{ $s->id }}">{{ $s->nama_status }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <x-slot:actions>
-                <x-button label="Batal" wire:click="closeModal" type="button" />
-                <x-button label="Aktifkan" class="btn-success" type="submit" />
-            </x-slot:actions>
-        </x-form>
+        <div class="p-6">
+            <x-form wire:submit.prevent="aktifkan">
+                <x-input wire:model="tanggalAktif" label="Tanggal Masuk (Kontrak Kerja)" type="date" required />
+                <div class="form-control">
+                    <label class="label"><span class="label-text">Status Kepegawaian</span></label>
+                    <select class="select select-bordered" wire:model="statusIdAktif">
+                        @foreach (\App\Models\Status::where('is_active', true)->where('id', '!=', 3)->orderBy('nama_status')->get() as $s)
+                            <option value="{{ $s->id }}">{{ $s->nama_status }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <x-slot:actions>
+                    <x-button label="Batal" wire:click="closeModal" type="button" />
+                    <x-button label="Aktifkan" class="btn-success" type="submit" />
+                </x-slot:actions>
+            </x-form>
+        </div>
     </x-modal>
 
     {{-- Modal Edit Foto --}}

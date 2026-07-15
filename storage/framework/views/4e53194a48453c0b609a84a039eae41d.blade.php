@@ -1,1 +1,0 @@
-<x-mary-icon name='o-briefcase' class='w-4 w-4' />

@@ -52,22 +52,25 @@ new class extends Component
         </x-menu-sub>
         @endhasanyrole
 
+        {{-- Master Data --}}
+        @hasanyrole('admin|super-admin|operator|manager')
+        <x-menu-sub title="Master Data" icon="o-circle-stack">
+            <x-menu-item title="Jabatan" icon="o-briefcase" :exact="true"
+                link="/master/jabatan" />
+            <x-menu-item title="Status Kerja" icon="o-check-badge" :exact="true"
+                link="/master/status-kerja" />
+            <x-menu-item title="Masa Kontrak" icon="o-clock" :exact="true"
+                link="/master/masa-kontrak" />
+            <x-menu-item title="Penandatangan" icon="o-pencil-square" :exact="true"
+                link="/master/penandatangan" />
+        </x-menu-sub>
+        @endhasanyrole
+
         {{-- Manajemen Karyawan --}}
         @hasanyrole('admin|super-admin|operator|manager')
         <x-menu-item title="Data Karyawan" icon="o-users" icon-classes="text-success"
             link="/karyawan" :exact="true" />
         @endhasanyrole
 
-
-        <x-menu-separator />
-
-        <li x-data="{ theme: localStorage.getItem('theme') || 'emerald' }"
-            x-init="$watch('theme', val => { localStorage.setItem('theme', val); document.documentElement.setAttribute('data-theme', val) })">
-            <a href="#" @click.prevent="theme = theme === 'emerald' ? 'dark' : 'emerald'">
-                <span x-show="theme === 'emerald'"><x-icon name="o-moon" class="w-5 h-5" /></span>
-                <span x-show="theme !== 'emerald'"><x-icon name="o-sun" class="w-5 h-5" /></span>
-                <span x-text="theme === 'emerald' ? 'Dark Mode' : 'Light Mode'"></span>
-            </a>
-        </li>
     </x-menu>
 </div>

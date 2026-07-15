@@ -32,6 +32,16 @@ Route::middleware('auth')->group(function () {
         Route::livewire('/karyawan', 'pages::karyawan.index')->name('karyawan.index');
         Route::livewire('/karyawan/create', 'pages::karyawan.create')->name('karyawan.create');
         Route::livewire('/karyawan/{karyawan}/edit', 'pages::karyawan.edit')->name('karyawan.edit');
+
+        Route::get('/karyawan/export/excel', [App\Http\Controllers\KaryawanExportController::class, 'excel'])
+            ->name('karyawan.export.excel');
+        Route::get('/karyawan/export/pdf', [App\Http\Controllers\KaryawanExportController::class, 'pdf'])
+            ->name('karyawan.export.pdf');
+
+        Route::livewire('/master/jabatan', 'pages::master.jabatan')->name('master.jabatan');
+        Route::livewire('/master/status-kerja', 'pages::master.status-kerja')->name('master.status-kerja');
+        Route::livewire('/master/masa-kontrak', 'pages::master.masa-kontrak')->name('master.masa-kontrak');
+        Route::livewire('/master/penandatangan', 'pages::master.penandatangan')->name('master.penandatangan');
     });
 
     // roles & permissions (super-admin only)

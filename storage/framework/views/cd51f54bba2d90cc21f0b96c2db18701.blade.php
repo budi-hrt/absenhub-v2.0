@@ -1,1 +1,0 @@
-<x-mary-icon name='o-phone' class='w-4 w-4' />

@@ -41,6 +41,18 @@
 
             {{-- MENU --}}
             <livewire:sidebar-menu />
+
+            {{-- DARK MODE TOGGLE --}}
+            <x-menu>
+                <li x-data="{ theme: localStorage.getItem('theme') || 'emerald' }"
+                    x-init="$watch('theme', val => { localStorage.setItem('theme', val); document.documentElement.setAttribute('data-theme', val) })">
+                    <a href="#" @click.prevent="theme = theme === 'emerald' ? 'dark' : 'emerald'">
+                        <span x-show="theme === 'emerald'"><x-icon name="o-moon" class="w-5 h-5" /></span>
+                        <span x-show="theme !== 'emerald'"><x-icon name="o-sun" class="w-5 h-5" /></span>
+                        <span class="mary-hideable" x-text="theme === 'emerald' ? 'Dark Mode' : 'Light Mode'"></span>
+                    </a>
+                </li>
+            </x-menu>
         </x-slot:sidebar>
 
         {{-- The `$slot` goes here --}}

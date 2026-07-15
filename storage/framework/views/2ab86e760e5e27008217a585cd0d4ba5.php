@@ -160,6 +160,80 @@ unset($__params);
 unset($__componentSlots);
 unset($__split);
 ?>
+
+            
+            <?php if (isset($component)) { $__componentOriginal5a2f10112e92a9c01ae3ba423b1cc044 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal5a2f10112e92a9c01ae3ba423b1cc044 = $attributes; } ?>
+<?php $component = Mary\View\Components\Menu::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('menu'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\Menu::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+                <li x-data="{ theme: localStorage.getItem('theme') || 'emerald' }"
+                    x-init="$watch('theme', val => { localStorage.setItem('theme', val); document.documentElement.setAttribute('data-theme', val) })">
+                    <a href="#" @click.prevent="theme = theme === 'emerald' ? 'dark' : 'emerald'">
+                        <span x-show="theme === 'emerald'"><?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
+<?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-moon'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\Icon::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'w-5 h-5']); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $attributes = $__attributesOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__attributesOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $component = $__componentOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__componentOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?></span>
+                        <span x-show="theme !== 'emerald'"><?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
+<?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-sun'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\Icon::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'w-5 h-5']); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $attributes = $__attributesOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__attributesOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $component = $__componentOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__componentOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?></span>
+                        <span class="mary-hideable" x-text="theme === 'emerald' ? 'Dark Mode' : 'Light Mode'"></span>
+                    </a>
+                </li>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal5a2f10112e92a9c01ae3ba423b1cc044)): ?>
+<?php $attributes = $__attributesOriginal5a2f10112e92a9c01ae3ba423b1cc044; ?>
+<?php unset($__attributesOriginal5a2f10112e92a9c01ae3ba423b1cc044); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal5a2f10112e92a9c01ae3ba423b1cc044)): ?>
+<?php $component = $__componentOriginal5a2f10112e92a9c01ae3ba423b1cc044; ?>
+<?php unset($__componentOriginal5a2f10112e92a9c01ae3ba423b1cc044); ?>
+<?php endif; ?>
          <?php $__env->endSlot(); ?>
 
         
