@@ -1,0 +1,482 @@
+<!DOCTYPE html><html lang="id" class="light" style=""><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#0053db",
+                        "surface-bright": "#f7f9fb",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-container": "#ffede6",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#737686",
+                        "on-surface-variant": "#434655",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#943700",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-dim": "#d8dadc",
+                        "primary-fixed": "#dbe1ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2d3133",
+                        "on-primary-container": "#eeefff",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "tertiary-fixed": "#ffdbcd",
+                        "inverse-primary": "#b4c5ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "surface-container": "#eceef0",
+                        "on-primary-fixed": "#00174b",
+                        "primary": "#004ac6",
+                        "on-background": "#191c1e",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#d0e1fb",
+                        "secondary": "#505f76",
+                        "on-secondary-container": "#54647a",
+                        "outline-variant": "#c3c6d7",
+                        "on-tertiary-fixed": "#360f00",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "background": "#f7f9fb",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#2563eb",
+                        "tertiary-container": "#bc4800",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-surface": "#191c1e",
+                        "surface": "#f7f9fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "gutter": "16px",
+                        "container-margin": "24px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    }catch(_e){}</script><meta charset="utf-8"></head><body class="min-h-screen text-on-surface">
+<main class="max-w-[1440px] mx-auto p-lg">
+<!-- Header Section-->
+<header class="mb-xl flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<h1 class="font-display text-display text-primary mb-xs">Kelola Absensi</h1>
+<p class="font-body-lg text-secondary">Atur dan tinjau kehadiran karyawan harian Anda dengan presisi.</p>
+</div>
+<div class="flex items-center gap-md">
+<div id="selectionCounter" class="hidden items-center gap-xs px-md py-sm bg-secondary-container text-on-secondary-container rounded-xl font-label-md animate-in fade-in slide-in-from-right-4 duration-300">
+<span class="material-symbols-outlined text-[18px]" data-original-icon="check_circle">check_circle</span>
+<span id="counterText" class="">0 Karyawan Terpilih</span>
+</div>
+<button id="btnCollective" disabled="" class="group relative flex items-center gap-xs px-lg py-md bg-primary text-on-primary rounded-xl font-headline-md shadow-lg hover:shadow-primary/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale">
+<span class="material-symbols-outlined" data-original-icon="group_add">group_add</span>
+<span class="">Keterangan Kolektif</span>
+<span class="absolute -top-2 -right-2 flex h-4 w-4">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-fixed opacity-75"></span>
+<span class="relative inline-flex rounded-full h-4 w-4 bg-primary-fixed"></span>
+</span>
+<!-- Tooltip -->
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-inverse-surface text-inverse-on-surface text-[11px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none text-center leading-tight">
+                        Pilih minimal 2 karyawan untuk mengaktifkan fitur ini
+                    </div>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<div class="bg-white rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+<!-- Table Controls -->
+<div class="p-md border-b border-outline-variant bg-surface-container-low flex flex-col sm:flex-row gap-md items-center justify-between">
+<div class="relative w-full sm:w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input type="text" placeholder="Cari nama atau jabatan karyawan..." class="w-full pl-10 pr-4 py-2 bg-white border border-outline-variant rounded-lg font-body-md focus:ring-2 focus:ring-primary focus:border-primary transition-all">
+</div><div class="relative w-full sm:w-48"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">calendar_today</span><input type="date" class="w-full pl-10 pr-4 py-2 bg-white border border-outline-variant rounded-lg font-body-md focus:ring-2 focus:ring-primary focus:border-primary transition-all" value="2024-05-24"></div>
+<div class="flex items-center gap-sm">
+<button class="flex items-center gap-xs px-md py-2 border border-outline-variant rounded-lg font-label-md text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+                        Filter
+                    </button>
+<button class="flex items-center gap-xs px-md py-2 border border-outline-variant rounded-lg font-label-md text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                        Ekspor
+                    </button>
+</div>
+</div>
+<!-- Attendance Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-md border-b border-outline-variant">
+<th class="p-md w-12">
+<input type="checkbox" id="selectAll" class="rounded border-outline-variant text-primary focus:ring-primary">
+</th>
+<th class="p-md">KARYAWAN</th><th class="p-md">TANGGAL</th>
+<th class="p-md">KETERANGAN</th>
+<th class="p-md">CHECK IN</th>
+<th class="p-md">CHECK OUT</th>
+<th class="p-md text-right">AKSI</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant font-body-md">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-md">
+<input type="checkbox" class="row-checkbox rounded border-outline-variant text-primary focus:ring-primary">
+</td>
+<td class="p-md">
+<div class="flex items-center gap-md">
+<img class="w-10 h-10 rounded-full object-cover border-2 border-surface-container" data-alt="A professional headshot of a young male employee in business casual attire, with a friendly expression, soft office lighting, clean modern professional photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5vE0_0ReOZAcbr5EQwc7vT83_wFjpvLh5Z3OVNW7YCYJRCIxgB64ilewpWZmNC6r39zv-fbYn8kEh5KfweH_F7NMIqkvzkQeA7yZc0iolb1tNgH1M4BDuQXuJ2ulsEa49P4jOCctGPeo4TouOmv422ZnpTsZY-YRXrQ-A4mhZCW2C_feUKgjM9fnZfLeBR8HBwJtvdykstgpvcqrwvjoWv0PaVD_vDMC-WlGOS7a_fE1SoCDL4rjN">
+<div>
+<div class="font-medium text-on-surface">Aditya Pratama</div>
+<div class="text-[12px] text-secondary">Senior Developer</div>
+</div>
+</div>
+</td><td class="p-md text-secondary">24 Mei 2024</td>
+<td class="p-md">
+<select class="status-hadir rounded-full px-sm py-1 border-none font-medium text-[13px] focus:ring-2 focus:ring-primary cursor-pointer appearance-none w-48">
+<option selected="" value="hadir">Hadir</option>
+<option value="dinas">Dinas Luar</option>
+<option value="cuti">Cuti</option>
+<option value="sakit">Sakit</option>
+<option value="alpa">Alpa</option>
+<option value="off">Off</option>
+</select>
+</td>
+<td class="p-md font-mono text-on-surface-variant">08:00</td>
+<td class="p-md font-mono text-on-surface-variant">17:05</td>
+<td class="p-md text-right">
+<button class="p-xs text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">edit_note</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-md">
+<input class="row-checkbox rounded border-outline-variant text-primary focus:ring-primary" type="checkbox">
+</td>
+<td class="p-md">
+<div class="flex items-center gap-md">
+<img class="w-10 h-10 rounded-full object-cover border-2 border-surface-container" data-alt="Close-up portrait of a professional female HR specialist with a warm smile, wearing a blazer, studio lighting, corporate high-quality aesthetic, neutral background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXHdWDP-RoGqTQv2xtsjMI4GNfZS5M8-EFgUX_XQTkrN14O8lblAlwmSG0GymCElQ5DfPwfwqbR5WxrBTUDs6WChJwXkVutEdvttmNs2bhQwYoTf9TCNer7h_DxG9HwW64mMgMx2MRhxiuYnn0UHntfVNy_Ed109LnmQLUS9ntL87HYSgKqoX8kTXrWHdl4wFYV2kz4ZTRUVBSkz4V0zRzU4XWY7AjKK48H2G4O7JZxMstcmYnS-ur">
+<div>
+<div class="font-medium text-on-surface">Siti Aminah</div>
+<div class="text-[12px] text-secondary">HR Specialist</div>
+</div>
+</div>
+</td><td class="p-md text-secondary">24 Mei 2024</td>
+<td class="p-md">
+<select class="status-cuti rounded-full px-sm py-1 border-none font-medium text-[13px] focus:ring-2 focus:ring-primary cursor-pointer appearance-none w-48">
+<option value="hadir">Hadir</option>
+<option value="dinas">Dinas Luar</option>
+<option selected="" value="cuti">Cuti</option>
+<option value="sakit">Sakit</option>
+<option value="alpa">Alpa</option>
+</select>
+</td>
+<td class="p-md font-mono text-secondary">-</td>
+<td class="p-md font-mono text-secondary">-</td>
+<td class="p-md text-right">
+<button class="p-xs text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">edit_note</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-md">
+<input class="row-checkbox rounded border-outline-variant text-primary focus:ring-primary" type="checkbox">
+</td>
+<td class="p-md">
+<div class="flex items-center gap-md">
+<img class="w-10 h-10 rounded-full object-cover border-2 border-surface-container" data-alt="Portrait of a male marketing manager in a modern open office environment, soft bokeh background, wearing a smart casual polo shirt, looking professional and approachable." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgLiA885pDsPtrZBdz4BPBdjQYMIul5m2fnSv-MeWX3OedNiYji25unMNfm-fMLIRVsQ3M3CLuI4A84HIy2N1Y_qjNY0Ue1ExQqx29hDuGB3UlAxXCOPPZqmfi50FEsnwehRCuOC-Aj8rdBEJORHVo7UNYM99kYHuzkgmhKPNvJE8YcHhsxXY2YF37J4fjb1sz1cbPMsQ57YRIsizPSv4uDow1TMppYHfll_nACWbQIuseS5tAhhwy">
+<div>
+<div class="font-medium text-on-surface">Budi Santoso</div>
+<div class="text-[12px] text-secondary">Marketing Manager</div>
+</div>
+</div>
+</td><td class="p-md text-secondary">24 Mei 2024</td>
+<td class="p-md">
+<select class="status-dinas rounded-full px-sm py-1 border-none font-medium text-[13px] focus:ring-2 focus:ring-primary cursor-pointer appearance-none w-48">
+<option value="hadir">Hadir</option>
+<option selected="" value="dinas">Dinas Luar</option>
+<option value="cuti">Cuti</option>
+<option value="sakit">Sakit</option>
+<option value="alpa">Alpa</option>
+</select>
+</td>
+<td class="p-md font-mono text-on-surface-variant">09:12</td>
+<td class="p-md font-mono text-secondary">-</td>
+<td class="p-md text-right">
+<button class="p-xs text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">edit_note</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-md">
+<input class="row-checkbox rounded border-outline-variant text-primary focus:ring-primary" type="checkbox">
+</td>
+<td class="p-md">
+<div class="flex items-center gap-md">
+<img class="w-10 h-10 rounded-full object-cover border-2 border-surface-container" data-alt="Portrait of a female UI designer with creative style, colorful glasses, in a workspace filled with natural morning light, professional photography, soft shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuSvterh8YS7QAbQDJsvFZbSTmzfgkb29OZr9ydI5UHtTUnTYvkPFtlP7tWoD6FU0qlhF3KADSPQxKSIpzq-7nvnNWwQXvFF3S08CT4IUe3VVhNodQp4Sqf7UVtJJYga9UhH6sPQ81zuAHgE6majpO3ACr8EeFObK4SjOtUKr5AUE6ZTQGP-36HuGK-gqhAX77v5LIHKKmsMZH82A-LXWtqPFryFClS5H_8JDzmBQVacJzl60nOgPM">
+<div>
+<div class="font-medium text-on-surface">Maya Indah</div>
+<div class="text-[12px] text-secondary">UI Designer</div>
+</div>
+</div>
+</td><td class="p-md text-secondary">24 Mei 2024</td>
+<td class="p-md">
+<select class="status-sakit rounded-full px-sm py-1 border-none font-medium text-[13px] focus:ring-2 focus:ring-primary cursor-pointer appearance-none w-48">
+<option value="hadir">Hadir</option>
+<option value="dinas">Dinas Luar</option>
+<option value="cuti">Cuti</option>
+<option selected="" value="sakit">Sakit</option>
+<option value="alpa">Alpa</option>
+</select>
+</td>
+<td class="p-md font-mono text-secondary">-</td>
+<td class="p-md font-mono text-secondary">-</td>
+<td class="p-md text-right">
+<button class="p-xs text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">edit_note</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-md">
+<input class="row-checkbox rounded border-outline-variant text-primary focus:ring-primary" type="checkbox">
+</td>
+<td class="p-md">
+<div class="flex items-center gap-md">
+<img class="w-10 h-10 rounded-full object-cover border-2 border-surface-container" data-alt="A mature male executive sitting in a boardroom, natural daylight, sophisticated business attire, high-end corporate photography, focused expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5Jwe4tw4Ws4lWAcsjrkwIlh0c96B-hHDJQ0u6btQrjUow7_jeij7QmmTzZseb-qb2uSfZIuecimTg2ytO695j3aE4XAwDtMMAevggYfFmroHWE-xqFQw7KY6j9UA3zZ97gt3N16YvesDLaIozSFagO1k-UUulY9uO6ekwyB89Qt8OuNPPyiP1iHpWDc9178ycln0RH4njJexoE-Sb_skRP0r63DiZQbHk1f4n6bOAh-zKcdVu8Lvh">
+<div>
+<div class="font-medium text-on-surface">Raka Wijaya</div>
+<div class="text-[12px] text-secondary">Accountant</div>
+</div>
+</div>
+</td><td class="p-md text-secondary">24 Mei 2024</td>
+<td class="p-md">
+<select class="status-off rounded-full px-sm py-1 border-none font-medium text-[13px] focus:ring-2 focus:ring-primary cursor-pointer appearance-none w-48">
+<option value="hadir">Hadir</option>
+<option selected="" value="off">Off</option>
+<option value="libur">Libur</option>
+</select>
+</td>
+<td class="p-md font-mono text-secondary">-</td>
+<td class="p-md font-mono text-secondary">-</td>
+<td class="p-md text-right">
+<button class="p-xs text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">edit_note</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="p-md border-t border-outline-variant flex items-center justify-between">
+<div class="font-body-md text-secondary">Menampilkan 5 dari 124 Karyawan</div>
+<div class="flex items-center gap-xs">
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container text-outline transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-medium">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container transition-colors">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container transition-colors">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container text-outline transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Empty State (Hidden) -->
+<div class="hidden flex-col items-center justify-center py-xl bg-white rounded-xl border border-dashed border-outline-variant mt-lg" id="emptyState">
+<span class="material-symbols-outlined text-[64px] text-surface-variant mb-md">person_search</span>
+<h3 class="font-headline-md text-on-surface">Data Tidak Ditemukan</h3>
+<p class="text-secondary font-body-md mt-xs">Coba sesuaikan kata kunci pencarian atau filter Anda.</p>
+</div>
+</main>
+<!-- Modal: Keterangan Kolektif -->
+<div class="fixed inset-0 z-[100] hidden flex items-center justify-center p-md" id="modalCollective">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"></div>
+<!-- Modal Content -->
+<div class="relative bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+<div class="p-lg border-b border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined">group</span>
+</div>
+<div>
+<h2 class="font-headline-md text-on-surface">Keterangan Kolektif</h2>
+<p class="text-secondary text-[12px]">Ubah keterangan untuk <span class="font-bold text-primary" id="modalSelectedCount">0</span> karyawan terpilih</p>
+</div>
+</div>
+<button class="p-xs hover:bg-surface-container rounded-full transition-colors" id="closeModal">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="p-lg space-y-lg">
+<div class="space-y-sm">
+<label class="font-label-md text-on-surface-variant">PILIH KETERANGAN</label>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-sm">
+<button class="status-hadir flex items-center justify-center gap-xs p-md rounded-xl border-2 border-transparent hover:border-primary/20 transition-all text-[13px] font-medium">
+<span class="w-2 h-2 rounded-full bg-current"></span> Hadir
+                        </button>
+<button class="status-dinas flex items-center justify-center gap-xs p-md rounded-xl border-2 border-transparent hover:border-primary/20 transition-all text-[13px] font-medium">
+<span class="w-2 h-2 rounded-full bg-current"></span> Dinas Luar
+                        </button>
+<button class="status-cuti flex items-center justify-center gap-xs p-md rounded-xl border-2 border-transparent hover:border-primary/20 transition-all text-[13px] font-medium">
+<span class="w-2 h-2 rounded-full bg-current"></span> Cuti
+                        </button>
+<button class="status-sakit flex items-center justify-center gap-xs p-md rounded-xl border-2 border-transparent hover:border-primary/20 transition-all text-[13px] font-medium">
+<span class="w-2 h-2 rounded-full bg-current"></span> Sakit
+                        </button>
+<button class="status-alpa flex items-center justify-center gap-xs p-md rounded-xl border-2 border-transparent hover:border-primary/20 transition-all text-[13px] font-medium">
+<span class="w-2 h-2 rounded-full bg-current"></span> Alpa
+                        </button>
+<button class="status-libur flex items-center justify-center gap-xs p-md rounded-xl border-2 border-transparent hover:border-primary/20 transition-all text-[13px] font-medium">
+<span class="w-2 h-2 rounded-full bg-current"></span> Libur
+                        </button>
+</div>
+</div>
+<div class="space-y-sm">
+<label class="font-label-md text-on-surface-variant">CATATAN TAMBAHAN (OPSIONAL)</label>
+<textarea class="w-full p-md border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-body-md" placeholder="Contoh: Penugasan proyek di luar kota atau sakit tipes..." rows="3"></textarea>
+</div>
+<div class="p-md bg-surface-container-low rounded-xl border border-outline-variant flex items-start gap-md">
+<span class="material-symbols-outlined text-primary">info</span>
+<p class="text-[12px] text-on-surface-variant leading-relaxed">
+                        Tindakan ini akan menimpa status absensi saat ini untuk semua karyawan yang dipilih. Pastikan data yang Anda masukkan sudah benar.
+                    </p>
+</div>
+</div>
+<div class="p-lg bg-surface-container border-t border-outline-variant flex justify-end gap-md">
+<button class="px-lg py-md text-secondary hover:bg-white/50 rounded-xl transition-colors font-medium" id="cancelModal">Batal</button>
+<button class="px-xl py-md bg-primary text-on-primary rounded-xl font-headline-md shadow-lg hover:shadow-primary/20 transition-all">
+                    Simpan Perubahan
+                </button>
+</div>
+</div>
+</div>
+<!-- Feedback Toast -->
+<div class="fixed bottom-lg left-1/2 -translate-x-1/2 z-[200] hidden translate-y-20 opacity-0 transition-all duration-300" id="toast">
+<div class="bg-inverse-surface text-inverse-on-surface px-xl py-md rounded-full shadow-2xl flex items-center gap-md">
+<span class="material-symbols-outlined text-green-400">check_circle</span>
+<span class="font-body-md">Data berhasil diperbarui secara kolektif.</span>
+</div>
+</div>
+<script>
+        const selectAll = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.row-checkbox');
+        const btnCollective = document.getElementById('btnCollective');
+        const counterText = document.getElementById('counterText');
+        const selectionCounter = document.getElementById('selectionCounter');
+        const modal = document.getElementById('modalCollective');
+        const btnCloseModal = document.getElementById('closeModal');
+        const btnCancelModal = document.getElementById('cancelModal');
+        const modalCountDisplay = document.getElementById('modalSelectedCount');
+
+        function updateUI() {
+            const checkedCount = Array.from(checkboxes).filter(c => c.checked).length;
+            
+            if (checkedCount > 0) {
+                selectionCounter.classList.remove('hidden');
+                selectionCounter.classList.add('flex');
+                counterText.textContent = `${checkedCount} Karyawan Terpilih`;
+            } else {
+                selectionCounter.classList.add('hidden');
+                selectionCounter.classList.remove('flex');
+            }
+
+            if (checkedCount >= 2) {
+                btnCollective.disabled = false;
+            } else {
+                btnCollective.disabled = true;
+            }
+
+            modalCountDisplay.textContent = checkedCount;
+        }
+
+        selectAll.addEventListener('change', (e) => {
+            checkboxes.forEach(cb => {
+                cb.checked = e.target.checked;
+                const row = cb.closest('tr');
+                if (cb.checked) row.classList.add('bg-primary/5');
+                else row.classList.remove('bg-primary/5');
+            });
+            updateUI();
+        });
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                const row = cb.closest('tr');
+                if (cb.checked) row.classList.add('bg-primary/5');
+                else row.classList.remove('bg-primary/5');
+                
+                selectAll.checked = Array.from(checkboxes).every(c => c.checked);
+                updateUI();
+            });
+        });
+
+        // Modal Logic
+        btnCollective.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+
+        const closeModal = () => {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        };
+
+        btnCloseModal.addEventListener('click', closeModal);
+        btnCancelModal.addEventListener('click', closeModal);
+
+        // Backdrop close
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // Status select color auto-update simulation
+        document.querySelectorAll('select').forEach(sel => {
+            sel.addEventListener('change', (e) => {
+                sel.className = `status-${e.target.value} rounded-full px-sm py-1 border-none font-medium text-[13px] focus:ring-2 focus:ring-primary cursor-pointer appearance-none`;
+            });
+        });
+    </script>
+
+</body></html>

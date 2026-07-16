@@ -42,6 +42,10 @@ Route::middleware('auth')->group(function () {
         Route::livewire('/master/status-kerja', 'pages::master.status-kerja')->name('master.status-kerja');
         Route::livewire('/master/masa-kontrak', 'pages::master.masa-kontrak')->name('master.masa-kontrak');
         Route::livewire('/master/penandatangan', 'pages::master.penandatangan')->name('master.penandatangan');
+
+        // Manajemen Absensi
+        Route::livewire('/absen/kelola', 'pages::absen.kelola-absen')->name('absen.kelola');
+        Route::livewire('/absen/lihat', 'pages::absen.lihat-absen')->name('absen.lihat');
     });
 
     // roles & permissions (super-admin only)

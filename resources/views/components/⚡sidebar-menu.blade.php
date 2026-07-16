@@ -72,5 +72,15 @@ new class extends Component
             link="/karyawan" :exact="true" />
         @endhasanyrole
 
+        {{-- Manajemen Absensi --}}
+        @hasanyrole('admin|super-admin|operator|manager')
+        <x-menu-sub title="Manajemen Absensi" icon="o-calendar-days">
+            <x-menu-item title="Kelola Absensi" icon="o-pencil-square" icon-classes="text-primary"
+                link="/absen/kelola" :exact="true" />
+            <x-menu-item title="Lihat Absensi" icon="o-eye" icon-classes="text-success"
+                link="/absen/lihat" :exact="true" />
+        </x-menu-sub>
+        @endhasanyrole
+
     </x-menu>
 </div>
