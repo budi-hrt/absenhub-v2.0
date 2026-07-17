@@ -1,13 +1,16 @@
 <?php
 
 use App\Models\Absen;
+use App\Imports\AbsenImport;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Mary\Traits\Toast;
+use Maatwebsite\Excel\Facades\Excel;
 
 new class extends Component {
-    use Toast, WithPagination;
+    use Toast, WithPagination, WithFileUploads;
 
     public string $search = '';
     public string $filterTanggal = '';
@@ -18,10 +21,15 @@ new class extends Component {
     public string $collectiveKeterangan = 'Hadir';
     public string $collectiveCatatan = '';
 
-    public bool $editModal = false;
-    public ?int $editAbsenId = null;
-    public string $editKeterangan = 'Hadir';
-    public string $editCatatan = '';
+    public bool $detailModal = false;
+    public ?int $detailAbsenId = null;
+
+    public bool $importModal = false;
+    public $importFile;
+    public int $importSuccess = 0;
+    public int $importDuplicate = 0;
+    public array $importErrors = [];
+    public bool $importDone = false;
 
     public array $keteranganOptions = [];
 
@@ -158,34 +166,53 @@ new class extends Component {
         $this->collectiveModal = false;
     }
 
-    public function editAbsen(int $id): void
+    #[Computed]
+    public function detailAbsen()
     {
-        $absen = Absen::findOrFail($id);
-        $this->editAbsenId = $id;
-        $this->editKeterangan = $absen->keterangan;
-        $this->editCatatan = '';
-        $this->editModal = true;
+        if (!$this->detailAbsenId) {
+            return null;
+        }
+
+        return Absen::with('karyawan.jabatan')->find($this->detailAbsenId);
     }
 
-    public function saveEdit(): void
+    public function openDetail(int $id): void
+    {
+        $this->detailAbsenId = $id;
+        $this->detailModal = true;
+    }
+
+    public function import(): void
     {
         $this->validate([
-            'editKeterangan' => 'required|string|in:Hadir,Dinas Luar,Cuti,Sakit,Izin,Tidak Absen,Alpa,Off,Libur,Lainnya',
+            'importFile' => 'required|file|mimes:csv,xlsx,xls|max:5120',
         ]);
 
-        $absen = Absen::findOrFail($this->editAbsenId);
-        $absen->update(['keterangan' => $this->editKeterangan]);
+        $import = new AbsenImport;
+        Excel::import($import, $this->importFile->getRealPath());
 
-        $this->success("Keterangan {$absen->karyawan->nama_karyawan} diperbarui.", position: 'toast-top toast-end');
-        $this->editModal = false;
-        $this->editAbsenId = null;
+        $this->importSuccess = $import->successCount;
+        $this->importDuplicate = $import->duplicateCount;
+        $this->importErrors = $import->errors;
+        $this->importDone = true;
+
+        $this->resetPage();
+
+        if ($this->importSuccess > 0) {
+            $this->success("{$this->importSuccess} data absensi berhasil diimport.", position: 'toast-top toast-end');
+        }
+    }
+
+    public function resetImport(): void
+    {
+        $this->reset(['importFile', 'importSuccess', 'importDuplicate', 'importErrors', 'importDone', 'importModal']);
     }
 
     public function closeModal(): void
     {
         $this->collectiveModal = false;
-        $this->editModal = false;
-        $this->editAbsenId = null;
+        $this->detailModal = false;
+        $this->detailAbsenId = null;
         $this->selectedRows = [];
     }
 
@@ -245,6 +272,14 @@ new class extends Component {
             </select>
         </fieldset>
         <div class="flex items-end gap-2 ml-auto">
+            <button class="btn btn-ghost btn-sm" onclick="window.location.href='{{ route('absen.template') }}'">
+                <x-icon name="o-document-arrow-down" class="w-4 h-4" />
+                Template
+            </button>
+            <button class="btn btn-outline btn-sm btn-warning" wire:click="$set('importModal', true)" spinner>
+                <x-icon name="o-arrow-up-tray" class="w-4 h-4" />
+                Import
+            </button>
             <button class="btn btn-primary btn-sm" wire:click="$set('filterTanggal', '{{ now()->format('Y-m-d') }}')">
                 <x-icon name="o-calendar-days" class="w-4 h-4" />
                 Hari Ini
@@ -334,25 +369,149 @@ new class extends Component {
             @endscope
 
             @scope('actions', $row)
-                <div class="flex gap-1">
-                    <x-button icon="o-pencil" wire:click="editAbsen({{ $row->id }})"
-                        class="btn-ghost btn-sm text-primary" spinner />
-                </div>
+                <x-button icon="o-eye" wire:click="openDetail({{ $row->id }})"
+                    class="btn-ghost btn-sm text-primary" spinner />
             @endscope
         </x-table>
     </x-card>
 
-    {{-- Modal Edit --}}
-    <x-modal wire:model="editModal" title="Edit Keterangan Absensi" box-class="!max-w-md">
+    {{-- Modal Detail --}}
+    <x-modal wire:model="detailModal" title="Detail Absensi" box-class="!max-w-2xl">
+        @php $d = $this->detailAbsen; @endphp
+        @if ($d)
+            <div class="space-y-6">
+                {{-- Employee Info --}}
+                <div class="flex items-center gap-4">
+                    <div class="avatar">
+                        <div class="mask mask-squircle w-16 h-16">
+                            <img src="{{ $d->karyawan->foto_karyawan ? Storage::url($d->karyawan->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $d->karyawan->nik }}" />
+                        </div>
+                    </div>
+                    <div>
+                        <div class="font-bold text-lg">{{ $d->karyawan->nama_karyawan }}</div>
+                        <div class="text-sm text-base-content/50">{{ $d->karyawan->nik }} · {{ $d->karyawan->jabatan?->nama_jabatan ?? '-' }}</div>
+                    </div>
+                </div>
+
+                {{-- Info Grid --}}
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <span class="text-xs text-base-content/50 uppercase tracking-wide">Tanggal</span>
+                        <div class="font-medium">{{ $d->tanggal_absen->format('d M Y') }}</div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-base-content/50 uppercase tracking-wide">Keterangan</span>
+                        <div>
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-medium border {{ $this->getKeteranganColor($d->keterangan) }}">
+                                {{ $d->keterangan }}
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-base-content/50 uppercase tracking-wide">Check In</span>
+                        <div class="font-mono font-medium">{{ $d->scan_in ?? '-' }}</div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-base-content/50 uppercase tracking-wide">Check Out</span>
+                        <div class="font-mono font-medium">{{ $d->scan_out ?? '-' }}</div>
+                    </div>
+                </div>
+
+                {{-- Photos --}}
+                @if ($d->foto_in || $d->foto_out)
+                    <div>
+                        <span class="text-xs text-base-content/50 uppercase tracking-wide mb-2 block">Foto</span>
+                        <div class="flex gap-3">
+                            @if ($d->foto_in)
+                                <div>
+                                    <p class="text-xs text-base-content/50 mb-1">Check In</p>
+                                    <img src="{{ Storage::url($d->foto_in) }}" class="w-40 h-40 object-cover rounded-xl border" />
+                                </div>
+                            @endif
+                            @if ($d->foto_out)
+                                <div>
+                                    <p class="text-xs text-base-content/50 mb-1">Check Out</p>
+                                    <img src="{{ Storage::url($d->foto_out) }}" class="w-40 h-40 object-cover rounded-xl border" />
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
+                {{-- GPS --}}
+                @if ($d->lat_in && $d->long_in)
+                    <div>
+                        <span class="text-xs text-base-content/50 uppercase tracking-wide mb-2 block">Lokasi Check In</span>
+                        <a href="https://www.google.com/maps?q={{ $d->lat_in }},{{ $d->long_in }}" target="_blank"
+                            class="link link-primary text-sm flex items-center gap-1">
+                            <x-icon name="o-map-pin" class="w-4 h-4" />
+                            {{ $d->lat_in }}, {{ $d->long_in }}
+                        </a>
+                    </div>
+                @endif
+
+                {{-- Timestamps --}}
+                <div class="text-xs text-base-content/40 border-t pt-3 flex justify-between">
+                    <span>Dibuat: {{ $d->created_at->format('d M Y H:i') }}</span>
+                    <span>Diperbarui: {{ $d->updated_at->format('d M Y H:i') }}</span>
+                </div>
+            </div>
+        @endif
+        <x-slot:actions>
+            <x-button label="Tutup" wire:click="closeModal" type="button" />
+        </x-slot:actions>
+    </x-modal>
+
+    {{-- Modal Import --}}
+    <x-modal wire:model="importModal" title="Import Absensi" box-class="!max-w-md">
         <div class="space-y-4">
-            <x-select wire:model="editKeterangan" label="Keterangan"
-                :options="$keteranganOptions" option-value="id" option-label="name" />
-            <x-input wire:model="editCatatan" label="Catatan (Opsional)"
-                placeholder="Contoh: Penugasan proyek..." />
+            @unless ($importDone)
+                <div>
+                    <label class="label">
+                        <span class="label-text">Pilih file CSV/Excel</span>
+                    </label>
+                    <input type="file" wire:model="importFile"
+                        accept=".csv,.xlsx,.xls"
+                        class="file-input file-input-bordered file-input-primary w-full" />
+                    @error('importFile') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                    <div class="text-xs text-base-content/50 mt-2 space-y-1">
+                        <p>Format kolom: <code>No. ID</code>, <code>Tanggal</code>, <code>Scan Masuk</code>, <code>Scan Pulang</code></p>
+                        <p>No. ID = PIN mesin absen</p>
+                        <p>Tanggal = dd/mm/YYYY</p>
+                    </div>
+                </div>
+            @else
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2 text-success">
+                        <x-icon name="o-check-circle" class="w-6 h-6" />
+                        <span class="font-medium">{{ $importSuccess }} data berhasil diimport</span>
+                    </div>
+                    @if ($importDuplicate)
+                        <div class="flex items-center gap-2 text-warning">
+                            <x-icon name="o-exclamation-triangle" class="w-6 h-6" />
+                            <span class="font-medium">{{ $importDuplicate }} data duplikat dilewati</span>
+                        </div>
+                    @endif
+                    @if (count($importErrors))
+                        <div>
+                            <span class="text-sm text-base-content/50 font-medium">Gagal ({{ count($importErrors) }}):</span>
+                            <ul class="list-disc list-inside text-sm text-red-500 mt-1">
+                                @foreach ($importErrors as $err)
+                                    <li>{{ $err }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                </div>
+            @endunless
         </div>
         <x-slot:actions>
-            <x-button label="Batal" wire:click="closeModal" type="button" />
-            <x-button label="Simpan" class="btn-primary" wire:click="saveEdit" spinner />
+            @unless ($importDone)
+                <x-button label="Batal" wire:click="resetImport" type="button" />
+                <x-button label="Import" class="btn-primary" wire:click="import" spinner />
+            @else
+                <x-button label="Tutup" wire:click="resetImport" class="btn-primary" />
+            @endunless
         </x-slot:actions>
     </x-modal>
 

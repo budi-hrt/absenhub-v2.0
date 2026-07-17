@@ -1,7 +1,10 @@
 <?php
 
+use App\Exports\AbsenTemplateExport;
+use App\Exports\DetailHarianExport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
 
 Route::livewire('/login', 'pages::login')->name('login');
 
@@ -46,6 +49,23 @@ Route::middleware('auth')->group(function () {
         // Manajemen Absensi
         Route::livewire('/absen/kelola', 'pages::absen.kelola-absen')->name('absen.kelola');
         Route::livewire('/absen/lihat', 'pages::absen.lihat-absen')->name('absen.lihat');
+        Route::livewire('/absen/detail-harian', 'pages::absen.detail-harian')->name('absen.detail-harian');
+        Route::livewire('/absen/rekap-bulanan', 'pages::absen.rekap-bulanan')->name('absen.rekap-bulanan');
+        Route::livewire('/absen/rekap-tahunan', 'pages::absen.rekap-tahunan')->name('absen.rekap-tahunan');
+        Route::livewire('/absen/laporan-bulanan', 'pages::absen.laporan-bulanan')->name('absen.laporan-bulanan');
+        Route::get('/absen/laporan-bulanan/pdf', [App\Http\Controllers\LaporanBulananController::class, 'pdf'])
+            ->name('absen.laporan-bulanan.pdf');
+        Route::get('/absen/template', function () {
+            return Excel::download(new AbsenTemplateExport, 'template-absensi.xlsx');
+        })->name('absen.template');
+        Route::get('/absen/detail-harian/export', function () {
+            $export = new DetailHarianExport(
+                karyawanId: (int) request('karyawan_id'),
+                bulan: request('bulan'),
+                tahun: request('tahun'),
+            );
+            return Excel::download($export, 'detail-harian.xlsx');
+        })->name('absen.detail-harian.export');
     });
 
     // roles & permissions (super-admin only)

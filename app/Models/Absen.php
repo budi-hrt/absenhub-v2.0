@@ -10,6 +10,7 @@ class Absen extends Model
 
     protected $casts = [
         'tanggal_absen' => 'date',
+        'mode' => 'string',
     ];
 
     public function karyawan()

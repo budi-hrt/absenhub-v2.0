@@ -1,9 +1,12 @@
 <?php
 use App\Models\Absen;
+use App\Imports\AbsenImport;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Mary\Traits\Toast;
+use Maatwebsite\Excel\Facades\Excel;
 ?>
 
 <div>
@@ -103,6 +106,56 @@ use Mary\Traits\Toast;
             </select>
         </fieldset>
         <div class="flex items-end gap-2 ml-auto">
+            <button class="btn btn-ghost btn-sm" onclick="window.location.href='<?php echo e(route('absen.template')); ?>'">
+                <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
+<?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-document-arrow-down'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\Icon::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'w-4 h-4']); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $attributes = $__attributesOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__attributesOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $component = $__componentOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__componentOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?>
+                Template
+            </button>
+            <button class="btn btn-outline btn-sm btn-warning" wire:click="$set('importModal', true)" spinner>
+                <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
+<?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-arrow-up-tray'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\Icon::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'w-4 h-4']); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $attributes = $__attributesOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__attributesOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $component = $__componentOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__componentOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?>
+                Import
+            </button>
             <button class="btn btn-primary btn-sm" wire:click="$set('filterTanggal', '<?php echo e(now()->format('Y-m-d')); ?>')">
                 <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
@@ -257,17 +310,16 @@ use Mary\Traits\Toast;
             <?php }); ?>
 
             <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('actions', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
-                <div class="flex gap-1">
-                    <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
+                <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
-<?php $component = Mary\View\Components\Button::resolve(['icon' => 'o-pencil','spinner' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Mary\View\Components\Button::resolve(['icon' => 'o-eye','spinner' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Mary\View\Components\Button::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['wire:click' => 'editAbsen('.e($row->id).')','class' => 'btn-ghost btn-sm text-primary']); ?>
+<?php $component->withAttributes(['wire:click' => 'openDetail('.e($row->id).')','class' => 'btn-ghost btn-sm text-primary']); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
 <?php echo $__env->renderComponent(); ?>
@@ -280,7 +332,6 @@ use Mary\Traits\Toast;
 <?php $component = $__componentOriginal602b228a887fab12f0012a3179e5b533; ?>
 <?php unset($__componentOriginal602b228a887fab12f0012a3179e5b533); ?>
 <?php endif; ?>
-                </div>
             <?php }); ?>
          <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
@@ -306,66 +357,123 @@ use Mary\Traits\Toast;
     
     <?php if (isset($component)) { $__componentOriginal89a573612f1f1cb2dd9fc072235d4356 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal89a573612f1f1cb2dd9fc072235d4356 = $attributes; } ?>
-<?php $component = Mary\View\Components\Modal::resolve(['title' => 'Edit Keterangan Absensi','boxClass' => '!max-w-md'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Mary\View\Components\Modal::resolve(['title' => 'Detail Absensi','boxClass' => '!max-w-2xl'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('modal'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Mary\View\Components\Modal::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['wire:model' => 'editModal']); ?>
+<?php $component->withAttributes(['wire:model' => 'detailModal']); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
-        <div class="space-y-4">
-            <?php if (isset($component)) { $__componentOriginald64144c2287634503c73cd4803d6e578 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginald64144c2287634503c73cd4803d6e578 = $attributes; } ?>
-<?php $component = Mary\View\Components\Select::resolve(['label' => 'Keterangan','options' => $keteranganOptions,'optionValue' => 'id','optionLabel' => 'name'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('select'); ?>
+        <?php $d = $this->detailAbsen; ?>
+        <?php if($d): ?>
+            <div class="space-y-6">
+                
+                <div class="flex items-center gap-4">
+                    <div class="avatar">
+                        <div class="mask mask-squircle w-16 h-16">
+                            <img src="<?php echo e($d->karyawan->foto_karyawan ? Storage::url($d->karyawan->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $d->karyawan->nik); ?>" />
+                        </div>
+                    </div>
+                    <div>
+                        <div class="font-bold text-lg"><?php echo e($d->karyawan->nama_karyawan); ?></div>
+                        <div class="text-sm text-base-content/50"><?php echo e($d->karyawan->nik); ?> · <?php echo e($d->karyawan->jabatan?->nama_jabatan ?? '-'); ?></div>
+                    </div>
+                </div>
+
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <span class="text-xs text-base-content/50 uppercase tracking-wide">Tanggal</span>
+                        <div class="font-medium"><?php echo e($d->tanggal_absen->format('d M Y')); ?></div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-base-content/50 uppercase tracking-wide">Keterangan</span>
+                        <div>
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-medium border <?php echo e($this->getKeteranganColor($d->keterangan)); ?>">
+                                <?php echo e($d->keterangan); ?>
+
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-base-content/50 uppercase tracking-wide">Check In</span>
+                        <div class="font-mono font-medium"><?php echo e($d->scan_in ?? '-'); ?></div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-base-content/50 uppercase tracking-wide">Check Out</span>
+                        <div class="font-mono font-medium"><?php echo e($d->scan_out ?? '-'); ?></div>
+                    </div>
+                </div>
+
+                
+                <?php if($d->foto_in || $d->foto_out): ?>
+                    <div>
+                        <span class="text-xs text-base-content/50 uppercase tracking-wide mb-2 block">Foto</span>
+                        <div class="flex gap-3">
+                            <?php if($d->foto_in): ?>
+                                <div>
+                                    <p class="text-xs text-base-content/50 mb-1">Check In</p>
+                                    <img src="<?php echo e(Storage::url($d->foto_in)); ?>" class="w-40 h-40 object-cover rounded-xl border" />
+                                </div>
+                            <?php endif; ?>
+                            <?php if($d->foto_out): ?>
+                                <div>
+                                    <p class="text-xs text-base-content/50 mb-1">Check Out</p>
+                                    <img src="<?php echo e(Storage::url($d->foto_out)); ?>" class="w-40 h-40 object-cover rounded-xl border" />
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                
+                <?php if($d->lat_in && $d->long_in): ?>
+                    <div>
+                        <span class="text-xs text-base-content/50 uppercase tracking-wide mb-2 block">Lokasi Check In</span>
+                        <a href="https://www.google.com/maps?q=<?php echo e($d->lat_in); ?>,<?php echo e($d->long_in); ?>" target="_blank"
+                            class="link link-primary text-sm flex items-center gap-1">
+                            <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
+<?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-map-pin'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('icon'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Mary\View\Components\Select::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\Icon::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['wire:model' => 'editKeterangan']); ?>
+<?php $component->withAttributes(['class' => 'w-4 h-4']); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginald64144c2287634503c73cd4803d6e578)): ?>
-<?php $attributes = $__attributesOriginald64144c2287634503c73cd4803d6e578; ?>
-<?php unset($__attributesOriginald64144c2287634503c73cd4803d6e578); ?>
+<?php if (isset($__attributesOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $attributes = $__attributesOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__attributesOriginalce0070e6ae017cca68172d0230e44821); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginald64144c2287634503c73cd4803d6e578)): ?>
-<?php $component = $__componentOriginald64144c2287634503c73cd4803d6e578; ?>
-<?php unset($__componentOriginald64144c2287634503c73cd4803d6e578); ?>
+<?php if (isset($__componentOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $component = $__componentOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__componentOriginalce0070e6ae017cca68172d0230e44821); ?>
 <?php endif; ?>
-            <?php if (isset($component)) { $__componentOriginalf51438a7488970badd535e5f203e0c1b = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalf51438a7488970badd535e5f203e0c1b = $attributes; } ?>
-<?php $component = Mary\View\Components\Input::resolve(['label' => 'Catatan (Opsional)'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('input'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Mary\View\Components\Input::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['wire:model' => 'editCatatan','placeholder' => 'Contoh: Penugasan proyek...']); ?>
-<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+                            <?php echo e($d->lat_in); ?>, <?php echo e($d->long_in); ?>
 
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalf51438a7488970badd535e5f203e0c1b)): ?>
-<?php $attributes = $__attributesOriginalf51438a7488970badd535e5f203e0c1b; ?>
-<?php unset($__attributesOriginalf51438a7488970badd535e5f203e0c1b); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalf51438a7488970badd535e5f203e0c1b)): ?>
-<?php $component = $__componentOriginalf51438a7488970badd535e5f203e0c1b; ?>
-<?php unset($__componentOriginalf51438a7488970badd535e5f203e0c1b); ?>
-<?php endif; ?>
-        </div>
+                        </a>
+                    </div>
+                <?php endif; ?>
+
+                
+                <div class="text-xs text-base-content/40 border-t pt-3 flex justify-between">
+                    <span>Dibuat: <?php echo e($d->created_at->format('d M Y H:i')); ?></span>
+                    <span>Diperbarui: <?php echo e($d->updated_at->format('d M Y H:i')); ?></span>
+                </div>
+            </div>
+        <?php endif; ?>
          <?php $__env->slot('actions', null, []); ?> 
             <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
-<?php $component = Mary\View\Components\Button::resolve(['label' => 'Batal'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Mary\View\Components\Button::resolve(['label' => 'Tutup'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -385,16 +493,133 @@ use Mary\Traits\Toast;
 <?php $component = $__componentOriginal602b228a887fab12f0012a3179e5b533; ?>
 <?php unset($__componentOriginal602b228a887fab12f0012a3179e5b533); ?>
 <?php endif; ?>
-            <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
+         <?php $__env->endSlot(); ?>
+     <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal89a573612f1f1cb2dd9fc072235d4356)): ?>
+<?php $attributes = $__attributesOriginal89a573612f1f1cb2dd9fc072235d4356; ?>
+<?php unset($__attributesOriginal89a573612f1f1cb2dd9fc072235d4356); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal89a573612f1f1cb2dd9fc072235d4356)): ?>
+<?php $component = $__componentOriginal89a573612f1f1cb2dd9fc072235d4356; ?>
+<?php unset($__componentOriginal89a573612f1f1cb2dd9fc072235d4356); ?>
+<?php endif; ?>
+
+    
+    <?php if (isset($component)) { $__componentOriginal89a573612f1f1cb2dd9fc072235d4356 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal89a573612f1f1cb2dd9fc072235d4356 = $attributes; } ?>
+<?php $component = Mary\View\Components\Modal::resolve(['title' => 'Import Absensi','boxClass' => '!max-w-md'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('modal'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\Modal::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['wire:model' => 'importModal']); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+        <div class="space-y-4">
+            <?php if (! ($importDone)): ?>
+                <div>
+                    <label class="label">
+                        <span class="label-text">Pilih file CSV/Excel</span>
+                    </label>
+                    <input type="file" wire:model="importFile"
+                        accept=".csv,.xlsx,.xls"
+                        class="file-input file-input-bordered file-input-primary w-full" />
+                    <?php $__errorArgs = ['importFile'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="text-red-500 text-xs"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    <div class="text-xs text-base-content/50 mt-2 space-y-1">
+                        <p>Format kolom: <code>No. ID</code>, <code>Tanggal</code>, <code>Scan Masuk</code>, <code>Scan Pulang</code></p>
+                        <p>No. ID = PIN mesin absen</p>
+                        <p>Tanggal = dd/mm/YYYY</p>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2 text-success">
+                        <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
+<?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-check-circle'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\Icon::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'w-6 h-6']); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $attributes = $__attributesOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__attributesOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $component = $__componentOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__componentOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?>
+                        <span class="font-medium"><?php echo e($importSuccess); ?> data berhasil diimport</span>
+                    </div>
+                    <?php if($importDuplicate): ?>
+                        <div class="flex items-center gap-2 text-warning">
+                            <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
+<?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-exclamation-triangle'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\Icon::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'w-6 h-6']); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $attributes = $__attributesOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__attributesOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $component = $__componentOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__componentOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?>
+                            <span class="font-medium"><?php echo e($importDuplicate); ?> data duplikat dilewati</span>
+                        </div>
+                    <?php endif; ?>
+                    <?php if(count($importErrors)): ?>
+                        <div>
+                            <span class="text-sm text-base-content/50 font-medium">Gagal (<?php echo e(count($importErrors)); ?>):</span>
+                            <ul class="list-disc list-inside text-sm text-red-500 mt-1">
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $importErrors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $err): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                                    <li><?php echo e($err); ?></li>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+         <?php $__env->slot('actions', null, []); ?> 
+            <?php if (! ($importDone)): ?>
+                <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
-<?php $component = Mary\View\Components\Button::resolve(['label' => 'Simpan','spinner' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Mary\View\Components\Button::resolve(['label' => 'Batal'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Mary\View\Components\Button::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'btn-primary','wire:click' => 'saveEdit']); ?>
+<?php $component->withAttributes(['wire:click' => 'resetImport','type' => 'button']); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
 <?php echo $__env->renderComponent(); ?>
@@ -407,6 +632,52 @@ use Mary\Traits\Toast;
 <?php $component = $__componentOriginal602b228a887fab12f0012a3179e5b533; ?>
 <?php unset($__componentOriginal602b228a887fab12f0012a3179e5b533); ?>
 <?php endif; ?>
+                <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
+<?php $component = Mary\View\Components\Button::resolve(['label' => 'Import','spinner' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\Button::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'btn-primary','wire:click' => 'import']); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal602b228a887fab12f0012a3179e5b533)): ?>
+<?php $attributes = $__attributesOriginal602b228a887fab12f0012a3179e5b533; ?>
+<?php unset($__attributesOriginal602b228a887fab12f0012a3179e5b533); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal602b228a887fab12f0012a3179e5b533)): ?>
+<?php $component = $__componentOriginal602b228a887fab12f0012a3179e5b533; ?>
+<?php unset($__componentOriginal602b228a887fab12f0012a3179e5b533); ?>
+<?php endif; ?>
+            <?php else: ?>
+                <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
+<?php $component = Mary\View\Components\Button::resolve(['label' => 'Tutup'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\Button::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['wire:click' => 'resetImport','class' => 'btn-primary']); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal602b228a887fab12f0012a3179e5b533)): ?>
+<?php $attributes = $__attributesOriginal602b228a887fab12f0012a3179e5b533; ?>
+<?php unset($__attributesOriginal602b228a887fab12f0012a3179e5b533); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal602b228a887fab12f0012a3179e5b533)): ?>
+<?php $component = $__componentOriginal602b228a887fab12f0012a3179e5b533; ?>
+<?php unset($__componentOriginal602b228a887fab12f0012a3179e5b533); ?>
+<?php endif; ?>
+            <?php endif; ?>
          <?php $__env->endSlot(); ?>
      <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>

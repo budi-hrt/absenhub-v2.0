@@ -79,6 +79,14 @@ new class extends Component
                 link="/absen/kelola" :exact="true" />
             <x-menu-item title="Lihat Absensi" icon="o-eye" icon-classes="text-success"
                 link="/absen/lihat" :exact="true" />
+            <x-menu-item title="Detail Harian" icon="o-document-text" icon-classes="text-info"
+                link="/absen/detail-harian" :exact="true" />
+            <x-menu-item title="Rekap Bulanan" icon="o-table-cells" icon-classes="text-accent"
+                link="/absen/rekap-bulanan" :exact="true" />
+            <x-menu-item title="Rekap Tahunan" icon="o-calendar" icon-classes="text-secondary"
+                link="/absen/rekap-tahunan" :exact="true" />
+            <x-menu-item title="Laporan Bulanan" icon="o-chart-bar" icon-classes="text-error"
+                link="/absen/laporan-bulanan" :exact="true" />
         </x-menu-sub>
         @endhasanyrole
 
