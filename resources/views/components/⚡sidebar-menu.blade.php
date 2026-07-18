@@ -87,6 +87,8 @@ new class extends Component
                 link="/absen/rekap-tahunan" :exact="true" />
             <x-menu-item title="Laporan Bulanan" icon="o-chart-bar" icon-classes="text-error"
                 link="/absen/laporan-bulanan" :exact="true" />
+            <x-menu-item title="Pengaturan Jam Kerja" icon="o-clock" icon-classes="text-warning"
+                link="/pengaturan/absen" :exact="true" />
         </x-menu-sub>
         @endhasanyrole
 

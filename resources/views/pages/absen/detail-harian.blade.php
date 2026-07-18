@@ -2,6 +2,7 @@
 
 use App\Models\Absen;
 use App\Models\Karyawan;
+use App\Services\LatenessCalculator;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
 use Mary\Traits\Toast;
@@ -107,6 +108,7 @@ new class extends Component {
             ['key' => 'hari', 'label' => 'HARI', 'sortable' => false],
             ['key' => 'scan_in', 'label' => 'CHECK IN', 'sortable' => false],
             ['key' => 'scan_out', 'label' => 'CHECK OUT', 'sortable' => false],
+            ['key' => 'terlambat', 'label' => 'TERLAMBAT', 'class' => 'w-28', 'sortable' => false],
             ['key' => 'keterangan', 'label' => 'KETERANGAN', 'sortable' => false],
         ];
     }
@@ -172,11 +174,18 @@ new class extends Component {
             </select>
         </fieldset>
         @if ($filterKaryawan)
-            <a href="{{ route('absen.detail-harian.export', ['karyawan_id' => $filterKaryawan, 'bulan' => $bulan, 'tahun' => $tahun]) }}"
-                class="btn btn-outline btn-sm btn-primary">
-                <x-icon name="o-document-arrow-down" class="w-4 h-4" />
-                Excel
-            </a>
+            <div class="flex items-end gap-2 ml-auto">
+                <a href="{{ route('absen.detail-harian.export', ['karyawan_id' => $filterKaryawan, 'bulan' => $bulan, 'tahun' => $tahun]) }}"
+                    class="btn btn-outline btn-sm btn-primary">
+                    <x-icon name="o-document-arrow-down" class="w-4 h-4" />
+                    Excel
+                </a>
+                <a href="{{ route('absen.detail-harian.pdf', ['karyawan_id' => $filterKaryawan, 'bulan' => $bulan, 'tahun' => $tahun]) }}"
+                    class="btn btn-outline btn-sm btn-error">
+                    <x-icon name="o-document-arrow-down" class="w-4 h-4" />
+                    PDF
+                </a>
+            </div>
         @endif
     </div>
 
@@ -216,7 +225,7 @@ new class extends Component {
                 @endscope
 
                 @scope('cell_hari', $row)
-                    <span class="text-sm text-base-content/70">{{ $row->tanggal_absen->format('l') }}</span>
+                    <span class="text-sm text-base-content/70">{{ \Carbon\Carbon::parse($row->tanggal_absen)->locale('id')->translatedFormat('l') }}</span>
                 @endscope
 
                 @scope('cell_scan_in', $row)
@@ -229,6 +238,15 @@ new class extends Component {
                     <span class="text-sm font-mono {{ $row->scan_out ? 'text-base-content' : 'text-base-content/40' }}">
                         {{ $row->scan_out ?? '-' }}
                     </span>
+                @endscope
+
+                @scope('cell_terlambat', $row)
+                    @php $menit = LatenessCalculator::getMinutesLate($row->scan_in, $row->tanggal_absen->format('Y-m-d')); @endphp
+                    @if ($menit)
+                        <span class="badge badge-sm badge-error badge-outline">{{ $menit }} min</span>
+                    @else
+                        <span class="text-base-content/30">-</span>
+                    @endif
                 @endscope
 
                 @scope('cell_keterangan', $row)

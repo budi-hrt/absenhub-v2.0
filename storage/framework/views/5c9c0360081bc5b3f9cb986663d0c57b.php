@@ -1,5 +1,6 @@
 <?php
 use App\Models\Absen;
+use App\Services\LatenessCalculator;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
 use Livewire\WithPagination;
@@ -254,6 +255,15 @@ use Mary\Traits\Toast;
                     <?php echo e($row->scan_out ?? '-'); ?>
 
                 </span>
+            <?php }); ?>
+
+            <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_terlambat', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
+                <?php $menit = LatenessCalculator::getMinutesLate($row->scan_in, $row->tanggal_absen->format('Y-m-d')); ?>
+                <?php if($menit): ?>
+                    <span class="badge badge-sm badge-error badge-outline"><?php echo e($menit); ?> min</span>
+                <?php else: ?>
+                    <span class="text-base-content/30">-</span>
+                <?php endif; ?>
             <?php }); ?>
          <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>

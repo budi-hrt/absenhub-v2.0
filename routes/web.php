@@ -66,6 +66,48 @@ Route::middleware('auth')->group(function () {
             );
             return Excel::download($export, 'detail-harian.xlsx');
         })->name('absen.detail-harian.export');
+
+        Route::get('/absen/detail-harian/pdf', function () {
+            $karyawanId = (int) request('karyawan_id');
+            $bulan = request('bulan', now()->format('m'));
+            $tahun = request('tahun', now()->format('Y'));
+
+            $karyawan = \App\Models\Karyawan::with('jabatan')->find($karyawanId);
+            if (!$karyawan) abort(404);
+
+            $absens = \App\Models\Absen::where('karyawan_id', $karyawanId)
+                ->whereYear('tanggal_absen', $tahun)
+                ->whereMonth('tanggal_absen', $bulan)
+                ->orderBy('tanggal_absen')
+                ->get();
+
+            $months = [
+                '01' => 'Januari', '02' => 'Februari', '03' => 'Maret',
+                '04' => 'April', '05' => 'Mei', '06' => 'Juni',
+                '07' => 'Juli', '08' => 'Agustus', '09' => 'September',
+                '10' => 'Oktober', '11' => 'November', '12' => 'Desember',
+            ];
+
+            $rekap = $absens->groupBy('keterangan')->map->count();
+
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('exports.detail-harian-pdf', [
+                'absens' => $absens,
+                'namaKaryawan' => $karyawan->nama_karyawan,
+                'nik' => $karyawan->nik,
+                'jabatan' => $karyawan->jabatan?->nama_jabatan,
+                'bulan' => $bulan,
+                'tahun' => $tahun,
+                'namaBulan' => $months[$bulan] ?? $bulan,
+                'rekap' => $rekap,
+            ]);
+
+            $pdf->setPaper('folio', 'portrait');
+
+            return $pdf->download("detail-harian-{$karyawan->nama_karyawan}-{$bulan}-{$tahun}.pdf");
+        })->name('absen.detail-harian.pdf');
+
+        // Pengaturan
+        Route::livewire('/pengaturan/absen', 'pages::pengaturan.absen')->name('pengaturan.absen');
     });
 
     // roles & permissions (super-admin only)

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Absen;
+use App\Services\LatenessCalculator;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
 use Livewire\WithPagination;
@@ -142,6 +143,7 @@ new class extends Component {
             ['key' => 'keterangan', 'label' => 'KETERANGAN', 'class' => 'w-36'],
             ['key' => 'scan_in', 'label' => 'CHECK IN', 'sortable' => false],
             ['key' => 'scan_out', 'label' => 'CHECK OUT', 'sortable' => false],
+            ['key' => 'terlambat', 'label' => 'TERLAMBAT', 'class' => 'w-28', 'sortable' => false],
         ];
     }
 
@@ -300,6 +302,15 @@ new class extends Component {
                 <span class="text-sm font-mono {{ $row->scan_out ? 'text-base-content' : 'text-base-content/40' }}">
                     {{ $row->scan_out ?? '-' }}
                 </span>
+            @endscope
+
+            @scope('cell_terlambat', $row)
+                @php $menit = LatenessCalculator::getMinutesLate($row->scan_in, $row->tanggal_absen->format('Y-m-d')); @endphp
+                @if ($menit)
+                    <span class="badge badge-sm badge-error badge-outline">{{ $menit }} min</span>
+                @else
+                    <span class="text-base-content/30">-</span>
+                @endif
             @endscope
         </x-table>
     </x-card>
