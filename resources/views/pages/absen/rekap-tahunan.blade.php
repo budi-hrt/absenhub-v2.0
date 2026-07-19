@@ -3,16 +3,19 @@
 use App\Models\Absen;
 use App\Models\Karyawan;
 use Carbon\Carbon;
-use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Livewire\Component;
 use Livewire\WithPagination;
 use Mary\Traits\Toast;
 
-new class extends Component {
+new class extends Component
+{
     use Toast, WithPagination;
 
     public string $search = '';
+
     public string $tahun = '';
+
     public string $perPage = '10';
 
     public array $listTahun = [];
@@ -21,10 +24,12 @@ new class extends Component {
     {
         $now = now()->setTimezone('Asia/Makassar');
         $this->listTahun = collect(range($now->year - 2, $now->year + 1))
-            ->map(fn($y) => ['id' => (string) $y, 'name' => (string) $y])
+            ->map(fn ($y) => ['id' => (string) $y, 'name' => (string) $y])
             ->toArray();
 
-        if (empty($this->tahun)) $this->tahun = (string) $now->year;
+        if (empty($this->tahun)) {
+            $this->tahun = (string) $now->year;
+        }
     }
 
     public function updatingSearch(): void
@@ -84,6 +89,7 @@ new class extends Component {
     public function with(): array
     {
         $tahun = (int) $this->tahun;
+
         return [
             'karyawans' => $this->karyawans,
             'absenRecords' => $this->absenRecords,
@@ -94,7 +100,14 @@ new class extends Component {
 ?>
 
 <div>
-    <x-header title="Rekap Tahunan" separator progress-indicator />
+    <x-header title="Rekap Tahunan" separator progress-indicator>
+        <x-slot:actions>
+            <a href="{{ route('absen.rekap-tahunan.pdf', ['tahun' => $tahun, 'search' => $search]) }}" target="_blank" class="btn btn-error btn-sm text-white">
+                <x-icon name="o-document-arrow-down" class="w-4 h-4" />
+                Export PDF (F4)
+            </a>
+        </x-slot:actions>
+    </x-header>
 
     {{-- Filters --}}
     <section class="flex flex-wrap items-end gap-3 mb-2 p-3 bg-base-200 rounded-xl">

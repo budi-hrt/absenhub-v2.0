@@ -1,13 +1,14 @@
 <?php
+use App\Imports\AbsenImport;
 use App\Models\Absen;
 use App\Models\Karyawan;
-use App\Imports\AbsenImport;
-use Livewire\Component;
+use Carbon\Carbon;
 use Livewire\Attributes\Computed;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Mary\Traits\Toast;
 use Maatwebsite\Excel\Facades\Excel;
+use Mary\Traits\Toast;
 ?>
 
 <div>
@@ -48,7 +49,7 @@ use Maatwebsite\Excel\Facades\Excel;
 <?php endif; ?>
          <?php $__env->endSlot(); ?>
          <?php $__env->slot('actions', null, []); ?> 
-            <?php if(count($this->selectedRows) >= 2): ?>
+            <?php if(\App\Models\FeatureFlag::isEnabled('collective_keterangan') && count($this->selectedRows) >= 2): ?>
                 <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
 <?php $component = Mary\View\Components\Button::resolve(['label' => 'Keterangan Kolektif ('.e(count($this->selectedRows)).')','icon' => 'o-users','spinner' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -135,6 +136,7 @@ use Maatwebsite\Excel\Facades\Excel;
 <?php endif; ?>
                 Template
             </button>
+            <?php if(\App\Models\FeatureFlag::isEnabled('import_absen')): ?>
             <button class="btn btn-outline btn-sm btn-warning"
                 wire:click="$set('importModal', true)" spinner>
                 <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
@@ -161,6 +163,7 @@ use Maatwebsite\Excel\Facades\Excel;
 <?php endif; ?>
                 Import
             </button>
+            <?php endif; ?>
             <button class="btn btn-primary btn-sm"
                 wire:click="$set('filterTanggal', '<?php echo e(now()->format('Y-m-d')); ?>')">
                 <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
@@ -274,7 +277,7 @@ use Maatwebsite\Excel\Facades\Excel;
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
         <div wire:loading.class="opacity-40 pointer-events-none"
-            wire:target="gotoPage,previousPage,nextPage,setKeterangan,filterTanggal,filterKeterangan,search"
+            wire:target="gotoPage,previousPage,nextPage,setKeterangan,filterTanggal,filterKeterangan,search,saveCollective"
             class="transition-opacity duration-200">
             <?php if (isset($component)) { $__componentOriginal8fbd727209323874b055feef49197909 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal8fbd727209323874b055feef49197909 = $attributes; } ?>
@@ -353,19 +356,82 @@ use Maatwebsite\Excel\Facades\Excel;
                 <?php }); ?>
 
                 <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_scan_in', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
-                    <span
-                        class="text-sm font-mono <?php echo e($row->scan_in ? 'text-base-content' : 'text-base-content/40'); ?>">
-                        <?php echo e($row->scan_in ?? '-'); ?>
-
-                    </span>
+                    <?php if(\App\Models\FeatureFlag::isEnabled('manual_checkin_edit')): ?>
+                        <div x-data="timeCell(<?php echo e($row->id); ?>, 'in', '<?php echo e($row->scan_in ? substr($row->scan_in, 0, 5) : ''); ?>')"
+                             class="flex items-center gap-1.5 group relative">
+                            <input type="time" x-model="val"
+                                class="input input-sm border font-mono w-28 transition-all"
+                                :class="{
+                                    'border-primary ring-1 ring-primary/30 bg-base-100': focused,
+                                    'border-success bg-success/5': status === 'saved' && !focused,
+                                    'border-error bg-error/5': status === 'error' && !focused,
+                                    'border-base-200 bg-base-100/30 hover:bg-base-100': status !== 'saved' && status !== 'error' && !focused
+                                }"
+                                @focus="focused = true"
+                                @blur="focused = false; save()"
+                                @input.debounce.600ms="save()"
+                                @keydown.enter.prevent="save(); $el.blur(); $el.closest('tr')?.querySelector('[data-scan-out] input')?.focus()"
+                                @keydown.tab="save()" />
+                            
+                            <div class="w-4 h-4 flex items-center justify-center">
+                                <template x-if="status === 'saving'">
+                                    <span class="loading loading-spinner loading-xs text-primary"></span>
+                                </template>
+                                <template x-if="status === 'saved'">
+                                    <svg class="w-4 h-4 text-success animate-in fade-in" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+                                    </svg>
+                                </template>
+                                <template x-if="status === 'error'">
+                                    <svg class="w-4 h-4 text-error cursor-pointer" @click="save()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" title="Gagal menyimpan, klik untuk retry">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                                    </svg>
+                                </template>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <span class="font-mono text-sm pl-3 text-base-content/75"><?php echo e($row->scan_in ? substr($row->scan_in, 0, 5) : '-'); ?></span>
+                    <?php endif; ?>
                 <?php }); ?>
 
                 <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_scan_out', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
-                    <span
-                        class="text-sm font-mono <?php echo e($row->scan_out ? 'text-base-content' : 'text-base-content/40'); ?>">
-                        <?php echo e($row->scan_out ?? '-'); ?>
-
-                    </span>
+                    <?php if(\App\Models\FeatureFlag::isEnabled('manual_checkout_edit')): ?>
+                        <div x-data="timeCell(<?php echo e($row->id); ?>, 'out', '<?php echo e($row->scan_out ? substr($row->scan_out, 0, 5) : ''); ?>')"
+                             data-scan-out
+                             class="flex items-center gap-1.5 group relative">
+                            <input type="time" x-model="val"
+                                class="input input-sm border font-mono w-28 transition-all"
+                                :class="{
+                                    'border-primary ring-1 ring-primary/30 bg-base-100': focused,
+                                    'border-success bg-success/5': status === 'saved' && !focused,
+                                    'border-error bg-error/5': status === 'error' && !focused,
+                                    'border-base-200 bg-base-100/30 hover:bg-base-100': status !== 'saved' && status !== 'error' && !focused
+                                }"
+                                @focus="focused = true"
+                                @blur="focused = false; save()"
+                                @input.debounce.600ms="save()"
+                                @keydown.enter.prevent="save(); $el.blur()"
+                                @keydown.tab="save()" />
+                            
+                            <div class="w-4 h-4 flex items-center justify-center">
+                                <template x-if="status === 'saving'">
+                                    <span class="loading loading-spinner loading-xs text-primary"></span>
+                                </template>
+                                <template x-if="status === 'saved'">
+                                    <svg class="w-4 h-4 text-success animate-in fade-in" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+                                    </svg>
+                                </template>
+                                <template x-if="status === 'error'">
+                                    <svg class="w-4 h-4 text-error cursor-pointer" @click="save()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" title="Gagal menyimpan, klik untuk retry">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                                    </svg>
+                                </template>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <span class="font-mono text-sm pl-3 text-base-content/75"><?php echo e($row->scan_out ? substr($row->scan_out, 0, 5) : '-'); ?></span>
+                    <?php endif; ?>
                 <?php }); ?>
 
                 <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('actions', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
@@ -1044,4 +1110,51 @@ unset($__errorArgs, $__bag); ?>
 <?php unset($__componentOriginal89a573612f1f1cb2dd9fc072235d4356); ?>
 <?php endif; ?>
     </div>
+
+    
+        <?php
+        $__scriptKey = '2243191547-0';
+        ob_start();
+    ?>
+    <script>
+        Alpine.data('timeCell', (karyawanId, type, initial) => ({
+            val: initial,
+            lastSaved: initial,
+            status: 'idle',  // idle | saving | saved | error
+            focused: false,
+            _clearTimer: null,
+
+            save() {
+                // Skip if value hasn't changed from last saved
+                if (this.val === this.lastSaved) return;
+
+                // Clear any pending success-clear timer
+                if (this._clearTimer) clearTimeout(this._clearTimer);
+
+                this.status = 'saving';
+                const method = type === 'in' ? 'setScanIn' : 'setScanOut';
+
+                $wire.call(method, karyawanId, this.val).then(() => {
+                    this.lastSaved = this.val;
+                    this.status = 'saved';
+                    // Auto-clear success after 2s
+                    this._clearTimer = setTimeout(() => {
+                        if (this.status === 'saved') this.status = 'idle';
+                    }, 2000);
+                }).catch(() => {
+                    this.status = 'error';
+                });
+            },
+
+            destroy() {
+                if (this._clearTimer) clearTimeout(this._clearTimer);
+            }
+        }));
+    </script>
+        <?php
+        $__output = ob_get_clean();
+
+        \Livewire\store($this)->push('scripts', $__output, $__scriptKey)
+    ?>
+
 </div><?php /**PATH C:\laragon\www\absenhub-v2.0\storage\framework\views/livewire/views/d9cac638.blade.php ENDPATH**/ ?>

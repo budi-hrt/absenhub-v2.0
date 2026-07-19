@@ -1,31 +1,27 @@
 <?php
 
 use App\Models\Absen;
-use App\Services\LatenessCalculator;
-use Livewire\Component;
+use Carbon\Carbon;
 use Livewire\Attributes\Computed;
+use Livewire\Component;
 use Livewire\WithPagination;
 use Mary\Traits\Toast;
 
-new class extends Component {
+new class extends Component
+{
     use Toast, WithPagination;
 
     public string $search = '';
+
     public string $filterTanggalAwal = '';
+
     public string $filterTanggalAkhir = '';
+
     public string $filterKeterangan = '';
+
     public string $dateError = '';
 
-    public function boot(): void
-    {
-        $today = now()->format('Y-m-d');
-        if (empty($this->filterTanggalAwal)) {
-            $this->filterTanggalAwal = $today;
-        }
-        if (empty($this->filterTanggalAkhir)) {
-            $this->filterTanggalAkhir = $today;
-        }
-    }
+    public bool $showData = false;
 
     public function updatingSearch(): void
     {
@@ -34,45 +30,69 @@ new class extends Component {
 
     public function updatedFilterTanggalAwal(): void
     {
-        $this->resolveDateError();
+        $this->filterTanggalAkhir = '';
+        $this->showData = false;
+        $this->dateError = '';
         $this->resetPage();
     }
 
     public function updatedFilterTanggalAkhir(): void
     {
-        $this->resolveDateError();
+        $this->showData = false;
+        $this->dateError = '';
         $this->resetPage();
     }
 
-    protected function validateDateRange(): bool
-    {
-        if (empty($this->filterTanggalAwal) || empty($this->filterTanggalAkhir)) {
-            return false;
-        }
-        if ($this->filterTanggalAwal > $this->filterTanggalAkhir) {
-            return false;
-        }
-        if (\Carbon\Carbon::parse($this->filterTanggalAwal)->diffInDays($this->filterTanggalAkhir) > 31) {
-            return false;
-        }
-        return true;
-    }
-
-    protected function resolveDateError(): void
+    public function submitFilter(): void
     {
         $this->dateError = '';
-        if (empty($this->filterTanggalAwal) || empty($this->filterTanggalAkhir)) {
+
+        if (empty($this->filterTanggalAwal)) {
+            $this->dateError = 'Tanggal awal wajib diisi.';
+            $this->showData = false;
+
             return;
         }
+
+        if (empty($this->filterTanggalAkhir)) {
+            $this->dateError = 'Tanggal akhir wajib diisi.';
+            $this->showData = false;
+
+            return;
+        }
+
         if ($this->filterTanggalAwal > $this->filterTanggalAkhir) {
             $this->dateError = 'Tanggal akhir tidak boleh sebelum tanggal awal.';
+            $this->showData = false;
+
             return;
         }
-        if (\Carbon\Carbon::parse($this->filterTanggalAwal)->diffInDays($this->filterTanggalAkhir) > 31) {
-            $this->dateError = 'Maksimal range 31 hari. Silakan perkecil rentang tanggal.';
+
+        if (Carbon::parse($this->filterTanggalAwal)->diffInDays($this->filterTanggalAkhir) > 31) {
+            $this->dateError = 'Maksimal rentang tanggal adalah 31 hari. Silakan perkecil rentang tanggal.';
+            $this->showData = false;
+
             return;
         }
-        $this->dateError = '';
+
+        $this->showData = true;
+        $this->resetPage();
+    }
+
+    public function setHariIni(): void
+    {
+        $today = now()->format('Y-m-d');
+        $this->filterTanggalAwal = $today;
+        $this->filterTanggalAkhir = $today;
+        $this->submitFilter();
+    }
+
+    public function setKemarin(): void
+    {
+        $yesterday = now()->subDay()->format('Y-m-d');
+        $this->filterTanggalAwal = $yesterday;
+        $this->filterTanggalAkhir = $yesterday;
+        $this->submitFilter();
     }
 
     public function updatingFilterKeterangan(): void
@@ -82,12 +102,13 @@ new class extends Component {
 
     protected function getFilteredQuery()
     {
-        if (empty($this->filterTanggalAwal) || empty($this->filterTanggalAkhir) || !$this->validateDateRange()) {
+        if (! $this->showData || empty($this->filterTanggalAwal) || empty($this->filterTanggalAkhir)) {
             return Absen::with('karyawan.jabatan')->whereRaw('0=1');
         }
+
         return Absen::with('karyawan.jabatan')
             ->whereBetween('tanggal_absen', [$this->filterTanggalAwal, $this->filterTanggalAkhir])
-            ->when($this->filterKeterangan, fn($q) => $q->where('keterangan', $this->filterKeterangan))
+            ->when($this->filterKeterangan, fn ($q) => $q->where('keterangan', $this->filterKeterangan))
             ->when($this->search, function ($q) {
                 $term = trim($this->search);
                 $q->whereHas('karyawan', function ($kq) use ($term) {
@@ -110,7 +131,7 @@ new class extends Component {
     #[Computed]
     public function rekap()
     {
-        if (empty($this->filterTanggalAwal) || empty($this->filterTanggalAkhir) || !$this->validateDateRange()) {
+        if (! $this->showData || empty($this->filterTanggalAwal) || empty($this->filterTanggalAkhir)) {
             return ['alpa' => 0, 'sakit' => 0, 'cuti' => 0, 'izin' => 0];
         }
 
@@ -149,11 +170,9 @@ new class extends Component {
 
     public function with(): array
     {
-        $this->resolveDateError();
-
         $absens = $this->absens;
-        $start = $absens->firstItem();
-        $absens->getCollection()->transform(fn($item, $i) => tap($item)->setAttribute('row_no', $start + $i));
+        $start = $absens->firstItem() ?? 1;
+        $absens->getCollection()->transform(fn ($item, $i) => tap($item)->setAttribute('row_no', $start + $i));
 
         return [
             'absens' => $absens,
@@ -188,21 +207,43 @@ new class extends Component {
                 icon="o-magnifying-glass" />
         </x-slot:middle>
         <x-slot:actions>
+            @if ($showData && $filterTanggalAwal && $filterTanggalAkhir)
+                <a href="{{ route('absen.lihat.pdf', [
+                    'tanggal_awal' => $filterTanggalAwal,
+                    'tanggal_akhir' => $filterTanggalAkhir,
+                    'keterangan' => $filterKeterangan,
+                    'search' => $search
+                ]) }}" target="_blank" class="btn btn-error btn-sm text-white">
+                    <x-icon name="o-document-arrow-down" class="w-4 h-4" />
+                    Export PDF (F4)
+                </a>
+            @endif
         </x-slot:actions>
     </x-header>
 
     {{-- Filters --}}
-    <div class="flex flex-wrap gap-3 mb-4">
-        <fieldset class="fieldset">
-            <legend class="fieldset-legend text-xs">Tanggal Awal</legend>
+    <div class="flex flex-wrap gap-4 items-end mb-6 bg-base-200/50 p-4 rounded-xl border border-base-200">
+        <fieldset class="fieldset p-0 m-0">
+            <legend class="fieldset-legend text-xs font-semibold">Tanggal Awal</legend>
             <input type="date" class="input input-bordered input-sm w-44" wire:model.live="filterTanggalAwal" />
         </fieldset>
-        <fieldset class="fieldset">
-            <legend class="fieldset-legend text-xs">Tanggal Akhir</legend>
+        <fieldset class="fieldset p-0 m-0">
+            <legend class="fieldset-legend text-xs font-semibold">Tanggal Akhir</legend>
             <input type="date" class="input input-bordered input-sm w-44" wire:model.live="filterTanggalAkhir" />
         </fieldset>
-        <fieldset class="fieldset">
-            <legend class="fieldset-legend text-xs">Keterangan</legend>
+
+        <div>
+            <button class="btn btn-primary btn-sm px-4" 
+                wire:click="submitFilter" 
+                spinner="submitFilter"
+                @if (empty($filterTanggalAwal) || empty($filterTanggalAkhir)) disabled @endif>
+                <x-icon name="o-magnifying-glass" class="w-4 h-4" />
+                Lihat Absen
+            </button>
+        </div>
+
+        <fieldset class="fieldset p-0 m-0">
+            <legend class="fieldset-legend text-xs font-semibold">Keterangan</legend>
             <select class="select select-bordered select-sm w-44" wire:model.live="filterKeterangan">
                 <option value="">Semua</option>
                 <option value="Hadir">Hadir</option>
@@ -217,12 +258,13 @@ new class extends Component {
                 <option value="Lainnya">Lainnya</option>
             </select>
         </fieldset>
+
         <div class="flex items-end gap-2 ml-auto">
-            <button class="btn btn-primary btn-sm" wire:click="$set('filterTanggalAwal', '{{ now()->format('Y-m-d') }}'); $set('filterTanggalAkhir', '{{ now()->format('Y-m-d') }}')">
+            <button class="btn btn-outline btn-sm" wire:click="setHariIni" spinner="setHariIni">
                 <x-icon name="o-calendar-days" class="w-4 h-4" />
                 Hari Ini
             </button>
-            <button class="btn btn-secondary btn-sm" wire:click="$set('filterTanggalAwal', '{{ now()->subDay()->format('Y-m-d') }}'); $set('filterTanggalAkhir', '{{ now()->subDay()->format('Y-m-d') }}')">
+            <button class="btn btn-outline btn-sm" wire:click="setKemarin" spinner="setKemarin">
                 <x-icon name="o-arrow-uturn-left" class="w-4 h-4" />
                 Kemarin
             </button>
@@ -230,88 +272,111 @@ new class extends Component {
     </div>
 
     @if ($dateError)
-        <div class="flex items-center gap-2 mb-4 px-4 py-2 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg">
+        <div class="flex items-center gap-2 mb-6 px-4 py-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl">
             <x-icon name="o-exclamation-triangle" class="w-4 h-4 shrink-0" />
             <span>{{ $dateError }}</span>
         </div>
     @endif
 
-    {{-- Summary Cards --}}
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-        {{-- Alpa --}}
-        <div class="rounded-xl px-4 py-3 bg-red-50 border border-red-200">
-            <div class="text-xs font-semibold text-red-600 uppercase tracking-wide">Alpa</div>
-            <div class="text-2xl font-bold text-red-700 mt-1">{{ $rekap['alpa'] }}</div>
+    @if (!$showData)
+        {{-- Guidance / Empty State --}}
+        <div class="flex flex-col items-center justify-center py-16 px-4 bg-base-100 rounded-2xl border border-base-200 shadow-sm text-center">
+            <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
+                <x-icon name="o-calendar" class="w-8 h-8" />
+            </div>
+            <h3 class="text-base font-bold text-base-content">Tentukan Periode Absensi</h3>
+            <p class="text-xs text-base-content/60 max-w-sm mt-2 leading-relaxed">
+                Silakan pilih <strong>Tanggal Awal</strong> dan <strong>Tanggal Akhir</strong> di atas, kemudian klik tombol <strong>Lihat Absen</strong> untuk menampilkan data absensi karyawan.
+            </p>
+            <div class="flex gap-2 mt-6">
+                <button class="btn btn-sm btn-outline btn-primary" wire:click="setHariIni" spinner="setHariIni">
+                    <x-icon name="o-calendar-days" class="w-4 h-4" />
+                    Hari Ini
+                </button>
+                <button class="btn btn-sm btn-outline btn-secondary" wire:click="setKemarin" spinner="setKemarin">
+                    <x-icon name="o-arrow-uturn-left" class="w-4 h-4" />
+                    Kemarin
+                </button>
+            </div>
         </div>
-        {{-- Sakit --}}
-        <div class="rounded-xl px-4 py-3 bg-amber-50 border border-amber-200">
-            <div class="text-xs font-semibold text-amber-600 uppercase tracking-wide">Sakit</div>
-            <div class="text-2xl font-bold text-amber-700 mt-1">{{ $rekap['sakit'] }}</div>
+    @else
+        {{-- Summary Cards --}}
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+            {{-- Alpa --}}
+            <div class="rounded-xl px-4 py-3 bg-red-50 border border-red-200">
+                <div class="text-xs font-semibold text-red-600 uppercase tracking-wide">Alpa</div>
+                <div class="text-2xl font-bold text-red-700 mt-1">{{ $rekap['alpa'] }}</div>
+            </div>
+            {{-- Sakit --}}
+            <div class="rounded-xl px-4 py-3 bg-amber-50 border border-amber-200">
+                <div class="text-xs font-semibold text-amber-600 uppercase tracking-wide">Sakit</div>
+                <div class="text-2xl font-bold text-amber-700 mt-1">{{ $rekap['sakit'] }}</div>
+            </div>
+            {{-- Cuti --}}
+            <div class="rounded-xl px-4 py-3 bg-violet-50 border border-violet-200">
+                <div class="text-xs font-semibold text-violet-600 uppercase tracking-wide">Cuti</div>
+                <div class="text-2xl font-bold text-violet-700 mt-1">{{ $rekap['cuti'] }}</div>
+            </div>
+            {{-- Izin --}}
+            <div class="rounded-xl px-4 py-3 bg-slate-50 border border-slate-200">
+                <div class="text-xs font-semibold text-slate-600 uppercase tracking-wide">Izin</div>
+                <div class="text-2xl font-bold text-slate-700 mt-1">{{ $rekap['izin'] }}</div>
+            </div>
         </div>
-        {{-- Cuti --}}
-        <div class="rounded-xl px-4 py-3 bg-violet-50 border border-violet-200">
-            <div class="text-xs font-semibold text-violet-600 uppercase tracking-wide">Cuti</div>
-            <div class="text-2xl font-bold text-violet-700 mt-1">{{ $rekap['cuti'] }}</div>
-        </div>
-        {{-- Izin --}}
-        <div class="rounded-xl px-4 py-3 bg-slate-50 border border-slate-200">
-            <div class="text-xs font-semibold text-slate-600 uppercase tracking-wide">Izin</div>
-            <div class="text-2xl font-bold text-slate-700 mt-1">{{ $rekap['izin'] }}</div>
-        </div>
-    </div>
 
-    {{-- Table --}}
-    <x-card shadow>
-        <x-table :headers="$headers" :rows="$absens" with-pagination
-            show-empty-text empty-text="Tidak ada data ditemukan">
-            @scope('cell_no', $row)
-                <span class="text-sm text-base-content/50">{{ $row->row_no }}</span>
-            @endscope
+        {{-- Table --}}
+        <x-card shadow>
+            <x-table :headers="$headers" :rows="$absens" with-pagination
+                show-empty-text empty-text="Tidak ada data ditemukan">
+                @scope('cell_no', $row)
+                    <span class="text-sm text-base-content/50">{{ $row->row_no }}</span>
+                @endscope
 
-            @scope('cell_karyawan', $row)
-                <div class="flex items-center gap-3">
-                    <div class="avatar">
-                        <div class="mask mask-squircle w-10 h-10">
-                            <img src="{{ $row->karyawan->foto_karyawan ? Storage::url($row->karyawan->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $row->karyawan->nik }}" alt="{{ $row->karyawan->nama_karyawan }}" />
+                @scope('cell_karyawan', $row)
+                    <div class="flex items-center gap-3">
+                        <div class="avatar">
+                            <div class="mask mask-squircle w-10 h-10">
+                                <img src="{{ $row->karyawan->foto_karyawan ? Storage::url($row->karyawan->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $row->karyawan->nik }}" alt="{{ $row->karyawan->nama_karyawan }}" />
+                            </div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm">{{ $row->karyawan->nama_karyawan }}</div>
+                            <div class="text-xs text-base-content/50">{{ $row->karyawan->jabatan?->nama_jabatan ?? '-' }}</div>
                         </div>
                     </div>
-                    <div>
-                        <div class="font-bold text-sm">{{ $row->karyawan->nama_karyawan }}</div>
-                        <div class="text-xs text-base-content/50">{{ $row->karyawan->jabatan?->nama_jabatan ?? '-' }}</div>
-                    </div>
-                </div>
-            @endscope
+                @endscope
 
-            @scope('cell_tanggal', $row)
-                <span class="text-sm">{{ $row->tanggal_absen->format('d M Y') }}</span>
-            @endscope
+                @scope('cell_tanggal', $row)
+                    <span class="text-sm">{{ $row->tanggal_absen->format('d M Y') }}</span>
+                @endscope
 
-            @scope('cell_keterangan', $row)
-                <span class="inline-block px-3 py-1 rounded-full text-xs font-medium border {{ $this->getColor($row->keterangan) }}">
-                    {{ $row->keterangan }}
-                </span>
-            @endscope
+                @scope('cell_keterangan', $row)
+                    <span class="inline-block px-3 py-1 rounded-full text-xs font-medium border {{ $this->getColor($row->keterangan) }}">
+                        {{ $row->keterangan }}
+                    </span>
+                @endscope
 
-            @scope('cell_scan_in', $row)
-                <span class="text-sm font-mono {{ $row->scan_in ? 'text-base-content' : 'text-base-content/40' }}">
-                    {{ $row->scan_in ?? '-' }}
-                </span>
-            @endscope
+                @scope('cell_scan_in', $row)
+                    <span class="text-sm font-mono {{ $row->scan_in ? 'text-base-content' : 'text-base-content/40' }}">
+                        {{ $row->scan_in ?? '-' }}
+                    </span>
+                @endscope
 
-            @scope('cell_scan_out', $row)
-                <span class="text-sm font-mono {{ $row->scan_out ? 'text-base-content' : 'text-base-content/40' }}">
-                    {{ $row->scan_out ?? '-' }}
-                </span>
-            @endscope
+                @scope('cell_scan_out', $row)
+                    <span class="text-sm font-mono {{ $row->scan_out ? 'text-base-content' : 'text-base-content/40' }}">
+                        {{ $row->scan_out ?? '-' }}
+                    </span>
+                @endscope
 
-            @scope('cell_terlambat', $row)
-                @php $menit = LatenessCalculator::getMinutesLate($row->scan_in, $row->tanggal_absen->format('Y-m-d')); @endphp
-                @if ($menit)
-                    <span class="badge badge-sm badge-error badge-outline">{{ $menit }} min</span>
-                @else
-                    <span class="text-base-content/30">-</span>
-                @endif
-            @endscope
-        </x-table>
-    </x-card>
+                @scope('cell_terlambat', $row)
+                    @php $menit = \App\Services\LatenessCalculator::getMinutesLate($row->scan_in, $row->tanggal_absen->format('Y-m-d')); @endphp
+                    @if ($menit)
+                        <span class="badge badge-sm badge-error badge-outline">{{ $menit }} min</span>
+                    @else
+                        <span class="text-base-content/30">-</span>
+                    @endif
+                @endscope
+            </x-table>
+        </x-card>
+    @endif
 </div>

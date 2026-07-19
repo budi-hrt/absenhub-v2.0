@@ -89,8 +89,22 @@ new class extends Component
                 link="/absen/laporan-bulanan" :exact="true" />
             <x-menu-item title="Pengaturan Jam Kerja" icon="o-clock" icon-classes="text-warning"
                 link="/pengaturan/absen" :exact="true" />
+            <x-menu-item title="Pengaturan Lokasi" icon="o-map-pin" icon-classes="text-primary"
+                link="/pengaturan/lokasi" :exact="true" />
         </x-menu-sub>
         @endhasanyrole
+
+        {{-- Super Admin: super-admin only --}}
+        @hasrole('super-admin')
+        <x-menu-sub title="Super Admin" icon="o-shield-check">
+            <x-menu-item title="Roles" icon="o-user-group" icon-classes="text-primary"
+                link="/roles" :exact="true" />
+            <x-menu-item title="Permissions" icon="o-key" icon-classes="text-warning"
+                link="/permissions" :exact="true" />
+            <x-menu-item title="Feature Flags" icon="o-flag" icon-classes="text-success"
+                link="/feature-flags" :exact="true" />
+        </x-menu-sub>
+        @endhasrole
 
     </x-menu>
 </div>

@@ -2,6 +2,13 @@
 
 use App\Exports\AbsenTemplateExport;
 use App\Exports\DetailHarianExport;
+use App\Http\Controllers\KaryawanExportController;
+use App\Http\Controllers\LaporanBulananController;
+use App\Http\Controllers\LihatAbsenExportController;
+use App\Http\Controllers\RekapExportController;
+use App\Models\Absen;
+use App\Models\Karyawan;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
@@ -36,9 +43,9 @@ Route::middleware('auth')->group(function () {
         Route::livewire('/karyawan/create', 'pages::karyawan.create')->name('karyawan.create');
         Route::livewire('/karyawan/{karyawan}/edit', 'pages::karyawan.edit')->name('karyawan.edit');
 
-        Route::get('/karyawan/export/excel', [App\Http\Controllers\KaryawanExportController::class, 'excel'])
+        Route::get('/karyawan/export/excel', [KaryawanExportController::class, 'excel'])
             ->name('karyawan.export.excel');
-        Route::get('/karyawan/export/pdf', [App\Http\Controllers\KaryawanExportController::class, 'pdf'])
+        Route::get('/karyawan/export/pdf', [KaryawanExportController::class, 'pdf'])
             ->name('karyawan.export.pdf');
 
         Route::livewire('/master/jabatan', 'pages::master.jabatan')->name('master.jabatan');
@@ -49,11 +56,17 @@ Route::middleware('auth')->group(function () {
         // Manajemen Absensi
         Route::livewire('/absen/kelola', 'pages::absen.kelola-absen')->name('absen.kelola');
         Route::livewire('/absen/lihat', 'pages::absen.lihat-absen')->name('absen.lihat');
+        Route::get('/absen/lihat/pdf', [LihatAbsenExportController::class, 'pdf'])
+            ->name('absen.lihat.pdf');
         Route::livewire('/absen/detail-harian', 'pages::absen.detail-harian')->name('absen.detail-harian');
         Route::livewire('/absen/rekap-bulanan', 'pages::absen.rekap-bulanan')->name('absen.rekap-bulanan');
+        Route::get('/absen/rekap-bulanan/pdf', [RekapExportController::class, 'bulanan'])
+            ->name('absen.rekap-bulanan.pdf');
         Route::livewire('/absen/rekap-tahunan', 'pages::absen.rekap-tahunan')->name('absen.rekap-tahunan');
+        Route::get('/absen/rekap-tahunan/pdf', [RekapExportController::class, 'tahunan'])
+            ->name('absen.rekap-tahunan.pdf');
         Route::livewire('/absen/laporan-bulanan', 'pages::absen.laporan-bulanan')->name('absen.laporan-bulanan');
-        Route::get('/absen/laporan-bulanan/pdf', [App\Http\Controllers\LaporanBulananController::class, 'pdf'])
+        Route::get('/absen/laporan-bulanan/pdf', [LaporanBulananController::class, 'pdf'])
             ->name('absen.laporan-bulanan.pdf');
         Route::get('/absen/template', function () {
             return Excel::download(new AbsenTemplateExport, 'template-absensi.xlsx');
@@ -64,6 +77,7 @@ Route::middleware('auth')->group(function () {
                 bulan: request('bulan'),
                 tahun: request('tahun'),
             );
+
             return Excel::download($export, 'detail-harian.xlsx');
         })->name('absen.detail-harian.export');
 
@@ -72,10 +86,12 @@ Route::middleware('auth')->group(function () {
             $bulan = request('bulan', now()->format('m'));
             $tahun = request('tahun', now()->format('Y'));
 
-            $karyawan = \App\Models\Karyawan::with('jabatan')->find($karyawanId);
-            if (!$karyawan) abort(404);
+            $karyawan = Karyawan::with('jabatan')->find($karyawanId);
+            if (! $karyawan) {
+                abort(404);
+            }
 
-            $absens = \App\Models\Absen::where('karyawan_id', $karyawanId)
+            $absens = Absen::where('karyawan_id', $karyawanId)
                 ->whereYear('tanggal_absen', $tahun)
                 ->whereMonth('tanggal_absen', $bulan)
                 ->orderBy('tanggal_absen')
@@ -90,7 +106,7 @@ Route::middleware('auth')->group(function () {
 
             $rekap = $absens->groupBy('keterangan')->map->count();
 
-            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('exports.detail-harian-pdf', [
+            $pdf = Pdf::loadView('exports.detail-harian-pdf', [
                 'absens' => $absens,
                 'namaKaryawan' => $karyawan->nama_karyawan,
                 'nik' => $karyawan->nik,
@@ -108,11 +124,13 @@ Route::middleware('auth')->group(function () {
 
         // Pengaturan
         Route::livewire('/pengaturan/absen', 'pages::pengaturan.absen')->name('pengaturan.absen');
+        Route::livewire('/pengaturan/lokasi', 'pages::pengaturan.lokasi')->name('pengaturan.lokasi');
     });
 
     // roles & permissions (super-admin only)
     Route::middleware('role:super-admin')->group(function () {
         Route::livewire('/roles', 'pages::roles.index');
         Route::livewire('/permissions', 'pages::permissions.index');
+        Route::livewire('/feature-flags', 'pages::pengaturan.feature-flags')->name('pengaturan.feature-flags');
     });
 });
