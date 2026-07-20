@@ -58,7 +58,8 @@
                     $alpa = $allRecords->where('keterangan', 'Alpa')->count();
                     $off = $allRecords->where('keterangan', 'Off')->count();
                     $libur = $allRecords->where('keterangan', 'Libur')->count();
-                    $persen = $totalHari > 0 ? round((($hadir + $dn + $cuti + $off + $libur) / $totalHari) * 100) : 0;
+                    $lainnya = $allRecords->where('keterangan', 'Lainnya')->count();
+                    $persen = $hk > 0 ? max(0, round(100 - ($alpa * 3) - ($izin * 2) - ($sakit * 1) - ($lainnya * 0.5), 1)) : 0;
                     $isAlumni = !$k->is_active;
                 @endphp
                 <tr>

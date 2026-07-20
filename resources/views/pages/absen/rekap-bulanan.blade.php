@@ -192,7 +192,7 @@ new class extends Component
                             $off = $allRecords->where('keterangan', 'Off')->count();
                             $libur = $allRecords->where('keterangan', 'Libur')->count();
                             $lainnya = $allRecords->where('keterangan', 'Lainnya')->count();
-                            $persen = $totalHari > 0 ? round((($hadir + $dn + $cuti + $off + $libur) / $totalHari) * 100) : 0;
+                            $persen = $hk > 0 ? max(0, round(100 - ($alpa * 3) - ($izin * 2) - ($sakit * 1) - ($lainnya * 0.5), 1)) : 0;
                             $isAlumni = !$k->is_active;
                         @endphp
                         <tr class="hover:bg-base-200/50 transition-colors">

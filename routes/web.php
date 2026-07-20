@@ -32,6 +32,9 @@ Route::middleware('auth')->group(function () {
     // Routes khusus role karyawan
     Route::middleware('role:karyawan')->group(function () {
         Route::livewire('/dashboard', 'pages::karyawan.dashboard')->name('dashboard');
+        Route::livewire('/riwayat', 'pages::karyawan.riwayat')->name('karyawan.riwayat');
+        Route::livewire('/profile', 'pages::karyawan.profile')->name('karyawan.profile');
+        Route::livewire('/pengajuan', 'pages::karyawan.pengajuan')->name('karyawan.pengajuan');
     });
 
     // Routes untuk admin/manager/operator/super-admin
@@ -121,6 +124,10 @@ Route::middleware('auth')->group(function () {
 
             return $pdf->download("detail-harian-{$karyawan->nama_karyawan}-{$bulan}-{$tahun}.pdf");
         })->name('absen.detail-harian.pdf');
+
+        // Pengajuan Cuti/Izin/Sakit
+        Route::livewire('/pengajuan/kelola', 'pages::pengajuan.index')->name('pengajuan.kelola');
+        Route::livewire('/pengajuan/jatah-cuti', 'pages::pengajuan.jatah-cuti')->name('pengajuan.jatah-cuti');
 
         // Pengaturan
         Route::livewire('/pengaturan/absen', 'pages::pengaturan.absen')->name('pengaturan.absen');

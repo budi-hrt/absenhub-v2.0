@@ -1,0 +1,361 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "background": "#faf8ff",
+                      "inverse-surface": "#2e3037",
+                      "surface-bright": "#faf8ff",
+                      "secondary": "#006a61",
+                      "inverse-on-surface": "#f0f0f9",
+                      "secondary-fixed": "#89f5e7",
+                      "primary": "#003c90",
+                      "surface-variant": "#e1e2eb",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed-variant": "#7d2d00",
+                      "on-primary": "#ffffff",
+                      "on-secondary-container": "#006f66",
+                      "on-tertiary-container": "#ffc0a7",
+                      "inverse-primary": "#b0c6ff",
+                      "surface-dim": "#d9d9e2",
+                      "on-primary-container": "#bcceff",
+                      "on-surface": "#191b22",
+                      "on-background": "#191b22",
+                      "surface-container-highest": "#e1e2eb",
+                      "on-primary-fixed-variant": "#00419c",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed-dim": "#ffb596",
+                      "primary-fixed-dim": "#b0c6ff",
+                      "surface-container": "#ededf6",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-fixed": "#360f00",
+                      "on-primary-fixed": "#001945",
+                      "surface-tint": "#1d59c1",
+                      "secondary-container": "#86f2e4",
+                      "surface": "#faf8ff",
+                      "outline-variant": "#c3c6d5",
+                      "surface-container-low": "#f3f3fc",
+                      "secondary-fixed-dim": "#6bd8cb",
+                      "outline": "#737784",
+                      "tertiary-fixed": "#ffdbcd",
+                      "error-container": "#ffdad6",
+                      "on-secondary": "#ffffff",
+                      "tertiary": "#732900",
+                      "tertiary-container": "#993900",
+                      "on-error-container": "#93000a",
+                      "surface-container-high": "#e7e7f1",
+                      "on-surface-variant": "#434653",
+                      "on-secondary-fixed": "#00201d",
+                      "primary-container": "#0f52ba",
+                      "on-secondary-fixed-variant": "#005049",
+                      "primary-fixed": "#d9e2ff",
+                      "on-tertiary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container-margin": "1rem",
+                      "inline-gutter": "1rem",
+                      "touch-target-min": "48px",
+                      "stack-gap": "1.5rem",
+                      "bottom-nav-height": "72px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Inter"],
+                      "label-md": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "stats-display": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "stats-display": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+      }catch(_e){}</script><meta charset="utf-8"></head><body class="bg-background text-on-background min-h-screen flex">
+<!-- Desktop Sidebar Navigation -->
+<aside class="hidden md:flex flex-col w-72 bg-surface-container-low h-screen sticky top-0 border-r border-outline-variant/30">
+<div class="px-8 py-10">
+<h1 class="font-headline-md text-headline-md font-bold text-primary tracking-tight">Kinetic Sync</h1>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<!-- Home (Active) -->
+<a href="#" class="sidebar-item flex items-center gap-4 px-4 py-3 rounded-xl bg-primary-container text-on-primary-container font-semibold">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-body-lg text-body-lg">Home</span>
+</a>
+<!-- History -->
+<a href="#" class="sidebar-item flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">history</span>
+<span class="font-body-lg text-body-lg">History</span>
+</a>
+<!-- Profile -->
+<a href="#" class="sidebar-item flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-lg text-body-lg">Profile</span>
+</a>
+<!-- Settings -->
+<a class="sidebar-item flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-lg text-body-lg">Settings</span>
+</a>
+</nav>
+<div class="p-6 mt-auto">
+<div class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-high/50 border border-outline-variant/20">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-primary-fixed">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a friendly young male employee named Budi, set against a clean, corporate office background with soft bokeh lighting. The style is modern, professional, and crisp, using natural daylight to highlight clean skin tones and professional attire, reflecting a light-mode business aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCShuSnRSs5390K0z9J1fhm1qumCBQfCFKfY8pQxMVVzZPBix1iiQjkvc2ZWglwPJ-2LimPz5T_WzsStYLMIgQNsGq87tGgZ0tuXoYU8_Y5uXLFhf6MzHiXIzMKlZWWQz_JDt9yahmP9xTN8rEOZoQ8qZ3ChBPUFiGyz_YMGCcN6MkYnKw8KQ-Y_gbs67fkQshvQRrHQFoXyMVyAMmgekMdK8y9wsWsQuIl4WHqC8K_tIWY7uHZy1iL">
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-on-surface">Budi</span>
+<span class="font-label-md text-[10px] text-outline uppercase tracking-wider">Frontend Dev</span>
+</div>
+<button class="ml-auto text-outline hover:text-error transition-colors">
+<span class="material-symbols-outlined">logout</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 min-w-0 overflow-y-auto">
+<!-- Top App Bar (Mobile Viewport Only) -->
+<header class="md:hidden flex justify-between items-center px-4 py-4 w-full sticky top-0 bg-surface z-50">
+<h2 class="font-headline-md text-headline-md font-bold text-primary">Welcome Back</h2>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-original-icon="notifications">notifications</span>
+<div class="w-8 h-8 rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up professional avatar of a young office employee with a warm expression. Bright lighting, high-quality corporate photography style, minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1Ih--P5uiNKgTsXTcmrvTKGhVbEnDeuO4BbgzZXEitFbb1ulj4XemTN_0q5LQLHQdph47V978CEvPDYzsg_ABYr7ttdYRDr3R7TT7bgln_W421CXrf2rqmny6L2p2vUnuttbegHDA9lXAEhWBZRB8-rNWzcRCvOQ4qVHQR4Z2_2QX5sm6nbSCmp__Rp5t3qCs0xYFgOow2UukJB2OJ7EOv8JwfOB_AaOKuIrZslVMGlE-LRpikmN_">
+</div>
+</div>
+</header>
+<div class="max-w-7xl mx-auto px-6 md:px-10 py-8 md:py-12 space-y-10">
+<!-- Hero Section: Check-in & Time -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+<div class="lg:col-span-2 relative h-64 rounded-[32px] overflow-hidden group">
+
+<div class="absolute inset-0 bg-gradient-to-br from-primary/90 to-primary-container/80 p-10 flex flex-col justify-between text-white">
+<div>
+<h3 class="font-headline-lg text-headline-lg mb-2">Good Morning, Budi</h3>
+<p class="font-body-lg text-body-lg opacity-90">Ready to start your productive session today?</p>
+</div>
+<div class="flex items-end justify-between">
+<div class="space-y-1">
+<p class="font-label-md text-label-md uppercase tracking-[0.2em] opacity-70">Current Time</p>
+<div class="font-stats-display text-stats-display tabular-nums tracking-tighter" id="clock">09:12:45</div>
+</div>
+<button class="bg-white text-primary px-10 py-4 rounded-full font-bold font-body-lg hover:bg-primary-fixed transition-all active:scale-95 clock-shadow">
+                                Clock In Now
+                            </button>
+</div>
+</div>
+</div>
+<!-- Secondary Status Card -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-[32px] p-8 h-64 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<span class="font-label-md text-label-md text-outline uppercase tracking-widest">Shift Status</span>
+<h4 class="font-headline-md text-headline-md text-on-surface">Pagi (08:00 - 17:00)</h4>
+</div>
+<div class="w-12 h-12 rounded-2xl bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">schedule</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex-1 h-3 bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[15%] h-full bg-secondary rounded-full"></div>
+</div>
+<span class="font-label-md text-label-md text-secondary">15% Done</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span class="font-body-sm text-body-sm">Main Office, Jakarta Pusat</span>
+</div>
+</div>
+</section>
+<!-- Statistics Grid (Expanded) -->
+<section class="space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-surface">Statistik Bulan Ini</h3>
+<button class="text-primary font-label-md text-label-md flex items-center gap-1 hover:underline">
+                        Download Report <span class="material-symbols-outlined text-[16px]">download</span>
+</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+<!-- Alpa -->
+<div class="bento-card bg-surface-container-low p-6 rounded-3xl border border-outline-variant/20 flex flex-col gap-4">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-error">close</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-outline">Alpa</p>
+<p class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">0</p>
+</div>
+</div>
+<!-- Izin -->
+<div class="bento-card bg-surface-container-low p-6 rounded-3xl border border-outline-variant/20 flex flex-col gap-4">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">assignment_return</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-outline">Izin</p>
+<p class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">1d</p>
+</div>
+</div>
+<!-- Sakit -->
+<div class="bento-card bg-surface-container-low p-6 rounded-3xl border border-outline-variant/20 flex flex-col gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-outline">medical_services</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-outline">Sakit</p>
+<p class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">0</p>
+</div>
+</div>
+<!-- Cuti -->
+<div class="bento-card bg-surface-container-low p-6 rounded-3xl border border-outline-variant/20 flex flex-col gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-fixed-dim flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-fixed-variant">event_available</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-outline">Cuti</p>
+<p class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">2d</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Activity Log & Visual Insight -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Aktivitas Terakhir -->
+<div class="lg:col-span-2 bg-surface-container-lowest border border-outline-variant/30 rounded-[32px] p-8 space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-surface">Aktivitas Terakhir</h3>
+<span class="font-label-md text-label-md text-primary bg-primary-fixed px-3 py-1 rounded-full">August 2023</span>
+</div>
+<div class="space-y-4">
+<!-- Activity Item 1 -->
+<div class="flex items-center gap-6 p-4 rounded-2xl border-l-4 border-secondary bg-surface-container-low/50 hover:bg-surface-container-high transition-colors">
+<div class="flex flex-col items-center min-w-[60px]">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">24</span>
+<span class="font-label-md text-label-md text-outline uppercase">AUG</span>
+</div>
+<div class="flex-1">
+<p class="font-body-lg text-body-lg font-bold text-on-surface">Check In</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">08:02 AM • Main Office</p>
+</div>
+<div class="px-3 py-1 rounded-full bg-secondary-container/30 text-secondary font-label-md text-label-md">
+                                On Time
+                            </div>
+</div>
+<!-- Activity Item 2 -->
+<div class="flex items-center gap-6 p-4 rounded-2xl border-l-4 border-primary bg-surface-container-low/50 hover:bg-surface-container-high transition-colors">
+<div class="flex flex-col items-center min-w-[60px]">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">23</span>
+<span class="font-label-md text-label-md text-outline uppercase">AUG</span>
+</div>
+<div class="flex-1">
+<p class="font-body-lg text-body-lg font-bold text-on-surface">Check Out</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">05:30 PM • Main Office</p>
+</div>
+<div class="px-3 py-1 rounded-full bg-primary-container/10 text-primary font-label-md text-label-md">
+                                Overtime: 30m
+                            </div>
+</div>
+<!-- Activity Item 3 -->
+<div class="flex items-center gap-6 p-4 rounded-2xl border-l-4 border-tertiary bg-surface-container-low/50 hover:bg-surface-container-high transition-colors">
+<div class="flex flex-col items-center min-w-[60px]">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">22</span>
+<span class="font-label-md text-label-md text-outline uppercase">AUG</span>
+</div>
+<div class="flex-1">
+<p class="font-body-lg text-body-lg font-bold text-on-surface">Leave Approved</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Sick Leave • Dr. Certificate Attached</p>
+</div>
+<div class="px-3 py-1 rounded-full bg-tertiary-container/30 text-tertiary font-label-md text-label-md">
+                                Approved
+                            </div>
+</div>
+</div>
+<button class="w-full py-4 rounded-2xl bg-surface-container-high text-on-surface-variant font-bold font-body-lg hover:bg-outline-variant/30 transition-colors">
+                        View Complete History
+                    </button>
+</div>
+<!-- Decorative Insight Panel -->
+<div class="bg-inverse-surface rounded-[32px] p-8 flex flex-col justify-between relative overflow-hidden text-inverse-on-surface">
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl"></div>
+<div class="relative z-10 space-y-4">
+<div class="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-fixed text-3xl" style="font-variation-settings: 'FILL' 1;">insights</span>
+</div>
+<h4 class="font-headline-md text-headline-md font-bold">Productivity Insight</h4>
+<p class="font-body-sm text-body-sm opacity-80 leading-relaxed">
+                            You've been 100% consistent on check-ins this week. Maintain this streak to unlock "Elite Punctual" badge!
+                        </p>
+</div>
+<div class="mt-8">
+<img class="w-full h-32 object-cover rounded-2xl" data-alt="A modern, abstract representation of a data visualization chart with sleek, glowing blue and teal lines representing growth and productivity trends. Set against a dark, professional tech-inspired background with subtle light particles and soft focus. High-end SaaS interface aesthetic, corporate and motivational." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXXKoTLBUDLAkuO_s02F57PM4jp5c0BjqCu-7o_If1OSihM3kbPLIqhLBuG9-By77Q3vPFHoiDVuZ3hnYCxwHiJQ9MH98rIi1NUBDFNp6kuFbmIw90lIFFFTJvYGNiHq1u3PMDVeJ38dlh6eYL3kofT2SSEtV69V1VE1dDhJOixuY0UAHSSxnV_YNuhG6rwTmPcX4uRJ91ZC1GvcLIV_4TmGK1qzoLRi8Lzu9u6hCe6dmqZNPnNQot">
+</div>
+<div class="mt-6 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-fixed animate-pulse"></span>
+<span class="font-label-md text-label-md opacity-60">Status: Excellent</span>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Mobile Bottom Navigation (Visible only on small screens) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe bg-surface/80 backdrop-blur-md h-[72px] border-t border-outline-variant/20">
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-md text-[10px]">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-md text-[10px]">History</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-[10px]">Profile</span>
+</button>
+</nav>
+<script>
+        // Digital Clock Update
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Ripple Effect for Buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                let x = e.clientX - e.target.offsetLeft;
+                let y = e.clientY - e.target.offsetTop;
+                let ripples = document.createElement('span');
+                ripples.style.left = x + 'px';
+                ripples.style.top = y + 'px';
+                this.appendChild(ripples);
+                setTimeout(() => {
+                    ripples.remove();
+                }, 1000);
+            });
+        });
+    </script>
+
+</body></html>

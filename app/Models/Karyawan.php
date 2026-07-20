@@ -68,4 +68,12 @@ class Karyawan extends Model
     {
         return $this->hasMany(Nonaktif::class, 'karyawan_id', 'id');
     }
+
+    /**
+     * RELASI KE TABEL PENGAJUAN ABSEN
+     */
+    public function pengajuanAbsens()
+    {
+        return $this->hasMany(PengajuanAbsen::class, 'karyawan_id', 'id');
+    }
 }

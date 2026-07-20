@@ -31,9 +31,12 @@ new class extends Component
         <x-menu-separator />
         @endif
 
-        {{-- Dashboard --}}
+        {{-- Dashboard & Menu Karyawan --}}
         @hasrole('karyawan')
         <x-menu-item title="Dashboard" icon="o-home" link="/dashboard" />
+        <x-menu-item title="Riwayat Absen" icon="o-document-text" link="/riwayat" />
+        <x-menu-item title="Pengajuan" icon="o-paper-airplane" link="/pengajuan" />
+        <x-menu-item title="Profil Saya" icon="o-user" link="/profile" />
         @else
         <x-menu-item title="Dashboard" icon="o-home" link="/" />
         @endhasrole
@@ -70,6 +73,16 @@ new class extends Component
         @hasanyrole('admin|super-admin|operator|manager')
         <x-menu-item title="Data Karyawan" icon="o-users" icon-classes="text-success"
             link="/karyawan" :exact="true" />
+        @endhasanyrole
+
+        {{-- Pengajuan Cuti/Izin --}}
+        @hasanyrole('admin|super-admin|operator|manager')
+        <x-menu-sub title="Pengajuan Cuti/Izin" icon="o-paper-airplane">
+            <x-menu-item title="Kelola Pengajuan" icon="o-check-badge" icon-classes="text-warning"
+                link="/pengajuan/kelola" :exact="true" />
+            <x-menu-item title="Jatah & Sisa Cuti" icon="o-calendar-days" icon-classes="text-success"
+                link="/pengajuan/jatah-cuti" :exact="true" />
+        </x-menu-sub>
         @endhasanyrole
 
         {{-- Manajemen Absensi --}}
