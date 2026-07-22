@@ -14,7 +14,7 @@ new class extends Component {
     public string $search = '';
     public string $bulan = '';
     public string $tahun = '';
-    public string $perPage = '10';
+    public string $perPage = '20';
 
     public array $listBulan = [];
     public array $listTahun = [];
@@ -201,8 +201,18 @@ new class extends Component {
 
     {{-- Table --}}
     <div class="bg-base-100 border rounded-xl overflow-hidden shadow-sm">
-        <div class="overflow-x-auto">
-            <table class="w-full border-collapse text-xs" wire:key="laporan-{{ $bulan }}-{{ $tahun }}">
+        <div class="relative min-h-[30rem]">
+            {{-- Loading Overlay --}}
+            <div wire:loading class="absolute inset-0 bg-base-100/30 backdrop-blur-[1px] z-50 rounded-xl transition-all duration-150">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+                    <span class="loading loading-spinner loading-lg text-primary"></span>
+                    <span class="text-xs font-bold text-primary tracking-wider uppercase animate-pulse">Memuat...</span>
+                </div>
+            </div>
+
+            <div wire:loading.class="opacity-25 pointer-events-none" class="transition-opacity duration-150">
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-xs" wire:key="laporan-{{ $bulan }}-{{ $tahun }}">
                 <thead>
                     {{-- Header Row 1 --}}
                     <tr class="bg-base-200 border-b">
@@ -293,4 +303,6 @@ new class extends Component {
             @endif
         </div>
     </div>
+</div>
+</div>
 </div>

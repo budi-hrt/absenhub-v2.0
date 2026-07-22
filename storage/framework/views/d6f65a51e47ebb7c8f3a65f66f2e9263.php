@@ -4,6 +4,7 @@ use App\Models\Absen;
 use App\Models\Karyawan;
 use Carbon\Carbon;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -273,13 +274,20 @@ use Mary\Traits\Toast;
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Mary\View\Components\Card::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'min-h-[32rem]']); ?>
+<?php $component->withAttributes([]); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
-        <div wire:loading.class="opacity-40 pointer-events-none"
-            wire:target="gotoPage,previousPage,nextPage,setKeterangan,filterTanggal,filterKeterangan,search,saveCollective"
-            class="transition-opacity duration-200">
-            <?php if (isset($component)) { $__componentOriginal8fbd727209323874b055feef49197909 = $component; } ?>
+        <div class="relative min-h-[32rem]">
+            
+            <div wire:loading wire:target="search, filterTanggal, filterKeterangan, gotoPage, nextPage, previousPage" class="absolute inset-0 bg-base-100/30 backdrop-blur-[1px] z-50 rounded-xl transition-all duration-150">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+                    <span class="loading loading-spinner loading-lg text-primary"></span>
+                    <span class="text-xs font-bold text-primary tracking-wider uppercase animate-pulse">Memuat...</span>
+                </div>
+            </div>
+
+            <div wire:loading.class="opacity-25 pointer-events-none" wire:target="search, filterTanggal, filterKeterangan, gotoPage, nextPage, previousPage" class="transition-opacity duration-150">
+                <?php if (isset($component)) { $__componentOriginal8fbd727209323874b055feef49197909 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal8fbd727209323874b055feef49197909 = $attributes; } ?>
 <?php $component = Mary\View\Components\Table::resolve(['headers' => $headers,'rows' => $absens,'withPagination' => true,'showEmptyText' => true,'emptyText' => 'Tidak ada data ditemukan'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('table'); ?>
@@ -310,10 +318,13 @@ use Mary\Traits\Toast;
 
                 <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_karyawan', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
                     <div class="flex items-center gap-3">
-                        <div class="avatar">
-                            <div class="mask mask-squircle w-10 h-10">
-                                <img src="<?php echo e($row->foto_karyawan ? Storage::url($row->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $row->nik); ?>"
-                                    alt="<?php echo e($row->nama_karyawan); ?>" />
+                        <div class="avatar <?php echo e(!$row->foto_karyawan ? 'placeholder' : ''); ?>">
+                            <div class="mask mask-squircle w-10 h-10 <?php echo e(!$row->foto_karyawan ? 'bg-gradient-to-br from-primary/20 to-primary/10 text-primary border border-primary/20 flex items-center justify-center font-bold text-xs' : ''); ?>">
+                                <?php if($row->foto_karyawan): ?>
+                                    <img src="<?php echo e(Storage::url($row->foto_karyawan)); ?>" alt="<?php echo e($row->nama_karyawan); ?>" />
+                                <?php else: ?>
+                                    <span><?php echo e(strtoupper(substr($row->nama_karyawan, 0, 2))); ?></span>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div>
@@ -469,7 +480,8 @@ use Mary\Traits\Toast;
 <?php unset($__componentOriginal8fbd727209323874b055feef49197909); ?>
 <?php endif; ?>
         </div>
-     <?php echo $__env->renderComponent(); ?>
+    </div>
+ <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7f194736b6f6432dc38786f292496c34)): ?>
 <?php $attributes = $__attributesOriginal7f194736b6f6432dc38786f292496c34; ?>
@@ -499,9 +511,13 @@ use Mary\Traits\Toast;
                 <div class="space-y-4">
                     
                     <div class="flex items-center gap-3">
-                        <div class="avatar">
-                            <div class="mask mask-squircle w-11 h-11">
-                                <img src="<?php echo e($d->karyawan->foto_karyawan ? Storage::url($d->karyawan->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $d->karyawan->nik); ?>" alt="<?php echo e($d->karyawan->nama_karyawan); ?>" />
+                        <div class="avatar <?php echo e(!$d->karyawan->foto_karyawan ? 'placeholder' : ''); ?>">
+                            <div class="mask mask-squircle w-11 h-11 <?php echo e(!$d->karyawan->foto_karyawan ? 'bg-gradient-to-br from-primary/20 to-primary/10 text-primary border border-primary/20 flex items-center justify-center font-bold text-xs' : ''); ?>">
+                                <?php if($d->karyawan->foto_karyawan): ?>
+                                    <img src="<?php echo e(Storage::url($d->karyawan->foto_karyawan)); ?>" alt="<?php echo e($d->karyawan->nama_karyawan); ?>" />
+                                <?php else: ?>
+                                    <span><?php echo e(strtoupper(substr($d->karyawan->nama_karyawan, 0, 2))); ?></span>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div>

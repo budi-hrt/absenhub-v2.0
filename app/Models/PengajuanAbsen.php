@@ -12,8 +12,7 @@ class PengajuanAbsen extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'tanggal_mulai' => 'date',
-        'tanggal_selesai' => 'date',
+        'tanggal' => 'array',
     ];
 
     public function karyawan()
@@ -31,6 +30,6 @@ class PengajuanAbsen extends Model
      */
     public function getJumlahHariAttribute(): int
     {
-        return $this->tanggal_mulai->diffInDays($this->tanggal_selesai) + 1;
+        return count($this->tanggal ?? []);
     }
 }

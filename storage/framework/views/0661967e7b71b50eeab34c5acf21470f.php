@@ -4,7 +4,7 @@
             <div class="flex justify-between flex-1 sm:hidden">
                 <span>
                     <?php if($paginator->onFirstPage()): ?>
-                        <span class="btn btn-sm btn-disabled"><?php echo __('pagination.previous'); ?></span>
+                        <button type="button" class="btn btn-sm" disabled><?php echo __('pagination.previous'); ?></button>
                     <?php else: ?>
                         <button type="button" wire:click="previousPage('<?php echo e($paginator->getPageName()); ?>')" dusk="previousPage<?php echo e($paginator->getPageName() == 'page' ? '' : '.' . $paginator->getPageName()); ?>.before" class="btn btn-sm">
                             <?php echo __('pagination.previous'); ?>
@@ -19,7 +19,7 @@
 
                         </button>
                     <?php else: ?>
-                        <span class="btn btn-sm btn-disabled"><?php echo __('pagination.next'); ?></span>
+                        <button type="button" class="btn btn-sm" disabled><?php echo __('pagination.next'); ?></button>
                     <?php endif; ?>
                 </span>
             </div>
@@ -38,7 +38,7 @@
                 <div class="join shadow-sm">
                     
                     <?php if($paginator->onFirstPage()): ?>
-                        <span class="join-item btn btn-sm btn-disabled">‹</span>
+                        <button type="button" class="join-item btn btn-sm" disabled>‹</button>
                     <?php else: ?>
                         <button type="button" wire:click="previousPage('<?php echo e($paginator->getPageName()); ?>')" dusk="previousPage<?php echo e($paginator->getPageName() == 'page' ? '' : '.' . $paginator->getPageName()); ?>.after" class="join-item btn btn-sm">
                             ‹
@@ -48,12 +48,12 @@
                     
                     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $elements; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $element): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
                         <?php if(is_string($element)): ?>
-                            <span class="join-item btn btn-sm btn-disabled"><?php echo e($element); ?></span>
+                            <button type="button" class="join-item btn btn-sm" disabled><?php echo e($element); ?></button>
                         <?php endif; ?>
                         <?php if(is_array($element)): ?>
                             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $element; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page => $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
                                 <?php if($page == $paginator->currentPage()): ?>
-                                    <span class="join-item btn btn-sm btn-primary"><?php echo e($page); ?></span>
+                                    <button type="button" class="join-item btn btn-sm btn-primary"><?php echo e($page); ?></button>
                                 <?php else: ?>
                                     <button type="button" wire:click="gotoPage(<?php echo e($page); ?>, '<?php echo e($paginator->getPageName()); ?>')" class="join-item btn btn-sm" aria-label="<?php echo e(__('Go to page :page', ['page' => $page])); ?>">
                                         <?php echo e($page); ?>
@@ -70,7 +70,7 @@
                             ›
                         </button>
                     <?php else: ?>
-                        <span class="join-item btn btn-sm btn-disabled">›</span>
+                        <button type="button" class="join-item btn btn-sm" disabled>›</button>
                     <?php endif; ?>
                 </div>
             </div>

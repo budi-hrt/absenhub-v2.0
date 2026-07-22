@@ -123,15 +123,19 @@ new #[Layout('layouts.app')] #[Title('Jatah & Sisa Cuti')] class extends Compone
 
         $karyawans = $query->get()->map(function ($k) use ($jatah) {
             $terpakai = JatahCuti::terpakaiByKaryawan($k->id, $this->selectedTahun);
-            $sisa = max(0, $jatah->jatah_cuti - $terpakai);
-
             // Hitung pengajuan menunggu
             $menunggu = PengajuanAbsen::where('karyawan_id', $k->id)
                 ->where('jenis', 'Cuti')
                 ->where('status', 'Menunggu')
-                ->whereYear('tanggal_mulai', $this->selectedTahun)
                 ->get()
-                ->sum('jumlah_hari');
+                ->sum(function ($p) use ($jatah) {
+                    $tanggalArray = $p->tanggal ?? [];
+                    return collect($tanggalArray)
+                        ->filter(fn($tgl) => str_starts_with($tgl, (string) $this->selectedTahun))
+                        ->count();
+                });
+
+            $sisa = max(0, $jatah->jatah_cuti - $terpakai - $menunggu);
 
             return (object) [
                 'id' => $k->id,

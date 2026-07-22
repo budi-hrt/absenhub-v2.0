@@ -41,12 +41,27 @@ class JatahCuti extends Model
     /**
      * Hitung sisa cuti untuk karyawan tertentu
      */
-    public static function sisaByKaryawan(int $karyawanId, int $tahun = null): int
+    public static function sisaByKaryawan(int $karyawanId, int $tahun = null, bool $includeMenunggu = true): int
     {
         $tahun = $tahun ?? now()->year;
         $jatah = self::getTahun($tahun);
         $terpakai = self::terpakaiByKaryawan($karyawanId, $tahun);
+        
+        $menunggu = 0;
+        if ($includeMenunggu) {
+            // Ambil cuti berstatus menunggu di tahun ini
+            $menunggu = PengajuanAbsen::where('karyawan_id', $karyawanId)
+                ->where('jenis', 'Cuti')
+                ->where('status', 'Menunggu')
+                ->get()
+                ->sum(function ($p) use ($tahun) {
+                    $tanggalArray = $p->tanggal ?? [];
+                    return collect($tanggalArray)
+                        ->filter(fn($tgl) => str_starts_with($tgl, (string) $tahun))
+                        ->count();
+                });
+        }
 
-        return max(0, $jatah->jatah_cuti - $terpakai);
+        return max(0, $jatah->jatah_cuti - $terpakai - $menunggu);
     }
 }

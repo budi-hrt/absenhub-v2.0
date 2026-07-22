@@ -86,9 +86,19 @@ use Mary\Traits\Toast;
 
     
     <div class="bg-base-100 border rounded-xl overflow-hidden shadow-sm">
-        <div class="overflow-x-auto">
-            <table class="w-full border-collapse text-xs" <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::$currentLoop['key'] = 'rekap-bulanan-'.e($bulan).'-'.e($tahun).''; ?>wire:key="rekap-bulanan-<?php echo e($bulan); ?>-<?php echo e($tahun); ?>">
-                <thead>
+        <div class="relative min-h-[30rem]">
+            
+            <div wire:loading class="absolute inset-0 bg-base-100/30 backdrop-blur-[1px] z-50 rounded-xl transition-all duration-150">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+                    <span class="loading loading-spinner loading-lg text-primary"></span>
+                    <span class="text-xs font-bold text-primary tracking-wider uppercase animate-pulse">Memuat...</span>
+                </div>
+            </div>
+
+            <div wire:loading.class="opacity-25 pointer-events-none" class="transition-opacity duration-150">
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-xs" <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::$currentLoop['key'] = 'rekap-bulanan-'.e($bulan).'-'.e($tahun).''; ?>wire:key="rekap-bulanan-<?php echo e($bulan); ?>-<?php echo e($tahun); ?>">
+                        <thead>
                     <tr class="bg-base-200 border-b">
                         <th class="px-2 py-2 text-left font-semibold text-base-content/70 border-r w-[120px]">NAMA</th>
                         <th class="px-2 py-2 text-left font-semibold text-base-content/70 border-r w-[60px]">JABATAN</th>
@@ -170,4 +180,6 @@ use Mary\Traits\Toast;
             <?php endif; ?>
         </div>
     </div>
+</div>
+</div>
 </div><?php /**PATH C:\laragon\www\absenhub-v2.0\storage\framework\views/livewire/views/1fe5cd40.blade.php ENDPATH**/ ?>

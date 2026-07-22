@@ -352,7 +352,17 @@ use Mary\Traits\Toast;
 <?php $component->withAttributes([]); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
-            <?php if (isset($component)) { $__componentOriginal8fbd727209323874b055feef49197909 = $component; } ?>
+            <div class="relative min-h-[30rem]">
+                
+                <div wire:loading class="absolute inset-0 bg-base-100/30 backdrop-blur-[1px] z-50 rounded-xl transition-all duration-150">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+                        <span class="loading loading-spinner loading-lg text-primary"></span>
+                        <span class="text-xs font-bold text-primary tracking-wider uppercase animate-pulse">Memuat...</span>
+                    </div>
+                </div>
+
+                <div wire:loading.class="opacity-25 pointer-events-none" class="transition-opacity duration-150">
+                    <?php if (isset($component)) { $__componentOriginal8fbd727209323874b055feef49197909 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal8fbd727209323874b055feef49197909 = $attributes; } ?>
 <?php $component = Mary\View\Components\Table::resolve(['headers' => $headers,'rows' => $absens,'withPagination' => true,'showEmptyText' => true,'emptyText' => 'Tidak ada data ditemukan'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('table'); ?>
@@ -364,7 +374,7 @@ use Mary\Traits\Toast;
 <?php $component->withAttributes([]); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
-                <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_no', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
+                        <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_no', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
                     <span class="text-sm text-base-content/50"><?php echo e($row->row_no); ?></span>
                 <?php }); ?>
 
@@ -415,7 +425,7 @@ use Mary\Traits\Toast;
                         <span class="text-base-content/30">-</span>
                     <?php endif; ?>
                 <?php }); ?>
-             <?php echo $__env->renderComponent(); ?>
+                 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal8fbd727209323874b055feef49197909)): ?>
 <?php $attributes = $__attributesOriginal8fbd727209323874b055feef49197909; ?>
@@ -425,7 +435,9 @@ use Mary\Traits\Toast;
 <?php $component = $__componentOriginal8fbd727209323874b055feef49197909; ?>
 <?php unset($__componentOriginal8fbd727209323874b055feef49197909); ?>
 <?php endif; ?>
-         <?php echo $__env->renderComponent(); ?>
+            </div>
+        </div>
+     <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7f194736b6f6432dc38786f292496c34)): ?>
 <?php $attributes = $__attributesOriginal7f194736b6f6432dc38786f292496c34; ?>

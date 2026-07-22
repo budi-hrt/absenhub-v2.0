@@ -73,6 +73,8 @@ new class extends Component
         @hasanyrole('admin|super-admin|operator|manager')
         <x-menu-item title="Data Karyawan" icon="o-users" icon-classes="text-success"
             link="/karyawan" :exact="true" />
+        <x-menu-item title="Kontrak Kerja" icon="o-document-text" icon-classes="text-warning"
+            link="/kontrak" :exact="true" />
         @endhasanyrole
 
         {{-- Pengajuan Cuti/Izin --}}

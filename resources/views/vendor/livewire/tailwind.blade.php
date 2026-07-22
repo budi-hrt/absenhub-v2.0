@@ -4,7 +4,7 @@
             <div class="flex justify-between flex-1 sm:hidden">
                 <span>
                     @if ($paginator->onFirstPage())
-                        <span class="btn btn-sm btn-disabled">{!! __('pagination.previous') !!}</span>
+                        <button type="button" class="btn btn-sm" disabled>{!! __('pagination.previous') !!}</button>
                     @else
                         <button type="button" wire:click="previousPage('{{ $paginator->getPageName() }}')" dusk="previousPage{{ $paginator->getPageName() == 'page' ? '' : '.' . $paginator->getPageName() }}.before" class="btn btn-sm">
                             {!! __('pagination.previous') !!}
@@ -17,7 +17,7 @@
                             {!! __('pagination.next') !!}
                         </button>
                     @else
-                        <span class="btn btn-sm btn-disabled">{!! __('pagination.next') !!}</span>
+                        <button type="button" class="btn btn-sm" disabled>{!! __('pagination.next') !!}</button>
                     @endif
                 </span>
             </div>
@@ -36,7 +36,7 @@
                 <div class="join shadow-sm">
                     {{-- Previous Page --}}
                     @if ($paginator->onFirstPage())
-                        <span class="join-item btn btn-sm btn-disabled">‹</span>
+                        <button type="button" class="join-item btn btn-sm" disabled>‹</button>
                     @else
                         <button type="button" wire:click="previousPage('{{ $paginator->getPageName() }}')" dusk="previousPage{{ $paginator->getPageName() == 'page' ? '' : '.' . $paginator->getPageName() }}.after" class="join-item btn btn-sm">
                             ‹
@@ -46,12 +46,12 @@
                     {{-- Pagination Elements --}}
                     @foreach ($elements as $element)
                         @if (is_string($element))
-                            <span class="join-item btn btn-sm btn-disabled">{{ $element }}</span>
+                            <button type="button" class="join-item btn btn-sm" disabled>{{ $element }}</button>
                         @endif
                         @if (is_array($element))
                             @foreach ($element as $page => $url)
                                 @if ($page == $paginator->currentPage())
-                                    <span class="join-item btn btn-sm btn-primary">{{ $page }}</span>
+                                    <button type="button" class="join-item btn btn-sm btn-primary">{{ $page }}</button>
                                 @else
                                     <button type="button" wire:click="gotoPage({{ $page }}, '{{ $paginator->getPageName() }}')" class="join-item btn btn-sm" aria-label="{{ __('Go to page :page', ['page' => $page]) }}">
                                         {{ $page }}
@@ -67,7 +67,7 @@
                             ›
                         </button>
                     @else
-                        <span class="join-item btn btn-sm btn-disabled">›</span>
+                        <button type="button" class="join-item btn btn-sm" disabled>›</button>
                     @endif
                 </div>
             </div>

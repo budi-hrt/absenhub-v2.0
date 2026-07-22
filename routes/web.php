@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
         Route::livewire('/karyawan', 'pages::karyawan.index')->name('karyawan.index');
         Route::livewire('/karyawan/create', 'pages::karyawan.create')->name('karyawan.create');
         Route::livewire('/karyawan/{karyawan}/edit', 'pages::karyawan.edit')->name('karyawan.edit');
+        Route::livewire('/kontrak', 'pages::kontrak.index')->name('kontrak.index');
 
         Route::get('/karyawan/export/excel', [KaryawanExportController::class, 'excel'])
             ->name('karyawan.export.excel');

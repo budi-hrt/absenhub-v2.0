@@ -326,9 +326,19 @@ new class extends Component
 
         {{-- Table --}}
         <x-card shadow>
-            <x-table :headers="$headers" :rows="$absens" with-pagination
-                show-empty-text empty-text="Tidak ada data ditemukan">
-                @scope('cell_no', $row)
+            <div class="relative min-h-[30rem]">
+                {{-- Loading Overlay --}}
+                <div wire:loading class="absolute inset-0 bg-base-100/30 backdrop-blur-[1px] z-50 rounded-xl transition-all duration-150">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+                        <span class="loading loading-spinner loading-lg text-primary"></span>
+                        <span class="text-xs font-bold text-primary tracking-wider uppercase animate-pulse">Memuat...</span>
+                    </div>
+                </div>
+
+                <div wire:loading.class="opacity-25 pointer-events-none" class="transition-opacity duration-150">
+                    <x-table :headers="$headers" :rows="$absens" with-pagination
+                        show-empty-text empty-text="Tidak ada data ditemukan">
+                        @scope('cell_no', $row)
                     <span class="text-sm text-base-content/50">{{ $row->row_no }}</span>
                 @endscope
 
@@ -376,7 +386,9 @@ new class extends Component
                         <span class="text-base-content/30">-</span>
                     @endif
                 @endscope
-            </x-table>
-        </x-card>
+                </x-table>
+            </div>
+        </div>
+    </x-card>
     @endif
 </div>

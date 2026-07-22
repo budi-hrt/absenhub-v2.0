@@ -16,11 +16,14 @@ new #[Layout('layouts.app')] #[Title('Pengajuan Izin/Cuti')] class extends Compo
     #[Validate('required|in:Cuti,Izin,Sakit')]
     public string $jenis = '';
 
-    #[Validate('required|date|after_or_equal:today')]
-    public string $tanggal_mulai = '';
-
-    #[Validate('required|date|after_or_equal:tanggal_mulai')]
-    public string $tanggal_selesai = '';
+    #[Validate([
+        'tanggal' => 'required|array|min:1',
+        'tanggal.*' => 'date',
+    ], message: [
+        'tanggal.required' => 'Pilih setidaknya satu tanggal.',
+        'tanggal.min' => 'Pilih setidaknya satu tanggal.',
+    ])]
+    public array $tanggal = [];
 
     #[Validate('nullable|string|max:500')]
     public string $keterangan = '';
@@ -40,8 +43,19 @@ new #[Layout('layouts.app')] #[Title('Pengajuan Izin/Cuti')] class extends Compo
     public function toggleForm()
     {
         $this->showForm = !$this->showForm;
-        $this->reset(['jenis', 'tanggal_mulai', 'tanggal_selesai', 'keterangan', 'lampiran']);
+        $this->reset(['jenis', 'tanggal', 'keterangan', 'lampiran']);
         $this->resetValidation();
+    }
+
+    public function tambahTanggal()
+    {
+        $this->tanggal[] = '';
+    }
+
+    public function hapusTanggal(int $index)
+    {
+        unset($this->tanggal[$index]);
+        $this->tanggal = array_values($this->tanggal);
     }
 
     public function submit()
@@ -55,7 +69,7 @@ new #[Layout('layouts.app')] #[Title('Pengajuan Izin/Cuti')] class extends Compo
             return;
         }
 
-        $jumlahHari = Carbon::parse($this->tanggal_mulai)->diffInDays(Carbon::parse($this->tanggal_selesai)) + 1;
+        $jumlahHari = count($this->tanggal);
 
         // Cek sisa cuti jika jenis = Cuti
         if ($this->jenis === 'Cuti') {
@@ -68,16 +82,17 @@ new #[Layout('layouts.app')] #[Title('Pengajuan Izin/Cuti')] class extends Compo
         }
 
         // Cek apakah ada pengajuan yang tumpang tindih
-        $bentrok = PengajuanAbsen::where('karyawan_id', $karyawan->id)
+        $existingDates = PengajuanAbsen::where('karyawan_id', $karyawan->id)
             ->where('status', '!=', 'Ditolak')
-            ->where(function ($q) {
-                $q->whereBetween('tanggal_mulai', [$this->tanggal_mulai, $this->tanggal_selesai])
-                    ->orWhereBetween('tanggal_selesai', [$this->tanggal_mulai, $this->tanggal_selesai]);
-            })
-            ->exists();
+            ->get()
+            ->pluck('tanggal')
+            ->flatten()
+            ->toArray();
+            
+        $bentrok = collect($this->tanggal)->intersect($existingDates)->isNotEmpty();
 
         if ($bentrok) {
-            $this->error('Sudah ada pengajuan pada rentang tanggal tersebut.');
+            $this->error('Sebagian atau seluruh tanggal yang dipilih sudah ada pengajuan.');
             return;
         }
 
@@ -90,15 +105,14 @@ new #[Layout('layouts.app')] #[Title('Pengajuan Izin/Cuti')] class extends Compo
         PengajuanAbsen::create([
             'karyawan_id' => $karyawan->id,
             'jenis' => $this->jenis,
-            'tanggal_mulai' => $this->tanggal_mulai,
-            'tanggal_selesai' => $this->tanggal_selesai,
+            'tanggal' => $this->tanggal,
             'keterangan' => $this->keterangan,
             'lampiran' => $lampiranPath,
             'status' => 'Menunggu',
         ]);
 
         $this->showForm = false;
-        $this->reset(['jenis', 'tanggal_mulai', 'tanggal_selesai', 'keterangan', 'lampiran']);
+        $this->reset(['jenis', 'tanggal', 'keterangan', 'lampiran']);
         $this->success('Pengajuan berhasil dikirim! Menunggu persetujuan admin.');
     }
 
@@ -206,9 +220,22 @@ new #[Layout('layouts.app')] #[Title('Pengajuan Izin/Cuti')] class extends Compo
                 placeholder="Pilih jenis..." 
             />
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <x-input label="Tanggal Mulai" wire:model="tanggal_mulai" type="date" />
-                <x-input label="Tanggal Selesai" wire:model="tanggal_selesai" type="date" />
+            <div>
+                <label class="label"><span class="label-text font-semibold">Daftar Tanggal <span class="text-error">*</span></span></label>
+                <div class="space-y-2">
+                    @forelse($tanggal as $index => $tgl)
+                        <div class="flex gap-2 items-start">
+                            <div class="flex-1">
+                                <x-input wire:model="tanggal.{{ $index }}" type="date" icon="o-calendar" />
+                            </div>
+                            <x-button wire:click="hapusTanggal({{ $index }})" icon="o-trash" class="btn-error btn-outline" tooltip="Hapus" />
+                        </div>
+                    @empty
+                        <div class="text-sm text-base-content/50 italic mb-2">Belum ada tanggal dipilih.</div>
+                    @endforelse
+                </div>
+                <x-button wire:click="tambahTanggal" label="Tambah Tanggal" icon="o-plus" class="btn-sm btn-ghost mt-2 border border-base-300" />
+                @error('tanggal') <span class="text-error text-sm mt-1 block">{{ $message }}</span> @enderror
             </div>
 
             <x-textarea label="Keterangan / Alasan" wire:model="keterangan" placeholder="Tulis alasan pengajuan Anda..." rows="3" />
@@ -256,14 +283,14 @@ new #[Layout('layouts.app')] #[Title('Pengajuan Izin/Cuti')] class extends Compo
                     <div class="badge {{ $statusBadge }} badge-sm md:badge-md font-semibold">{{ $p->status }}</div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 bg-base-200/50 p-3 rounded-xl mb-3">
-                    <div>
-                        <p class="text-[10px] md:text-xs text-base-content/60 uppercase font-semibold mb-0.5">Dari</p>
-                        <p class="text-sm font-bold text-base-content">{{ Carbon::parse($p->tanggal_mulai)->locale('id')->isoFormat('D MMM Y') }}</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] md:text-xs text-base-content/60 uppercase font-semibold mb-0.5">Sampai</p>
-                        <p class="text-sm font-bold text-base-content">{{ Carbon::parse($p->tanggal_selesai)->locale('id')->isoFormat('D MMM Y') }}</p>
+                <div class="bg-base-200/50 p-3 rounded-xl mb-3">
+                    <p class="text-[10px] md:text-xs text-base-content/60 uppercase font-semibold mb-1">Daftar Tanggal</p>
+                    <div class="flex flex-wrap gap-2">
+                        @if(is_array($p->tanggal))
+                            @foreach($p->tanggal as $tgl)
+                                <span class="badge badge-neutral">{{ Carbon::parse($tgl)->locale('id')->isoFormat('D MMM Y') }}</span>
+                            @endforeach
+                        @endif
                     </div>
                 </div>
 

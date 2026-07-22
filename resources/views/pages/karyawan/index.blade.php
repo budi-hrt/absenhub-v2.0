@@ -288,59 +288,75 @@ new class extends Component {
 
     {{-- Table --}}
     <x-card shadow>
-        <x-table :headers="$headers" :rows="$karyawans" with-pagination>
-            @scope('cell_no', $row)
-                <span class="text-sm text-base-content/50">{{ $row->row_no }}</span>
-            @endscope
+        <div class="relative min-h-[30rem]">
+            {{-- Loading Overlay --}}
+            <div wire:loading wire:target="search, filterJabatan, filterStatus, filterKerja, filterAgama, gotoPage, nextPage, previousPage" class="absolute inset-0 bg-base-100/30 backdrop-blur-[1px] z-50 rounded-xl transition-all duration-150">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+                    <span class="loading loading-spinner loading-lg text-emerald-500"></span>
+                    <span class="text-xs font-bold text-emerald-600/70 tracking-wider uppercase animate-pulse">Memuat...</span>
+                </div>
+            </div>
 
-            @scope('cell_karyawan', $row)
-                <div class="flex items-center gap-3">
-                    <div class="avatar cursor-pointer" wire:click="editFoto({{ $row->id }})" title="Klik untuk ganti foto">
-                        <div class="mask mask-squircle w-10 h-10">
-                            <img src="{{ $row->foto_karyawan ? Storage::url($row->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $row->nik }}" alt="{{ $row->nama_karyawan }}" />
+            <div wire:loading.class="opacity-25 pointer-events-none" wire:target="search, filterJabatan, filterStatus, filterKerja, filterAgama, gotoPage, nextPage, previousPage" class="transition-opacity duration-150">
+                <x-table :headers="$headers" :rows="$karyawans" with-pagination>
+                @scope('cell_no', $row)
+                    <span class="text-sm text-base-content/50">{{ $row->row_no }}</span>
+                @endscope
+
+                @scope('cell_karyawan', $row)
+                    <div class="flex items-center gap-3">
+                        <div class="avatar cursor-pointer {{ !$row->foto_karyawan ? 'placeholder' : '' }}" wire:click="editFoto({{ $row->id }})" title="Klik untuk ganti foto">
+                            <div class="mask mask-squircle w-10 h-10 {{ !$row->foto_karyawan ? 'bg-gradient-to-br from-primary/20 to-primary/10 text-primary border border-primary/20 flex items-center justify-center font-bold text-xs' : '' }}">
+                                @if ($row->foto_karyawan)
+                                    <img src="{{ Storage::url($row->foto_karyawan) }}" alt="{{ $row->nama_karyawan }}" />
+                                @else
+                                    <span>{{ strtoupper(substr($row->nama_karyawan, 0, 2)) }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm">{{ $row->nama_karyawan }}</div>
+                            <div class="text-xs text-base-content/50">{{ $row->jabatan?->nama_jabatan ?? '-' }}</div>
                         </div>
                     </div>
-                    <div>
-                        <div class="font-bold text-sm">{{ $row->nama_karyawan }}</div>
-                        <div class="text-xs text-base-content/50">{{ $row->jabatan?->nama_jabatan ?? '-' }}</div>
+                @endscope
+
+                @scope('cell_kontak', $row)
+                    <div class="text-sm">
+                        <div>{{ $row->telp_karyawan }}</div>
+                        <div class="text-xs text-base-content/50">{{ $row->email_karyawan }}</div>
                     </div>
-                </div>
-            @endscope
+                @endscope
 
-            @scope('cell_kontak', $row)
-                <div class="text-sm">
-                    <div>{{ $row->telp_karyawan }}</div>
-                    <div class="text-xs text-base-content/50">{{ $row->email_karyawan }}</div>
-                </div>
-            @endscope
+                @scope('cell_is_active', $row)
+                    <div class="text-sm">{{ $row->status?->nama_status ?? '-' }}</div>
+                    <div class="text-xs {{ $row->is_active ? 'text-success' : 'text-error' }}">{{ $row->is_active ? 'Aktif' : 'Nonaktif' }}</div>
+                @endscope
 
-            @scope('cell_is_active', $row)
-                <div class="text-sm">{{ $row->status?->nama_status ?? '-' }}</div>
-                <div class="text-xs {{ $row->is_active ? 'text-success' : 'text-error' }}">{{ $row->is_active ? 'Aktif' : 'Nonaktif' }}</div>
-            @endscope
+                @scope('cell_agama', $row)
+                    <x-badge :value="$row->agama_karyawan ?? '-'" class="badge-info badge-soft" />
+                @endscope
 
-            @scope('cell_agama', $row)
-                <x-badge :value="$row->agama_karyawan ?? '-'" class="badge-info badge-soft" />
-            @endscope
-
-            @scope('actions', $row)
-                <div class="flex gap-1">
-                    <x-button icon="o-eye" wire:click="detailKaryawan({{ $row->id }})"
-                        class="btn-ghost btn-sm text-info" spinner />
-                    <a href="{{ route('karyawan.edit', $row->id) }}" wire:navigate>
-                        <x-button icon="o-pencil" class="btn-ghost btn-sm text-primary" />
-                    </a>
-                    @if ($row->is_active)
-                        <x-button icon="o-no-symbol" wire:click="confirmNonaktif({{ $row->id }})"
-                            class="btn-ghost btn-sm text-error" spinner />
-                    @else
-                        <x-button icon="o-check-badge" wire:click="confirmAktif({{ $row->id }})"
-                            class="btn-ghost btn-sm text-success" spinner />
-                    @endif
-                </div>
-            @endscope
-        </x-table>
-    </x-card>
+                @scope('actions', $row)
+                    <div class="flex gap-1">
+                        <x-button icon="o-eye" wire:click="detailKaryawan({{ $row->id }})"
+                            class="btn-ghost btn-sm text-info" spinner />
+                        <a href="{{ route('karyawan.edit', $row->id) }}" wire:navigate>
+                            <x-button icon="o-pencil" class="btn-ghost btn-sm text-primary" />
+                        </a>
+                        @if ($row->is_active)
+                            <x-button icon="o-no-symbol" wire:click="confirmNonaktif({{ $row->id }})"
+                                class="btn-ghost btn-sm text-error" spinner />
+                        @else
+                            <x-button icon="o-check-badge" wire:click="confirmAktif({{ $row->id }})"
+                                class="btn-ghost btn-sm text-success" spinner />
+                        @endif
+                    </div>
+                @endscope
+            </x-table>
+        </div>
+    </div>
+</x-card>
 
     {{-- Modal Detail --}}
     @php
@@ -380,9 +396,13 @@ new class extends Component {
             {{-- Header Gradient dengan Foto --}}
             <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-5 rounded-t-xl">
                 <div class="flex items-center gap-5">
-                    <div class="avatar">
-                        <div class="w-20 h-20 rounded-full ring-2 ring-white/30 ring-offset-0">
-                            <img src="{{ $detail->foto_karyawan ? Storage::url($detail->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $detail->nik }}" />
+                    <div class="avatar {{ !$detail->foto_karyawan ? 'placeholder' : '' }}">
+                        <div class="w-20 h-20 rounded-full ring-2 ring-white/30 ring-offset-0 {{ !$detail->foto_karyawan ? 'bg-white/20 text-white flex items-center justify-center font-bold text-lg' : '' }}">
+                            @if ($detail->foto_karyawan)
+                                <img src="{{ Storage::url($detail->foto_karyawan) }}" />
+                            @else
+                                <span>{{ strtoupper(substr($detail->nama_karyawan, 0, 2)) }}</span>
+                            @endif
                         </div>
                     </div>
                     <div>
@@ -469,9 +489,13 @@ new class extends Component {
         @if ($nk)
             <div class="bg-gradient-to-r from-red-500 to-rose-700 text-white px-6 py-5 rounded-t-xl">
                 <div class="flex items-center gap-4">
-                    <div class="avatar">
-                        <div class="w-16 h-16 rounded-full ring-2 ring-white/30 ring-offset-0">
-                            <img src="{{ $nk->foto_karyawan ? Storage::url($nk->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $nk->nik }}" />
+                    <div class="avatar {{ !$nk->foto_karyawan ? 'placeholder' : '' }}">
+                        <div class="w-16 h-16 rounded-full ring-2 ring-white/30 ring-offset-0 {{ !$nk->foto_karyawan ? 'bg-white/20 text-white flex items-center justify-center font-bold text-base' : '' }}">
+                            @if ($nk->foto_karyawan)
+                                <img src="{{ Storage::url($nk->foto_karyawan) }}" />
+                            @else
+                                <span>{{ strtoupper(substr($nk->nama_karyawan, 0, 2)) }}</span>
+                            @endif
                         </div>
                     </div>
                     <div>
@@ -498,9 +522,13 @@ new class extends Component {
         @if ($nk)
             <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-5 rounded-t-xl">
                 <div class="flex items-center gap-4">
-                    <div class="avatar">
-                        <div class="w-16 h-16 rounded-full ring-2 ring-white/30 ring-offset-0">
-                            <img src="{{ $nk->foto_karyawan ? Storage::url($nk->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $nk->nik }}" />
+                    <div class="avatar {{ !$nk->foto_karyawan ? 'placeholder' : '' }}">
+                        <div class="w-16 h-16 rounded-full ring-2 ring-white/30 ring-offset-0 {{ !$nk->foto_karyawan ? 'bg-white/20 text-white flex items-center justify-center font-bold text-base' : '' }}">
+                            @if ($nk->foto_karyawan)
+                                <img src="{{ Storage::url($nk->foto_karyawan) }}" />
+                            @else
+                                <span>{{ strtoupper(substr($nk->nama_karyawan, 0, 2)) }}</span>
+                            @endif
                         </div>
                     </div>
                     <div>

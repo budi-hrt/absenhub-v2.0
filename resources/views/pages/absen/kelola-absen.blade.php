@@ -5,13 +5,14 @@ use App\Models\Absen;
 use App\Models\Karyawan;
 use Carbon\Carbon;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
 use Mary\Traits\Toast;
 
-new class extends Component
+new #[Lazy] class extends Component
 {
     use Toast, WithFileUploads, WithPagination;
 
@@ -48,6 +49,18 @@ new class extends Component
     public array $keteranganOptions = [];
 
     public bool $showNoDataNotice = false;
+
+    public function placeholder()
+    {
+        return <<<'HTML'
+        <div class="flex justify-center items-center min-h-[32rem] bg-base-100/50 backdrop-blur-[1px] rounded-xl">
+            <div class="flex flex-col items-center gap-2">
+                <span class="loading loading-spinner loading-lg text-primary"></span>
+                <span class="text-xs font-bold text-primary tracking-wider uppercase animate-pulse">Memuat halaman...</span>
+            </div>
+        </div>
+        HTML;
+    }
 
     public function boot(): void
     {
@@ -138,6 +151,12 @@ new class extends Component
         return $this->getFilteredKaryawanQuery()->paginate(10);
     }
 
+    #[Computed]
+    public function filteredKaryawanIds(): array
+    {
+        return $this->getFilteredKaryawanQuery()->pluck('karyawans.id')->toArray();
+    }
+
     public function headers(): array
     {
         return [['key' => 'no', 'label' => '#', 'class' => 'w-1'], ['key' => 'karyawan', 'label' => 'KARYAWAN', 'sortable' => false], ['key' => 'tanggal', 'label' => 'TANGGAL', 'sortable' => false], ['key' => 'keterangan', 'label' => 'KETERANGAN', 'class' => 'w-48'], ['key' => 'scan_in', 'label' => 'CHECK IN', 'sortable' => false], ['key' => 'scan_out', 'label' => 'CHECK OUT', 'sortable' => false], ['key' => 'actions', 'label' => 'AKSI', 'class' => 'w-16']];
@@ -219,7 +238,7 @@ new class extends Component
 
     public function selectAll(): void
     {
-        $allIds = $this->getFilteredKaryawanQuery()->pluck('karyawans.id')->toArray();
+        $allIds = $this->filteredKaryawanIds;
         if (count($this->selectedRows) === count($allIds)) {
             $this->selectedRows = [];
         } else {
@@ -234,7 +253,7 @@ new class extends Component
 
     public function allSelected(): bool
     {
-        $allIds = $this->getFilteredKaryawanQuery()->pluck('karyawans.id')->toArray();
+        $allIds = $this->filteredKaryawanIds;
 
         return count($allIds) > 0 && count($this->selectedRows) === count($allIds);
     }
@@ -446,11 +465,18 @@ new class extends Component
     @endif
 
     {{-- Table --}}
-    <x-card shadow class="min-h-[32rem]">
-        <div wire:loading.class="opacity-40 pointer-events-none"
-            wire:target="gotoPage,previousPage,nextPage,setKeterangan,filterTanggal,filterKeterangan,search,saveCollective"
-            class="transition-opacity duration-200">
-            <x-table :headers="$headers" :rows="$absens" with-pagination show-empty-text
+    <x-card shadow>
+        <div class="relative min-h-[32rem]">
+            {{-- Loading Overlay --}}
+            <div wire:loading wire:target="search, filterTanggal, filterKeterangan, gotoPage, nextPage, previousPage" class="absolute inset-0 bg-base-100/30 backdrop-blur-[1px] z-50 rounded-xl transition-all duration-150">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+                    <span class="loading loading-spinner loading-lg text-primary"></span>
+                    <span class="text-xs font-bold text-primary tracking-wider uppercase animate-pulse">Memuat...</span>
+                </div>
+            </div>
+
+            <div wire:loading.class="opacity-25 pointer-events-none" wire:target="search, filterTanggal, filterKeterangan, gotoPage, nextPage, previousPage" class="transition-opacity duration-150">
+                <x-table :headers="$headers" :rows="$absens" with-pagination show-empty-text
                 empty-text="Tidak ada data ditemukan">
                 @scope('header_no', $header)
                     <label class="flex items-center gap-2">
@@ -471,10 +497,13 @@ new class extends Component
 
                 @scope('cell_karyawan', $row)
                     <div class="flex items-center gap-3">
-                        <div class="avatar">
-                            <div class="mask mask-squircle w-10 h-10">
-                                <img src="{{ $row->foto_karyawan ? Storage::url($row->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $row->nik }}"
-                                    alt="{{ $row->nama_karyawan }}" />
+                        <div class="avatar {{ !$row->foto_karyawan ? 'placeholder' : '' }}">
+                            <div class="mask mask-squircle w-10 h-10 {{ !$row->foto_karyawan ? 'bg-gradient-to-br from-primary/20 to-primary/10 text-primary border border-primary/20 flex items-center justify-center font-bold text-xs' : '' }}">
+                                @if ($row->foto_karyawan)
+                                    <img src="{{ Storage::url($row->foto_karyawan) }}" alt="{{ $row->nama_karyawan }}" />
+                                @else
+                                    <span>{{ strtoupper(substr($row->nama_karyawan, 0, 2)) }}</span>
+                                @endif
                             </div>
                         </div>
                         <div>
@@ -601,7 +630,8 @@ new class extends Component
                 @endscope
             </x-table>
         </div>
-    </x-card>
+    </div>
+</x-card>
 
     {{-- Modal Detail --}}
     <div wire:key="detail-modal-wrap">
@@ -611,9 +641,13 @@ new class extends Component
                 <div class="space-y-4">
                     {{-- Employee Info --}}
                     <div class="flex items-center gap-3">
-                        <div class="avatar">
-                            <div class="mask mask-squircle w-11 h-11">
-                                <img src="{{ $d->karyawan->foto_karyawan ? Storage::url($d->karyawan->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $d->karyawan->nik }}" alt="{{ $d->karyawan->nama_karyawan }}" />
+                        <div class="avatar {{ !$d->karyawan->foto_karyawan ? 'placeholder' : '' }}">
+                            <div class="mask mask-squircle w-11 h-11 {{ !$d->karyawan->foto_karyawan ? 'bg-gradient-to-br from-primary/20 to-primary/10 text-primary border border-primary/20 flex items-center justify-center font-bold text-xs' : '' }}">
+                                @if ($d->karyawan->foto_karyawan)
+                                    <img src="{{ Storage::url($d->karyawan->foto_karyawan) }}" alt="{{ $d->karyawan->nama_karyawan }}" />
+                                @else
+                                    <span>{{ strtoupper(substr($d->karyawan->nama_karyawan, 0, 2)) }}</span>
+                                @endif
                             </div>
                         </div>
                         <div>
