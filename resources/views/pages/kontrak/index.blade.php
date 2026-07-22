@@ -224,7 +224,11 @@ new #[Layout('layouts.app')] #[Title('Kontrak Kerja')] class extends Component {
 
         if ($this->filterMasaKontrak) {
             $query->whereHas('kontraks', function($q) {
-                $q->where('masa_kontrak_id', $this->filterMasaKontrak);
+                $q->whereIn('id', function($sub) {
+                    $sub->selectRaw('MAX(id)')
+                        ->from('kontraks')
+                        ->groupBy('karyawan_id');
+                })->where('masa_kontrak_id', $this->filterMasaKontrak);
             });
         }
 
@@ -284,15 +288,15 @@ new #[Layout('layouts.app')] #[Title('Kontrak Kerja')] class extends Component {
     {{-- Main Table --}}
     <x-card class="border border-base-300 shadow-sm mb-6 p-0">
         <div class="relative min-h-[30rem]">
-            {{-- Loading Overlay --}}
-            <div wire:loading class="absolute inset-0 bg-base-100/30 backdrop-blur-[1px] z-50 rounded-xl transition-all duration-150">
+            {{-- Loading Overlay for Search/Filters --}}
+            <div wire:loading wire:target="search, filterMasaKontrak, filterJabatan, filterStatus, resetFilters, gotoPage, previousPage, nextPage" class="absolute inset-0 bg-base-100/30 backdrop-blur-[1px] z-50 rounded-xl transition-all duration-150">
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
                     <span class="loading loading-spinner loading-lg text-primary"></span>
                     <span class="text-xs font-bold text-primary tracking-wider uppercase animate-pulse">Memuat...</span>
                 </div>
             </div>
 
-            <div wire:loading.class="opacity-25 pointer-events-none" class="transition-opacity duration-150 flex flex-col justify-between h-full">
+            <div wire:loading.class="opacity-25 pointer-events-none" wire:target="search, filterMasaKontrak, filterJabatan, filterStatus, resetFilters, gotoPage, previousPage, nextPage" class="transition-opacity duration-150 flex flex-col justify-between h-full">
                 <div class="overflow-x-auto">
                 <table class="table w-full">
                     <thead>
@@ -356,7 +360,7 @@ new #[Layout('layouts.app')] #[Title('Kontrak Kerja')] class extends Component {
                                 </td>
                                 <td>
                                     @if($latestContract && $latestContract->masaKontrak)
-                                        <span class="badge badge-neutral badge-sm font-medium">{{ $latestContract->masaKontrak->status_kontrak }}</span>
+                                        <span class="text-sm">{{ $latestContract->masaKontrak->status_kontrak }}</span>
                                     @else
                                         <span class="text-xs text-base-content/40">-</span>
                                     @endif
@@ -379,7 +383,7 @@ new #[Layout('layouts.app')] #[Title('Kontrak Kerja')] class extends Component {
                                     @endif
                                 </td>
                                 <td class="text-right">
-                                    <x-button wire:click="kelolaKontrak({{ $k->id }})" label="Kelola" icon="o-document-text" class="btn-sm btn-primary text-white shadow-sm" spinner tooltip="Kelola Kontrak" />
+                                    <x-button wire:click="kelolaKontrak({{ $k->id }})" label="Kelola" icon="o-document-text" class="btn-sm btn-primary text-white shadow-sm" spinner="kelolaKontrak({{ $k->id }})" tooltip="Kelola Kontrak" />
                                 </td>
                             </tr>
                         @empty
@@ -413,14 +417,14 @@ new #[Layout('layouts.app')] #[Title('Kontrak Kerja')] class extends Component {
                         <p class="text-sm">{{ $selectedKaryawan->jabatan?->nama_jabatan ?? 'Tanpa Jabatan' }}</p>
                     </div>
                     @if(!$showForm)
-                        <x-button wire:click="tambahBaru" label="Tambah Kontrak" icon="o-plus" class="btn-primary btn-sm text-white shadow-sm" />
+                        <x-button wire:click="tambahBaru" label="Tambah Kontrak Baru" icon="o-plus" class="btn-primary btn-sm text-white shadow-sm" />
                     @endif
                 </div>
 
                 {{-- Form Tambah/Edit --}}
                 @if($showForm)
                     <div class="bg-base-100 p-5 rounded-xl border border-primary/20 shadow-sm relative">
-                        <h3 class="font-bold text-lg mb-4 text-primary">{{ $editingId ? 'Edit Kontrak' : 'Buat Kontrak Baru' }}</h3>
+                        <h3 class="font-bold text-lg mb-4 text-primary">{{ $editingId ? 'Edit Kontrak (Kontrak Terbaru)' : 'Buat Kontrak Baru' }}</h3>
                         
                         <form wire:submit="simpan" class="space-y-4">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -459,20 +463,35 @@ new #[Layout('layouts.app')] #[Title('Kontrak Kerja')] class extends Component {
                                         <th>Periode</th>
                                         <th>Masa Kontrak</th>
                                         <th>Gaji Pokok</th>
+                                        <th>Status Record</th>
                                         <th class="text-right">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($selectedKaryawan->kontraks as $knt)
+                                    @forelse($selectedKaryawan->kontraks as $index => $knt)
+                                        @php
+                                            $isLatest = ($index === 0);
+                                        @endphp
                                         <tr class="hover">
                                             <td class="font-semibold">{{ $knt->nomor }}</td>
                                             <td>{{ Carbon::parse($knt->tanggal_mulai)->format('d/m/y') }} - {{ Carbon::parse($knt->tanggal_akhir)->format('d/m/y') }}</td>
                                             <td>{{ $knt->masaKontrak?->status_kontrak ?? '-' }}</td>
                                             <td>Rp {{ number_format($knt->gaji, 0, ',', '.') }}</td>
+                                            <td>
+                                                @if($isLatest)
+                                                    <span class="badge badge-success badge-sm font-semibold">Aktif</span>
+                                                @else
+                                                    <span class="badge badge-ghost badge-sm opacity-70">Arsip</span>
+                                                @endif
+                                            </td>
                                             <td class="text-right">
-                                                <div class="flex justify-end gap-1">
-                                                    <x-button wire:click="edit({{ $knt->id }})" icon="o-pencil" class="btn-xs btn-ghost text-info" tooltip="Edit" />
-                                                    <x-button wire:click="hapus({{ $knt->id }})" wire:confirm="Yakin ingin menghapus data kontrak ini?" icon="o-trash" class="btn-xs btn-ghost text-error" tooltip="Hapus" spinner />
+                                                <div class="flex justify-end gap-1 items-center">
+                                                    <x-button link="{{ route('kontrak.pdf', $knt->id) }}" external icon="o-printer" class="btn-xs btn-ghost text-primary" tooltip="Cetak / Preview PDF" />
+                                                    @if($isLatest)
+                                                        <x-button wire:click="edit({{ $knt->id }})" icon="o-pencil" class="btn-xs btn-ghost text-info" tooltip="Edit Kontrak Terbaru" spinner="edit({{ $knt->id }})" />
+                                                    @else
+                                                        <span class="text-xs text-base-content/40 italic px-1">Terkunci</span>
+                                                    @endif
                                                 </div>
                                             </td>
                                         </tr>

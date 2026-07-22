@@ -171,14 +171,14 @@ use Mary\Traits\Toast;
 
         <div class="relative min-h-[30rem]">
             
-            <div wire:loading class="absolute inset-0 bg-base-100/30 backdrop-blur-[1px] z-50 rounded-xl transition-all duration-150">
+            <div wire:loading wire:target="search, filterMasaKontrak, filterJabatan, filterStatus, resetFilters, gotoPage, previousPage, nextPage" class="absolute inset-0 bg-base-100/30 backdrop-blur-[1px] z-50 rounded-xl transition-all duration-150">
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
                     <span class="loading loading-spinner loading-lg text-primary"></span>
                     <span class="text-xs font-bold text-primary tracking-wider uppercase animate-pulse">Memuat...</span>
                 </div>
             </div>
 
-            <div wire:loading.class="opacity-25 pointer-events-none" class="transition-opacity duration-150 flex flex-col justify-between h-full">
+            <div wire:loading.class="opacity-25 pointer-events-none" wire:target="search, filterMasaKontrak, filterJabatan, filterStatus, resetFilters, gotoPage, previousPage, nextPage" class="transition-opacity duration-150 flex flex-col justify-between h-full">
                 <div class="overflow-x-auto">
                 <table class="table w-full">
                     <thead>
@@ -242,7 +242,7 @@ use Mary\Traits\Toast;
                                 </td>
                                 <td>
                                     <?php if($latestContract && $latestContract->masaKontrak): ?>
-                                        <span class="badge badge-neutral badge-sm font-medium"><?php echo e($latestContract->masaKontrak->status_kontrak); ?></span>
+                                        <span class="text-sm"><?php echo e($latestContract->masaKontrak->status_kontrak); ?></span>
                                     <?php else: ?>
                                         <span class="text-xs text-base-content/40">-</span>
                                     <?php endif; ?>
@@ -268,7 +268,7 @@ use Mary\Traits\Toast;
                                 <td class="text-right">
                                     <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
-<?php $component = Mary\View\Components\Button::resolve(['label' => 'Kelola','icon' => 'o-document-text','spinner' => true,'tooltip' => 'Kelola Kontrak'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Mary\View\Components\Button::resolve(['label' => 'Kelola','icon' => 'o-document-text','spinner' => 'kelolaKontrak('.e($k->id).')','tooltip' => 'Kelola Kontrak'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -365,7 +365,7 @@ use Mary\Traits\Toast;
                     <?php if(!$showForm): ?>
                         <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
-<?php $component = Mary\View\Components\Button::resolve(['label' => 'Tambah Kontrak','icon' => 'o-plus'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Mary\View\Components\Button::resolve(['label' => 'Tambah Kontrak Baru','icon' => 'o-plus'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -391,7 +391,7 @@ use Mary\Traits\Toast;
                 
                 <?php if($showForm): ?>
                     <div class="bg-base-100 p-5 rounded-xl border border-primary/20 shadow-sm relative">
-                        <h3 class="font-bold text-lg mb-4 text-primary"><?php echo e($editingId ? 'Edit Kontrak' : 'Buat Kontrak Baru'); ?></h3>
+                        <h3 class="font-bold text-lg mb-4 text-primary"><?php echo e($editingId ? 'Edit Kontrak (Kontrak Terbaru)' : 'Buat Kontrak Baru'); ?></h3>
                         
                         <form wire:submit="simpan" class="space-y-4">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -682,21 +682,55 @@ use Mary\Traits\Toast;
                                         <th>Periode</th>
                                         <th>Masa Kontrak</th>
                                         <th>Gaji Pokok</th>
+                                        <th>Status Record</th>
                                         <th class="text-right">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__empty_1 = true; $__currentLoopData = $selectedKaryawan->kontraks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $knt): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__empty_1 = true; $__currentLoopData = $selectedKaryawan->kontraks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $knt): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                                        <?php
+                                            $isLatest = ($index === 0);
+                                        ?>
                                         <tr class="hover">
                                             <td class="font-semibold"><?php echo e($knt->nomor); ?></td>
                                             <td><?php echo e(Carbon::parse($knt->tanggal_mulai)->format('d/m/y')); ?> - <?php echo e(Carbon::parse($knt->tanggal_akhir)->format('d/m/y')); ?></td>
                                             <td><?php echo e($knt->masaKontrak?->status_kontrak ?? '-'); ?></td>
                                             <td>Rp <?php echo e(number_format($knt->gaji, 0, ',', '.')); ?></td>
+                                            <td>
+                                                <?php if($isLatest): ?>
+                                                    <span class="badge badge-success badge-sm font-semibold">Aktif</span>
+                                                <?php else: ?>
+                                                    <span class="badge badge-ghost badge-sm opacity-70">Arsip</span>
+                                                <?php endif; ?>
+                                            </td>
                                             <td class="text-right">
-                                                <div class="flex justify-end gap-1">
+                                                <div class="flex justify-end gap-1 items-center">
                                                     <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
-<?php $component = Mary\View\Components\Button::resolve(['icon' => 'o-pencil','tooltip' => 'Edit'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Mary\View\Components\Button::resolve(['link' => ''.e(route('kontrak.pdf', $knt->id)).'','external' => true,'icon' => 'o-printer','tooltip' => 'Cetak / Preview PDF'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\Button::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'btn-xs btn-ghost text-primary']); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal602b228a887fab12f0012a3179e5b533)): ?>
+<?php $attributes = $__attributesOriginal602b228a887fab12f0012a3179e5b533; ?>
+<?php unset($__attributesOriginal602b228a887fab12f0012a3179e5b533); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal602b228a887fab12f0012a3179e5b533)): ?>
+<?php $component = $__componentOriginal602b228a887fab12f0012a3179e5b533; ?>
+<?php unset($__componentOriginal602b228a887fab12f0012a3179e5b533); ?>
+<?php endif; ?>
+                                                    <?php if($isLatest): ?>
+                                                        <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
+<?php $component = Mary\View\Components\Button::resolve(['icon' => 'o-pencil','tooltip' => 'Edit Kontrak Terbaru','spinner' => 'edit('.e($knt->id).')'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -716,28 +750,9 @@ use Mary\Traits\Toast;
 <?php $component = $__componentOriginal602b228a887fab12f0012a3179e5b533; ?>
 <?php unset($__componentOriginal602b228a887fab12f0012a3179e5b533); ?>
 <?php endif; ?>
-                                                    <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
-<?php $component = Mary\View\Components\Button::resolve(['icon' => 'o-trash','tooltip' => 'Hapus','spinner' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('button'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Mary\View\Components\Button::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['wire:click' => 'hapus('.e($knt->id).')','wire:confirm' => 'Yakin ingin menghapus data kontrak ini?','class' => 'btn-xs btn-ghost text-error']); ?>
-<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
-
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal602b228a887fab12f0012a3179e5b533)): ?>
-<?php $attributes = $__attributesOriginal602b228a887fab12f0012a3179e5b533; ?>
-<?php unset($__attributesOriginal602b228a887fab12f0012a3179e5b533); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal602b228a887fab12f0012a3179e5b533)): ?>
-<?php $component = $__componentOriginal602b228a887fab12f0012a3179e5b533; ?>
-<?php unset($__componentOriginal602b228a887fab12f0012a3179e5b533); ?>
-<?php endif; ?>
+                                                    <?php else: ?>
+                                                        <span class="text-xs text-base-content/40 italic px-1">Terkunci</span>
+                                                    <?php endif; ?>
                                                 </div>
                                             </td>
                                         </tr>
