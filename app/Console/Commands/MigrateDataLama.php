@@ -34,7 +34,7 @@ class MigrateDataLama extends Command
             // Laravel akan mencari teks ini di tabel jabatans.
             // Kalau tidak ada, akan dibuatkan otomatis. Kalau ada, langsung ambil ID-nya!
             $jabatan = Jabatan::firstOrCreate(
-                ['nama_jabatan' => $teksJabatan]
+                ['nama_jabatan' => $teksJabatan],
             );
 
             // 2. PERBAIKAN: OTOMATISASI STATUS DARI id_status CI3
@@ -49,7 +49,7 @@ class MigrateDataLama extends Command
                     'is_active' => 1,
                     'created_at' => now(),
                     'updated_at' => now(),
-                ]
+                ],
             );
 
             // --- SELESAI BAGIAN AJAIB ---

@@ -3,20 +3,25 @@
 use App\Models\Absen;
 use App\Models\Karyawan;
 use Carbon\Carbon;
-use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Livewire\Component;
 use Livewire\WithPagination;
 use Mary\Traits\Toast;
 
-new class extends Component {
+new class extends Component
+{
     use Toast, WithPagination;
 
     public string $search = '';
+
     public string $bulan = '';
+
     public string $tahun = '';
-    public string $perPage = '10';
+
+    public string $perPage = '20';
 
     public array $listBulan = [];
+
     public array $listTahun = [];
 
     public function boot(): void
@@ -32,11 +37,15 @@ new class extends Component {
 
         $now = now()->setTimezone('Asia/Makassar');
         $this->listTahun = collect(range($now->year - 2, $now->year + 1))
-            ->map(fn($y) => ['id' => (string) $y, 'name' => (string) $y])
+            ->map(fn ($y) => ['id' => (string) $y, 'name' => (string) $y])
             ->toArray();
 
-        if (empty($this->bulan)) $this->bulan = $now->format('m');
-        if (empty($this->tahun)) $this->tahun = (string) $now->year;
+        if (empty($this->bulan)) {
+            $this->bulan = $now->format('m');
+        }
+        if (empty($this->tahun)) {
+            $this->tahun = (string) $now->year;
+        }
     }
 
     public function updatingSearch(): void
@@ -72,7 +81,7 @@ new class extends Component {
                 $q->where('is_active', true)
                     ->orWhereHas('absens', function ($aq) use ($tahun, $bulan) {
                         $aq->whereYear('tanggal_absen', $tahun)
-                           ->whereMonth('tanggal_absen', $bulan);
+                            ->whereMonth('tanggal_absen', $bulan);
                     });
             })
             ->when($this->search, function ($q) {
@@ -126,7 +135,34 @@ new class extends Component {
 <?php $component->withAttributes([]); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
+         <?php $__env->slot('actions', null, []); ?> 
+            <a href="<?php echo e(route('absen.rekap-bulanan.pdf', ['bulan' => $bulan, 'tahun' => $tahun, 'search' => $search])); ?>" target="_blank" class="btn btn-error btn-sm text-white">
+                <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
+<?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-document-arrow-down'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\Icon::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'w-4 h-4']); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
 <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $attributes = $__attributesOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__attributesOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $component = $__componentOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__componentOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?>
+                Export PDF (F4)
+            </a>
+         <?php $__env->endSlot(); ?>
+     <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal6f99ffca722ef3c8789c4087c5ac9f0d)): ?>
 <?php $attributes = $__attributesOriginal6f99ffca722ef3c8789c4087c5ac9f0d; ?>
@@ -164,9 +200,19 @@ new class extends Component {
 
     
     <div class="bg-base-100 border rounded-xl overflow-hidden shadow-sm">
-        <div class="overflow-x-auto">
-            <table class="w-full border-collapse text-xs" <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::$currentLoop['key'] = 'rekap-bulanan-'.e($bulan).'-'.e($tahun).''; ?>wire:key="rekap-bulanan-<?php echo e($bulan); ?>-<?php echo e($tahun); ?>">
-                <thead>
+        <div class="relative min-h-[30rem]">
+            
+            <div wire:loading class="absolute inset-0 bg-base-100/30 backdrop-blur-[1px] z-50 rounded-xl transition-all duration-150">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+                    <span class="loading loading-spinner loading-lg text-primary"></span>
+                    <span class="text-xs font-bold text-primary tracking-wider uppercase animate-pulse">Memuat...</span>
+                </div>
+            </div>
+
+            <div wire:loading.class="opacity-25 pointer-events-none" class="transition-opacity duration-150">
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-xs" <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::$currentLoop['key'] = 'rekap-bulanan-'.e($bulan).'-'.e($tahun).''; ?>wire:key="rekap-bulanan-<?php echo e($bulan); ?>-<?php echo e($tahun); ?>">
+                        <thead>
                     <tr class="bg-base-200 border-b">
                         <th class="px-2 py-2 text-left font-semibold text-base-content/70 border-r w-[120px]">NAMA</th>
                         <th class="px-2 py-2 text-left font-semibold text-base-content/70 border-r w-[60px]">JABATAN</th>
@@ -197,7 +243,7 @@ new class extends Component {
                             $off = $allRecords->where('keterangan', 'Off')->count();
                             $libur = $allRecords->where('keterangan', 'Libur')->count();
                             $lainnya = $allRecords->where('keterangan', 'Lainnya')->count();
-                            $persen = $totalHari > 0 ? round((($hadir + $dn + $cuti + $off + $libur) / $totalHari) * 100) : 0;
+                            $persen = $hk > 0 ? max(0, round(100 - ($alpa * 3) - ($izin * 2) - ($sakit * 1) - ($lainnya * 0.5), 1)) : 0;
                             $isAlumni = !$k->is_active;
                         ?>
                         <tr class="hover:bg-base-200/50 transition-colors">
@@ -248,5 +294,7 @@ new class extends Component {
             <?php endif; ?>
         </div>
     </div>
+</div>
+</div>
 </div>
 <?php /**PATH C:\laragon\www\absenhub-v2.0\resources\views\pages\absen\rekap-bulanan.blade.php ENDPATH**/ ?>

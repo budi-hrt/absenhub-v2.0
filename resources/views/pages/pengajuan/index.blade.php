@@ -481,13 +481,12 @@ new #[Layout('layouts.app')] #[Title('Kelola Pengajuan')] class extends Componen
                 accept="image/*"
                 hint="Maks 2MB. Format: JPG, PNG."
             />
-
-            {{-- Actions --}}
-            <x-slot:actions>
-                <x-button label="Batal" @click="$wire.showCreateModal = false" />
-                <x-button type="submit" label="Buat Pengajuan" icon="o-paper-airplane" class="btn-primary" spinner="submitPengajuan" />
-            </x-slot:actions>
         </form>
+
+        <x-slot:actions>
+            <x-button label="Batal" @click="$wire.showCreateModal = false" />
+            <x-button label="Buat Pengajuan" icon="o-paper-airplane" class="btn-primary" wire:click="submitPengajuan" spinner="submitPengajuan" />
+        </x-slot:actions>
     </x-modal>
 
     {{-- Modal Detail --}}
@@ -530,9 +529,20 @@ new #[Layout('layouts.app')] #[Title('Kelola Pengajuan')] class extends Componen
                 @endif
 
                 @if($selectedPengajuan->lampiran)
-                    <div class="bg-base-200/50 p-3 rounded-xl">
-                        <p class="text-[10px] uppercase text-base-content/50 font-semibold mb-2">Lampiran</p>
-                        <img src="{{ Storage::url($selectedPengajuan->lampiran) }}" alt="Lampiran" class="rounded-lg max-h-64 object-contain" />
+                    <div x-data="{ zoom: false }" x-effect="document.body.style.overflow = zoom ? 'hidden' : ''">
+                        <div class="bg-base-200/50 p-3 rounded-xl">
+                            <p class="text-[10px] uppercase text-base-content/50 font-semibold mb-2">Lampiran</p>
+                            <img src="{{ Storage::url($selectedPengajuan->lampiran) }}" alt="Lampiran" class="rounded-lg max-h-64 object-contain cursor-pointer hover:opacity-90 transition-opacity" @click="zoom = true" />
+                        </div>
+
+                        <div x-show="zoom" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 p-4" @keydown.window.escape="zoom = false" @click="zoom = false" x-transition.opacity.duration.200ms>
+                            <div class="relative max-w-5xl max-h-[90vh] flex items-center justify-center" @click.stop>
+                                <button class="absolute -top-12 right-0 flex items-center gap-1.5 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-semibold backdrop-blur-sm transition-colors border border-white/20" @click="zoom = false">
+                                    <x-icon name="o-x-mark" class="w-5 h-5" /> Tutup
+                                </button>
+                                <img src="{{ Storage::url($selectedPengajuan->lampiran) }}" alt="Lampiran" class="max-w-full max-h-[85vh] rounded-xl shadow-2xl object-contain bg-black/40" />
+                            </div>
+                        </div>
                     </div>
                 @endif
 

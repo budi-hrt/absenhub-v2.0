@@ -14,25 +14,25 @@ return new class extends Migration
         Schema::create('pengajuan_absens', function (Blueprint $table) {
             $table->id();
             $table->foreignId('karyawan_id')->constrained('karyawans')->cascadeOnDelete();
-            
+
             // Jenis: Cuti, Izin, Sakit
-            $table->string('jenis'); 
-            
+            $table->string('jenis');
+
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
-            
+
             $table->text('keterangan')->nullable();
-            
+
             // Foto bukti surat dokter / dll
-            $table->string('lampiran')->nullable(); 
-            
+            $table->string('lampiran')->nullable();
+
             // Status: Menunggu, Disetujui, Ditolak
-            $table->string('status')->default('Menunggu'); 
-            
+            $table->string('status')->default('Menunggu');
+
             // Siapa admin yang menyetujui/menolak (optional)
-            $table->foreignId('admin_id')->nullable()->constrained('users')->nullOnDelete(); 
+            $table->foreignId('admin_id')->nullable()->constrained('users')->nullOnDelete();
             $table->text('alasan_tolak')->nullable();
-            
+
             $table->timestamps();
         });
     }

@@ -14,20 +14,20 @@ class JatahCuti extends Model
     /**
      * Ambil jatah cuti untuk tahun tertentu (atau buat default 12)
      */
-    public static function getTahun(int $tahun = null): self
+    public static function getTahun(?int $tahun = null): self
     {
         $tahun = $tahun ?? now()->year;
 
         return self::firstOrCreate(
             ['tahun' => $tahun],
-            ['jatah_cuti' => 12]
+            ['jatah_cuti' => 12],
         );
     }
 
     /**
      * Hitung cuti terpakai untuk karyawan tertentu di tahun ini
      */
-    public static function terpakaiByKaryawan(int $karyawanId, int $tahun = null): int
+    public static function terpakaiByKaryawan(int $karyawanId, ?int $tahun = null): int
     {
         $tahun = $tahun ?? now()->year;
 
@@ -41,12 +41,12 @@ class JatahCuti extends Model
     /**
      * Hitung sisa cuti untuk karyawan tertentu
      */
-    public static function sisaByKaryawan(int $karyawanId, int $tahun = null, bool $includeMenunggu = true): int
+    public static function sisaByKaryawan(int $karyawanId, ?int $tahun = null, bool $includeMenunggu = true): int
     {
         $tahun = $tahun ?? now()->year;
         $jatah = self::getTahun($tahun);
         $terpakai = self::terpakaiByKaryawan($karyawanId, $tahun);
-        
+
         $menunggu = 0;
         if ($includeMenunggu) {
             // Ambil cuti berstatus menunggu di tahun ini
@@ -56,8 +56,9 @@ class JatahCuti extends Model
                 ->get()
                 ->sum(function ($p) use ($tahun) {
                     $tanggalArray = $p->tanggal ?? [];
+
                     return collect($tanggalArray)
-                        ->filter(fn($tgl) => str_starts_with($tgl, (string) $tahun))
+                        ->filter(fn ($tgl) => str_starts_with($tgl, (string) $tahun))
                         ->count();
                 });
         }

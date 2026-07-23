@@ -7,6 +7,7 @@ use App\Models\Karyawan;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RekapExportController extends Controller
 {
@@ -111,5 +112,88 @@ class RekapExportController extends Controller
         $pdf->setPaper('folio', 'portrait');
 
         return $pdf->download("rekap-tahunan-{$tahun}.pdf");
+    }
+
+    public function performa(Request $request)
+    {
+        $tahun = $request->query('tahun', now()->format('Y'));
+        $search = $request->query('search', '');
+        $filterStatus = $request->query('filterStatus', 'tetap');
+
+        $karyawans = Karyawan::with('jabatan')
+            ->where('is_active', true)
+            ->when($filterStatus === 'tetap', function ($q) {
+                $q->where('status_id', 1);
+            })
+            ->when($filterStatus === 'kontrak', function ($q) {
+                $q->where('status_id', 2);
+            })
+            ->when($search, function ($q) use ($search) {
+                $term = trim($search);
+                $q->where(function ($sub) use ($term) {
+                    $sub->where('nama_karyawan', 'like', "%{$term}%")
+                        ->orWhere('nik', 'like', "%{$term}%");
+                });
+            })
+            ->get();
+
+        $karyawanIds = $karyawans->pluck('id');
+
+        $absenStats = DB::table('absens')
+            ->whereIn('karyawan_id', $karyawanIds)
+            ->whereYear('tanggal_absen', (int) $tahun)
+            ->select('karyawan_id', 'keterangan', DB::raw('count(*) as total'))
+            ->groupBy('karyawan_id', 'keterangan')
+            ->get()
+            ->groupBy('karyawan_id');
+
+        $performanceList = $karyawans->map(function ($k) use ($absenStats) {
+            $stats = $absenStats[$k->id] ?? collect();
+            $hk = $stats->sum('total');
+            $hadir = $stats->where('keterangan', 'Hadir')->sum('total');
+            $dn = $stats->where('keterangan', 'Dinas Luar')->sum('total');
+            $cuti = $stats->where('keterangan', 'Cuti')->sum('total');
+            $sakit = $stats->where('keterangan', 'Sakit')->sum('total');
+            $izin = $stats->where('keterangan', 'Izin')->sum('total');
+            $alpa = $stats->where('keterangan', 'Alpa')->sum('total');
+            $off = $stats->where('keterangan', 'Off')->sum('total');
+            $libur = $stats->where('keterangan', 'Libur')->sum('total');
+            $lainnya = $stats->where('keterangan', 'Lainnya')->sum('total');
+            $persen = $hk > 0 ? max(0, round(100 - ($alpa * 3) - ($izin * 2) - ($sakit * 1) - ($lainnya * 0.5), 1)) : 0;
+
+            return [
+                'karyawan' => $k,
+                'hk' => $hk,
+                'hadir' => $hadir,
+                'dn' => $dn,
+                'cuti' => $cuti,
+                'sakit' => $sakit,
+                'izin' => $izin,
+                'alpa' => $alpa,
+                'off' => $off,
+                'libur' => $libur,
+                'lainnya' => $lainnya,
+                'rate' => $persen,
+            ];
+        })->sort(function ($a, $b) {
+            if ($a['rate'] === $b['rate']) {
+                return strcmp($a['karyawan']->nama_karyawan, $b['karyawan']->nama_karyawan);
+            }
+
+            return $b['rate'] <=> $a['rate'];
+        })->values();
+
+        $pdf = Pdf::loadView('exports.performa-pdf', [
+            'performanceList' => $performanceList,
+            'tahun' => $tahun,
+            'filterStatus' => $filterStatus,
+            'search' => $search,
+        ]);
+
+        $pdf->setPaper('folio', 'portrait');
+
+        $statusLabel = $filterStatus === 'tetap' ? 'Karyawan-Tetap' : 'Karyawan-Kontrak';
+
+        return $pdf->download("performa-absensi-{$statusLabel}-{$tahun}.pdf");
     }
 }

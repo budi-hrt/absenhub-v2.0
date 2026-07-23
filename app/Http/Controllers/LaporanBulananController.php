@@ -32,7 +32,7 @@ class LaporanBulananController extends Controller
                 $q->where('is_active', true)
                     ->orWhereHas('absens', function ($aq) use ($tahun, $bulan) {
                         $aq->whereYear('tanggal_absen', $tahun)
-                           ->whereMonth('tanggal_absen', $bulan);
+                            ->whereMonth('tanggal_absen', $bulan);
                     });
             })
             ->when($search, function ($q) use ($search) {

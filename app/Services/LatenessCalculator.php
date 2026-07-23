@@ -9,17 +9,21 @@ class LatenessCalculator
 {
     public static function getMinutesLate(?string $scanIn, string $tanggalAbsen): ?int
     {
-        if (!$scanIn) return null;
+        if (! $scanIn) {
+            return null;
+        }
 
         $setting = PengaturanAbsen::where('tanggal_mulai', '<=', $tanggalAbsen)
             ->where(function ($q) use ($tanggalAbsen) {
                 $q->whereNull('tanggal_akhir')
-                  ->orWhere('tanggal_akhir', '>=', $tanggalAbsen);
+                    ->orWhere('tanggal_akhir', '>=', $tanggalAbsen);
             })
             ->orderBy('tanggal_mulai', 'desc')
             ->first();
 
-        if (!$setting) return null;
+        if (! $setting) {
+            return null;
+        }
 
         $jamMasuk = Carbon::parse($setting->jam_masuk);
         $scanInTime = Carbon::parse($scanIn);
@@ -37,7 +41,7 @@ class LatenessCalculator
         $setting = PengaturanAbsen::where('tanggal_mulai', '<=', $tanggalAbsen)
             ->where(function ($q) use ($tanggalAbsen) {
                 $q->whereNull('tanggal_akhir')
-                  ->orWhere('tanggal_akhir', '>=', $tanggalAbsen);
+                    ->orWhere('tanggal_akhir', '>=', $tanggalAbsen);
             })
             ->orderBy('tanggal_mulai', 'desc')
             ->first();

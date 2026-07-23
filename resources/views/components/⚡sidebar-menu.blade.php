@@ -43,7 +43,7 @@ new class extends Component
 
         {{-- Manajemen Users: admin/super-admin|operator|manager only --}}
         @hasanyrole('admin|super-admin|operator|manager')
-        <x-menu-sub title="Manajemen Users" icon="o-cog-6-tooth">
+        <x-menu-sub title="Manajemen Users" icon="o-users">
             @haspermission('lihat-admin')
             <x-menu-item title="Data Users" icon="o-user" icon-classes="text-primary"
                 link="/users" :exact="true" />
@@ -82,8 +82,6 @@ new class extends Component
         <x-menu-sub title="Pengajuan Cuti/Izin" icon="o-paper-airplane">
             <x-menu-item title="Kelola Pengajuan" icon="o-check-badge" icon-classes="text-warning"
                 link="/pengajuan/kelola" :exact="true" />
-            <x-menu-item title="Jatah & Sisa Cuti" icon="o-calendar-days" icon-classes="text-success"
-                link="/pengajuan/jatah-cuti" :exact="true" />
         </x-menu-sub>
         @endhasanyrole
 
@@ -100,12 +98,24 @@ new class extends Component
                 link="/absen/rekap-bulanan" :exact="true" />
             <x-menu-item title="Rekap Tahunan" icon="o-calendar" icon-classes="text-secondary"
                 link="/absen/rekap-tahunan" :exact="true" />
+            <x-menu-item title="Performa Karyawan" icon="o-chart-bar-square" icon-classes="text-primary"
+                link="/absen/performa" :exact="true" />
             <x-menu-item title="Laporan Bulanan" icon="o-chart-bar" icon-classes="text-error"
                 link="/absen/laporan-bulanan" :exact="true" />
-            <x-menu-item title="Pengaturan Jam Kerja" icon="o-clock" icon-classes="text-warning"
+        </x-menu-sub>
+        @endhasanyrole
+
+        {{-- Pengaturan: admin/super-admin|operator|manager only --}}
+        @hasanyrole('admin|super-admin|operator|manager')
+        <x-menu-sub title="Pengaturan" icon="o-cog-6-tooth">
+            <x-menu-item title="Profil Saya" icon="o-user" icon-classes="text-info"
+                link="/pengaturan/profile" :exact="true" />
+            <x-menu-item title="Jam Kerja" icon="o-clock" icon-classes="text-warning"
                 link="/pengaturan/absen" :exact="true" />
-            <x-menu-item title="Pengaturan Lokasi" icon="o-map-pin" icon-classes="text-primary"
+            <x-menu-item title="Lokasi Kantor" icon="o-map-pin" icon-classes="text-primary"
                 link="/pengaturan/lokasi" :exact="true" />
+            <x-menu-item title="Jatah Cuti" icon="o-calendar-days" icon-classes="text-success"
+                link="/pengajuan/jatah-cuti" :exact="true" />
         </x-menu-sub>
         @endhasanyrole
 

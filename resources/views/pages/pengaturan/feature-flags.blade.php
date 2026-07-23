@@ -108,21 +108,21 @@ new class extends Component
 
     {{-- Stats Row --}}
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div class="stats shadow border border-base-200">
+        <div class="stats shadow border border-base-200 bg-base-100">
             <div class="stat">
                 <div class="stat-title text-xs font-semibold">Total Fitur</div>
                 <div class="stat-value text-2xl font-bold mt-1">{{ $this->stats['total'] }}</div>
                 <div class="stat-desc text-[10px] text-base-content/40">Seluruh modul terdaftar</div>
             </div>
         </div>
-        <div class="stats shadow border border-base-200">
+        <div class="stats shadow border border-base-200 bg-base-100">
             <div class="stat">
                 <div class="stat-title text-xs font-semibold text-success">Aktif</div>
                 <div class="stat-value text-2xl font-bold mt-1 text-success">{{ $this->stats['enabled'] }}</div>
                 <div class="stat-desc text-[10px] text-success/70">Siap digunakan</div>
             </div>
         </div>
-        <div class="stats shadow border border-base-200">
+        <div class="stats shadow border border-base-200 bg-base-100">
             <div class="stat">
                 <div class="stat-title text-xs font-semibold text-error">Nonaktif</div>
                 <div class="stat-value text-2xl font-bold mt-1 text-error">{{ $this->stats['disabled'] }}</div>

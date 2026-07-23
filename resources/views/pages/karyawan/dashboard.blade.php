@@ -91,53 +91,45 @@ new #[Layout('layouts.app')] #[Title('Dashboard')] class extends Component {
             <h3 class="text-sm md:text-base font-semibold text-base-content">Statistik Bulan Ini</h3>
             <span class="text-[10px] md:text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full">{{ $namaBulan }}</span>
         </div>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {{-- Izin --}}
-            <div class="bg-base-100 p-3 md:p-4 rounded-xl border border-base-300 hover:border-warning/50 transition-colors">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center shrink-0">
-                        <x-icon name="o-document-text" class="w-5 h-5 text-warning" />
-                    </div>
-                    <div>
-                        <p class="text-[10px] md:text-xs text-base-content/60 font-semibold uppercase tracking-wider">Izin</p>
-                        <p class="text-lg md:text-xl font-bold text-base-content leading-tight">{{ $izin }} <span class="text-xs md:text-sm font-normal text-base-content/60">hari</span></p>
-                    </div>
+            <div class="bg-base-100 border border-base-300 p-4 rounded-xl shadow-xs flex items-center justify-between">
+                <div>
+                    <p class="text-[11px] font-semibold text-base-content/60 uppercase tracking-wider">Izin</p>
+                    <h3 class="text-xl md:text-2xl font-bold text-warning mt-0.5">{{ $izin }} <span class="text-xs font-normal text-base-content/60">hari</span></h3>
+                </div>
+                <div class="w-9 h-9 rounded-lg bg-warning/10 text-warning flex items-center justify-center">
+                    <x-icon name="o-document-text" class="w-5 h-5" />
                 </div>
             </div>
             {{-- Sakit --}}
-            <div class="bg-base-100 p-3 md:p-4 rounded-xl border border-base-300 hover:border-error/50 transition-colors">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-error/10 flex items-center justify-center shrink-0">
-                        <x-icon name="o-heart" class="w-5 h-5 text-error" />
-                    </div>
-                    <div>
-                        <p class="text-[10px] md:text-xs text-base-content/60 font-semibold uppercase tracking-wider">Sakit</p>
-                        <p class="text-lg md:text-xl font-bold text-base-content leading-tight">{{ $sakit }} <span class="text-xs md:text-sm font-normal text-base-content/60">hari</span></p>
-                    </div>
+            <div class="bg-base-100 border border-base-300 p-4 rounded-xl shadow-xs flex items-center justify-between">
+                <div>
+                    <p class="text-[11px] font-semibold text-base-content/60 uppercase tracking-wider">Sakit</p>
+                    <h3 class="text-xl md:text-2xl font-bold text-amber-600 mt-0.5">{{ $sakit }} <span class="text-xs font-normal text-base-content/60">hari</span></h3>
+                </div>
+                <div class="w-9 h-9 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center">
+                    <x-icon name="o-heart" class="w-5 h-5" />
                 </div>
             </div>
             {{-- Cuti --}}
-            <div class="bg-base-100 p-3 md:p-4 rounded-xl border border-base-300 hover:border-primary/50 transition-colors">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                        <x-icon name="o-calendar" class="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                        <p class="text-[10px] md:text-xs text-base-content/60 font-semibold uppercase tracking-wider">Cuti</p>
-                        <p class="text-lg md:text-xl font-bold text-base-content leading-tight">{{ $cuti }} <span class="text-xs md:text-sm font-normal text-base-content/60">hari</span></p>
-                    </div>
+            <div class="bg-base-100 border border-base-300 p-4 rounded-xl shadow-xs flex items-center justify-between">
+                <div>
+                    <p class="text-[11px] font-semibold text-base-content/60 uppercase tracking-wider">Cuti</p>
+                    <h3 class="text-xl md:text-2xl font-bold text-primary mt-0.5">{{ $cuti }} <span class="text-xs font-normal text-base-content/60">hari</span></h3>
+                </div>
+                <div class="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                    <x-icon name="o-calendar" class="w-5 h-5" />
                 </div>
             </div>
             {{-- Alpa --}}
-            <div class="bg-base-100 p-3 md:p-4 rounded-xl border border-base-300 hover:border-error/50 transition-colors">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-error/10 flex items-center justify-center shrink-0">
-                        <x-icon name="o-x-circle" class="w-5 h-5 text-error" />
-                    </div>
-                    <div>
-                        <p class="text-[10px] md:text-xs text-base-content/60 font-semibold uppercase tracking-wider">Alpa</p>
-                        <p class="text-lg md:text-xl font-bold text-base-content leading-tight">{{ $alpa }} <span class="text-xs md:text-sm font-normal text-base-content/60">hari</span></p>
-                    </div>
+            <div class="bg-base-100 border border-base-300 p-4 rounded-xl shadow-xs flex items-center justify-between">
+                <div>
+                    <p class="text-[11px] font-semibold text-base-content/60 uppercase tracking-wider">Alpa</p>
+                    <h3 class="text-xl md:text-2xl font-bold text-error mt-0.5">{{ $alpa }} <span class="text-xs font-normal text-base-content/60">hari</span></h3>
+                </div>
+                <div class="w-9 h-9 rounded-lg bg-error/10 text-error flex items-center justify-center">
+                    <x-icon name="o-x-circle" class="w-5 h-5" />
                 </div>
             </div>
         </div>

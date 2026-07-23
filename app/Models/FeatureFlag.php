@@ -19,6 +19,7 @@ class FeatureFlag extends Model
         // Default to true or database value
         return Cache::rememberForever("feature_flag:{$key}", function () use ($key) {
             $flag = self::where('key', $key)->first();
+
             return $flag ? (bool) $flag->is_enabled : true;
         });
     }

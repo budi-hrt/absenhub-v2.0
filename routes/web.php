@@ -3,6 +3,7 @@
 use App\Exports\AbsenTemplateExport;
 use App\Exports\DetailHarianExport;
 use App\Http\Controllers\KaryawanExportController;
+use App\Http\Controllers\KontrakExportController;
 use App\Http\Controllers\LaporanBulananController;
 use App\Http\Controllers\LihatAbsenExportController;
 use App\Http\Controllers\RekapExportController;
@@ -46,7 +47,7 @@ Route::middleware('auth')->group(function () {
         Route::livewire('/karyawan/create', 'pages::karyawan.create')->name('karyawan.create');
         Route::livewire('/karyawan/{karyawan}/edit', 'pages::karyawan.edit')->name('karyawan.edit');
         Route::livewire('/kontrak', 'pages::kontrak.index')->name('kontrak.index');
-        Route::get('/kontrak/{kontrak}/pdf', [\App\Http\Controllers\KontrakExportController::class, 'pdf'])->name('kontrak.pdf');
+        Route::get('/kontrak/{kontrak}/pdf', [KontrakExportController::class, 'pdf'])->name('kontrak.pdf');
 
         Route::get('/karyawan/export/excel', [KaryawanExportController::class, 'excel'])
             ->name('karyawan.export.excel');
@@ -70,6 +71,9 @@ Route::middleware('auth')->group(function () {
         Route::livewire('/absen/rekap-tahunan', 'pages::absen.rekap-tahunan')->name('absen.rekap-tahunan');
         Route::get('/absen/rekap-tahunan/pdf', [RekapExportController::class, 'tahunan'])
             ->name('absen.rekap-tahunan.pdf');
+        Route::livewire('/absen/performa', 'pages::absen.performa')->name('absen.performa');
+        Route::get('/absen/performa/pdf', [RekapExportController::class, 'performa'])
+            ->name('absen.performa.pdf');
         Route::livewire('/absen/laporan-bulanan', 'pages::absen.laporan-bulanan')->name('absen.laporan-bulanan');
         Route::get('/absen/laporan-bulanan/pdf', [LaporanBulananController::class, 'pdf'])
             ->name('absen.laporan-bulanan.pdf');
@@ -132,6 +136,7 @@ Route::middleware('auth')->group(function () {
         Route::livewire('/pengajuan/jatah-cuti', 'pages::pengajuan.jatah-cuti')->name('pengajuan.jatah-cuti');
 
         // Pengaturan
+        Route::livewire('/pengaturan/profile', 'pages::pengaturan.profile')->name('pengaturan.profile');
         Route::livewire('/pengaturan/absen', 'pages::pengaturan.absen')->name('pengaturan.absen');
         Route::livewire('/pengaturan/lokasi', 'pages::pengaturan.lokasi')->name('pengaturan.lokasi');
     });

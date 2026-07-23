@@ -601,10 +601,10 @@ unset($__errorArgs, $__bag); ?>
 <?php $component = $__componentOriginal34d3cad3f3cac9fafaaed454c83e534d; ?>
 <?php unset($__componentOriginal34d3cad3f3cac9fafaaed454c83e534d); ?>
 <?php endif; ?>
+        </form>
 
-            
-             <?php $__env->slot('actions', null, []); ?> 
-                <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
+         <?php $__env->slot('actions', null, []); ?> 
+            <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
 <?php $component = Mary\View\Components\Button::resolve(['label' => 'Batal'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('button'); ?>
@@ -626,7 +626,7 @@ unset($__errorArgs, $__bag); ?>
 <?php $component = $__componentOriginal602b228a887fab12f0012a3179e5b533; ?>
 <?php unset($__componentOriginal602b228a887fab12f0012a3179e5b533); ?>
 <?php endif; ?>
-                <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
+            <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
 <?php $component = Mary\View\Components\Button::resolve(['label' => 'Buat Pengajuan','icon' => 'o-paper-airplane','spinner' => 'submitPengajuan'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('button'); ?>
@@ -635,7 +635,7 @@ unset($__errorArgs, $__bag); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Mary\View\Components\Button::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['type' => 'submit','class' => 'btn-primary']); ?>
+<?php $component->withAttributes(['class' => 'btn-primary','wire:click' => 'submitPengajuan']); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
 <?php echo $__env->renderComponent(); ?>
@@ -648,8 +648,7 @@ unset($__errorArgs, $__bag); ?>
 <?php $component = $__componentOriginal602b228a887fab12f0012a3179e5b533; ?>
 <?php unset($__componentOriginal602b228a887fab12f0012a3179e5b533); ?>
 <?php endif; ?>
-             <?php $__env->endSlot(); ?>
-        </form>
+         <?php $__env->endSlot(); ?>
      <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal89a573612f1f1cb2dd9fc072235d4356)): ?>
@@ -712,9 +711,41 @@ unset($__errorArgs, $__bag); ?>
                 <?php endif; ?>
 
                 <?php if($selectedPengajuan->lampiran): ?>
-                    <div class="bg-base-200/50 p-3 rounded-xl">
-                        <p class="text-[10px] uppercase text-base-content/50 font-semibold mb-2">Lampiran</p>
-                        <img src="<?php echo e(Storage::url($selectedPengajuan->lampiran)); ?>" alt="Lampiran" class="rounded-lg max-h-64 object-contain" />
+                    <div x-data="{ zoom: false }" x-effect="document.body.style.overflow = zoom ? 'hidden' : ''">
+                        <div class="bg-base-200/50 p-3 rounded-xl">
+                            <p class="text-[10px] uppercase text-base-content/50 font-semibold mb-2">Lampiran</p>
+                            <img src="<?php echo e(Storage::url($selectedPengajuan->lampiran)); ?>" alt="Lampiran" class="rounded-lg max-h-64 object-contain cursor-pointer hover:opacity-90 transition-opacity" @click="zoom = true" />
+                        </div>
+
+                        <div x-show="zoom" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 p-4" @keydown.window.escape="zoom = false" @click="zoom = false" x-transition.opacity.duration.200ms>
+                            <div class="relative max-w-5xl max-h-[90vh] flex items-center justify-center" @click.stop>
+                                <button class="absolute -top-12 right-0 flex items-center gap-1.5 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-semibold backdrop-blur-sm transition-colors border border-white/20" @click="zoom = false">
+                                    <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
+<?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-x-mark'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\Icon::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'w-5 h-5']); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $attributes = $__attributesOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__attributesOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalce0070e6ae017cca68172d0230e44821)): ?>
+<?php $component = $__componentOriginalce0070e6ae017cca68172d0230e44821; ?>
+<?php unset($__componentOriginalce0070e6ae017cca68172d0230e44821); ?>
+<?php endif; ?> Tutup
+                                </button>
+                                <img src="<?php echo e(Storage::url($selectedPengajuan->lampiran)); ?>" alt="Lampiran" class="max-w-full max-h-[85vh] rounded-xl shadow-2xl object-contain bg-black/40" />
+                            </div>
+                        </div>
                     </div>
                 <?php endif; ?>
 

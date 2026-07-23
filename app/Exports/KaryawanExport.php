@@ -10,9 +10,13 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class KaryawanExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $search;
+
     protected $filterJabatan;
+
     protected $filterStatus;
+
     protected $filterAgama;
+
     protected $filterKerja;
 
     public function __construct(
@@ -20,7 +24,7 @@ class KaryawanExport implements FromCollection, WithHeadings, WithMapping
         string $filterJabatan = '',
         string $filterStatus = '',
         string $filterAgama = '',
-        string $filterKerja = ''
+        string $filterKerja = '',
     ) {
         $this->search = $search;
         $this->filterJabatan = $filterJabatan;
@@ -32,13 +36,13 @@ class KaryawanExport implements FromCollection, WithHeadings, WithMapping
     public function collection()
     {
         return Karyawan::with(['jabatan', 'status'])
-            ->when($this->search, fn($q) => $q->where('nama_karyawan', 'like', "%{$this->search}%")
+            ->when($this->search, fn ($q) => $q->where('nama_karyawan', 'like', "%{$this->search}%")
                 ->orWhere('nik', 'like', "%{$this->search}%"))
-            ->when($this->filterJabatan, fn($q) => $q->where('jabatan_id', $this->filterJabatan))
-            ->when($this->filterStatus === 'aktif', fn($q) => $q->where('is_active', true))
-            ->when($this->filterStatus === 'nonaktif', fn($q) => $q->where('is_active', false))
-            ->when($this->filterAgama, fn($q) => $q->where('agama_karyawan', $this->filterAgama))
-            ->when($this->filterKerja, fn($q) => $q->where('status_id', $this->filterKerja))
+            ->when($this->filterJabatan, fn ($q) => $q->where('jabatan_id', $this->filterJabatan))
+            ->when($this->filterStatus === 'aktif', fn ($q) => $q->where('is_active', true))
+            ->when($this->filterStatus === 'nonaktif', fn ($q) => $q->where('is_active', false))
+            ->when($this->filterAgama, fn ($q) => $q->where('agama_karyawan', $this->filterAgama))
+            ->when($this->filterKerja, fn ($q) => $q->where('status_id', $this->filterKerja))
             ->orderBy('nama_karyawan')
             ->get();
     }

@@ -5,36 +5,36 @@ namespace App\Http\Controllers;
 use App\Models\Kontrak;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class KontrakExportController extends Controller
 {
     public function pdf($id)
     {
         $kontrak = Kontrak::with(['karyawan.jabatan', 'masaKontrak', 'penandatangan.jabatan'])->findOrFail($id);
-        
+
         // Terbilang helper untuk angka nominal atau durasi
         $terbilang = function ($angka) use (&$terbilang) {
             $angka = floatval($angka);
-            $bilangan = array('', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima', 'Enam', 'Tujuh', 'Delapan', 'Sembilan', 'Sepuluh', 'Sebelas');
-            
+            $bilangan = ['', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima', 'Enam', 'Tujuh', 'Delapan', 'Sembilan', 'Sepuluh', 'Sebelas'];
+
             if ($angka < 12) {
                 return $bilangan[$angka];
-            } else if ($angka < 20) {
+            } elseif ($angka < 20) {
                 return $terbilang($angka - 10) . ' Belas';
-            } else if ($angka < 100) {
+            } elseif ($angka < 100) {
                 return $terbilang(floor($angka / 10)) . ' Puluh ' . $terbilang($angka % 10);
-            } else if ($angka < 200) {
+            } elseif ($angka < 200) {
                 return 'Seratus ' . $terbilang($angka % 100);
-            } else if ($angka < 1000) {
+            } elseif ($angka < 1000) {
                 return $terbilang(floor($angka / 100)) . ' Ratus ' . $terbilang($angka % 100);
-            } else if ($angka < 2000) {
+            } elseif ($angka < 2000) {
                 return 'Seribu ' . $terbilang($angka % 1000);
-            } else if ($angka < 1000000) {
+            } elseif ($angka < 1000000) {
                 return $terbilang(floor($angka / 1000)) . ' Ribu ' . $terbilang($angka % 1000);
-            } else if ($angka < 1000000000) {
+            } elseif ($angka < 1000000000) {
                 return $terbilang(floor($angka / 1000000)) . ' Juta ' . $terbilang($angka % 1000000);
             }
+
             return '';
         };
 
@@ -46,7 +46,7 @@ class KontrakExportController extends Controller
 
         $bulanIndo = [
             1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
         ];
 
         $tanggalSuratFormat = $tglSurat->day . ' ' . $bulanIndo[$tglSurat->month] . ' ' . $tglSurat->year;

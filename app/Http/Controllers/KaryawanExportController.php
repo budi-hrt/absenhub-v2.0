@@ -40,6 +40,7 @@ class KaryawanExportController extends Controller
         ]);
 
         $pdf->setPaper('folio', 'landscape');
+
         return $pdf->download('data-karyawan.pdf');
     }
 }

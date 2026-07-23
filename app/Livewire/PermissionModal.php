@@ -3,19 +3,24 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Mary\Traits\Toast;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Mary\Traits\Toast;
 
 class PermissionModal extends Component
 {
     use Toast;
 
     public bool $permissionModal = false;
+
     public ?int $selectedRoleId = null;
+
     public string $selectedRoleName = '';
+
     public array $selectedPermissions = [];
+
     public string $search = '';
+
     public bool $selectAll = false;
 
     public function open(int $roleId): void
@@ -65,7 +70,7 @@ class PermissionModal extends Component
         } else {
             $this->selectedPermissions = Permission::pluck('id')->toArray();
         }
-        $this->selectAll = !$this->selectAll;
+        $this->selectAll = ! $this->selectAll;
     }
 
     public function syncPermissions(): void
@@ -90,6 +95,7 @@ class PermissionModal extends Component
     public function isGroupFullySelected(string $group): bool
     {
         $ids = $this->getGroupPermissionIds($group);
+
         return count($ids) > 0 && count(array_intersect($ids, $this->selectedPermissions)) === count($ids);
     }
 
@@ -97,12 +103,14 @@ class PermissionModal extends Component
     {
         $ids = $this->getGroupPermissionIds($group);
         $intersect = array_intersect($ids, $this->selectedPermissions);
+
         return count($intersect) > 0 && count($intersect) < count($ids);
     }
 
     public function getGroupSelectedCount(string $group): int
     {
         $ids = $this->getGroupPermissionIds($group);
+
         return count(array_intersect($ids, $this->selectedPermissions));
     }
 
@@ -117,7 +125,7 @@ class PermissionModal extends Component
 
         if ($this->search) {
             $query->where('name', 'like', "%{$this->search}%")
-                  ->orWhere('group', 'like', "%{$this->search}%");
+                ->orWhere('group', 'like', "%{$this->search}%");
         }
 
         $permissions = $query->get();

@@ -3,7 +3,6 @@
 namespace App\Exports;
 
 use App\Models\Absen;
-use App\Models\Karyawan;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -11,7 +10,9 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class DetailHarianExport implements FromCollection, WithHeadings, WithMapping
 {
     protected int $karyawanId;
+
     protected string $bulan;
+
     protected string $tahun;
 
     public function __construct(int $karyawanId, string $bulan, string $tahun)

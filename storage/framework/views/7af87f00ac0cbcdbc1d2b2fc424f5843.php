@@ -49,12 +49,15 @@ use Livewire\Component;
             <h3 class="text-sm md:text-base font-semibold text-base-content">Statistik Bulan Ini</h3>
             <span class="text-[10px] md:text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full"><?php echo e($namaBulan); ?></span>
         </div>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             
-            <div class="bg-base-100 p-3 md:p-4 rounded-xl border border-base-300 hover:border-warning/50 transition-colors">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center shrink-0">
-                        <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
+            <div class="bg-base-100 border border-base-300 p-4 rounded-xl shadow-xs flex items-center justify-between">
+                <div>
+                    <p class="text-[11px] font-semibold text-base-content/60 uppercase tracking-wider">Izin</p>
+                    <h3 class="text-xl md:text-2xl font-bold text-warning mt-0.5"><?php echo e($izin); ?> <span class="text-xs font-normal text-base-content/60">hari</span></h3>
+                </div>
+                <div class="w-9 h-9 rounded-lg bg-warning/10 text-warning flex items-center justify-center">
+                    <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
 <?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-document-text'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('icon'); ?>
@@ -63,7 +66,7 @@ use Livewire\Component;
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Mary\View\Components\Icon::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'w-5 h-5 text-warning']); ?>
+<?php $component->withAttributes(['class' => 'w-5 h-5']); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
 <?php echo $__env->renderComponent(); ?>
@@ -76,18 +79,16 @@ use Livewire\Component;
 <?php $component = $__componentOriginalce0070e6ae017cca68172d0230e44821; ?>
 <?php unset($__componentOriginalce0070e6ae017cca68172d0230e44821); ?>
 <?php endif; ?>
-                    </div>
-                    <div>
-                        <p class="text-[10px] md:text-xs text-base-content/60 font-semibold uppercase tracking-wider">Izin</p>
-                        <p class="text-lg md:text-xl font-bold text-base-content leading-tight"><?php echo e($izin); ?> <span class="text-xs md:text-sm font-normal text-base-content/60">hari</span></p>
-                    </div>
                 </div>
             </div>
             
-            <div class="bg-base-100 p-3 md:p-4 rounded-xl border border-base-300 hover:border-error/50 transition-colors">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-error/10 flex items-center justify-center shrink-0">
-                        <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
+            <div class="bg-base-100 border border-base-300 p-4 rounded-xl shadow-xs flex items-center justify-between">
+                <div>
+                    <p class="text-[11px] font-semibold text-base-content/60 uppercase tracking-wider">Sakit</p>
+                    <h3 class="text-xl md:text-2xl font-bold text-amber-600 mt-0.5"><?php echo e($sakit); ?> <span class="text-xs font-normal text-base-content/60">hari</span></h3>
+                </div>
+                <div class="w-9 h-9 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center">
+                    <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
 <?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-heart'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('icon'); ?>
@@ -96,7 +97,7 @@ use Livewire\Component;
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Mary\View\Components\Icon::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'w-5 h-5 text-error']); ?>
+<?php $component->withAttributes(['class' => 'w-5 h-5']); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
 <?php echo $__env->renderComponent(); ?>
@@ -109,18 +110,16 @@ use Livewire\Component;
 <?php $component = $__componentOriginalce0070e6ae017cca68172d0230e44821; ?>
 <?php unset($__componentOriginalce0070e6ae017cca68172d0230e44821); ?>
 <?php endif; ?>
-                    </div>
-                    <div>
-                        <p class="text-[10px] md:text-xs text-base-content/60 font-semibold uppercase tracking-wider">Sakit</p>
-                        <p class="text-lg md:text-xl font-bold text-base-content leading-tight"><?php echo e($sakit); ?> <span class="text-xs md:text-sm font-normal text-base-content/60">hari</span></p>
-                    </div>
                 </div>
             </div>
             
-            <div class="bg-base-100 p-3 md:p-4 rounded-xl border border-base-300 hover:border-primary/50 transition-colors">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                        <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
+            <div class="bg-base-100 border border-base-300 p-4 rounded-xl shadow-xs flex items-center justify-between">
+                <div>
+                    <p class="text-[11px] font-semibold text-base-content/60 uppercase tracking-wider">Cuti</p>
+                    <h3 class="text-xl md:text-2xl font-bold text-primary mt-0.5"><?php echo e($cuti); ?> <span class="text-xs font-normal text-base-content/60">hari</span></h3>
+                </div>
+                <div class="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                    <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
 <?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-calendar'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('icon'); ?>
@@ -129,7 +128,7 @@ use Livewire\Component;
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Mary\View\Components\Icon::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'w-5 h-5 text-primary']); ?>
+<?php $component->withAttributes(['class' => 'w-5 h-5']); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
 <?php echo $__env->renderComponent(); ?>
@@ -142,18 +141,16 @@ use Livewire\Component;
 <?php $component = $__componentOriginalce0070e6ae017cca68172d0230e44821; ?>
 <?php unset($__componentOriginalce0070e6ae017cca68172d0230e44821); ?>
 <?php endif; ?>
-                    </div>
-                    <div>
-                        <p class="text-[10px] md:text-xs text-base-content/60 font-semibold uppercase tracking-wider">Cuti</p>
-                        <p class="text-lg md:text-xl font-bold text-base-content leading-tight"><?php echo e($cuti); ?> <span class="text-xs md:text-sm font-normal text-base-content/60">hari</span></p>
-                    </div>
                 </div>
             </div>
             
-            <div class="bg-base-100 p-3 md:p-4 rounded-xl border border-base-300 hover:border-error/50 transition-colors">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-error/10 flex items-center justify-center shrink-0">
-                        <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
+            <div class="bg-base-100 border border-base-300 p-4 rounded-xl shadow-xs flex items-center justify-between">
+                <div>
+                    <p class="text-[11px] font-semibold text-base-content/60 uppercase tracking-wider">Alpa</p>
+                    <h3 class="text-xl md:text-2xl font-bold text-error mt-0.5"><?php echo e($alpa); ?> <span class="text-xs font-normal text-base-content/60">hari</span></h3>
+                </div>
+                <div class="w-9 h-9 rounded-lg bg-error/10 text-error flex items-center justify-center">
+                    <?php if (isset($component)) { $__componentOriginalce0070e6ae017cca68172d0230e44821 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalce0070e6ae017cca68172d0230e44821 = $attributes; } ?>
 <?php $component = Mary\View\Components\Icon::resolve(['name' => 'o-x-circle'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('icon'); ?>
@@ -162,7 +159,7 @@ use Livewire\Component;
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Mary\View\Components\Icon::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'w-5 h-5 text-error']); ?>
+<?php $component->withAttributes(['class' => 'w-5 h-5']); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
 <?php echo $__env->renderComponent(); ?>
@@ -175,11 +172,6 @@ use Livewire\Component;
 <?php $component = $__componentOriginalce0070e6ae017cca68172d0230e44821; ?>
 <?php unset($__componentOriginalce0070e6ae017cca68172d0230e44821); ?>
 <?php endif; ?>
-                    </div>
-                    <div>
-                        <p class="text-[10px] md:text-xs text-base-content/60 font-semibold uppercase tracking-wider">Alpa</p>
-                        <p class="text-lg md:text-xl font-bold text-base-content leading-tight"><?php echo e($alpa); ?> <span class="text-xs md:text-sm font-normal text-base-content/60">hari</span></p>
-                    </div>
                 </div>
             </div>
         </div>

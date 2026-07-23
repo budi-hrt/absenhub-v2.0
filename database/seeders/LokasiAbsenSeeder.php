@@ -20,7 +20,7 @@ class LokasiAbsenSeeder extends Seeder
                 'longitude' => 106.827153,
                 'radius' => 100, // 100 meter
                 'is_active' => true,
-            ]
+            ],
         );
     }
 }

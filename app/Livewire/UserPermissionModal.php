@@ -4,19 +4,25 @@ namespace App\Livewire;
 
 use App\Models\User;
 use Livewire\Component;
-use Spatie\Permission\Models\Permission;
 use Mary\Traits\Toast;
+use Spatie\Permission\Models\Permission;
 
 class UserPermissionModal extends Component
 {
     use Toast;
 
     public bool $userModal = false;
+
     public ?int $selectedUserId = null;
+
     public string $selectedUserName = '';
+
     public array $selectedUserRoles = [];
+
     public array $rolePermissionIds = [];
+
     public array $directPermissionIds = [];
+
     public string $search = '';
 
     public function getListeners(): array
@@ -87,6 +93,7 @@ class UserPermissionModal extends Component
     {
         $ids = $this->getGroupPermissionIds($group);
         $all = array_unique(array_merge($this->rolePermissionIds, $this->directPermissionIds));
+
         return count(array_intersect($ids, $all));
     }
 
@@ -101,7 +108,7 @@ class UserPermissionModal extends Component
 
         if ($this->search) {
             $query->where('name', 'like', "%{$this->search}%")
-                  ->orWhere('group', 'like', "%{$this->search}%");
+                ->orWhere('group', 'like', "%{$this->search}%");
         }
 
         $permissions = $query->get();

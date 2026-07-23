@@ -402,7 +402,17 @@ new class extends Component {
 <?php $component->withAttributes([]); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
-        <?php if (isset($component)) { $__componentOriginal8fbd727209323874b055feef49197909 = $component; } ?>
+        <div class="relative min-h-[30rem]">
+            
+            <div wire:loading wire:target="search, filterJabatan, filterStatus, filterKerja, filterAgama, gotoPage, nextPage, previousPage" class="absolute inset-0 bg-base-100/30 backdrop-blur-[1px] z-50 rounded-xl transition-all duration-150">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+                    <span class="loading loading-spinner loading-lg text-emerald-500"></span>
+                    <span class="text-xs font-bold text-emerald-600/70 tracking-wider uppercase animate-pulse">Memuat...</span>
+                </div>
+            </div>
+
+            <div wire:loading.class="opacity-25 pointer-events-none" wire:target="search, filterJabatan, filterStatus, filterKerja, filterAgama, gotoPage, nextPage, previousPage" class="transition-opacity duration-150">
+                <?php if (isset($component)) { $__componentOriginal8fbd727209323874b055feef49197909 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal8fbd727209323874b055feef49197909 = $attributes; } ?>
 <?php $component = Mary\View\Components\Table::resolve(['headers' => $headers,'rows' => $karyawans,'withPagination' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('table'); ?>
@@ -414,38 +424,42 @@ new class extends Component {
 <?php $component->withAttributes([]); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
-            <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_no', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
-                <span class="text-sm text-base-content/50"><?php echo e($row->row_no); ?></span>
-            <?php }); ?>
+                <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_no', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
+                    <span class="text-sm text-base-content/50"><?php echo e($row->row_no); ?></span>
+                <?php }); ?>
 
-            <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_karyawan', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
-                <div class="flex items-center gap-3">
-                    <div class="avatar cursor-pointer" wire:click="editFoto(<?php echo e($row->id); ?>)" title="Klik untuk ganti foto">
-                        <div class="mask mask-squircle w-10 h-10">
-                            <img src="<?php echo e($row->foto_karyawan ? Storage::url($row->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $row->nik); ?>" alt="<?php echo e($row->nama_karyawan); ?>" />
+                <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_karyawan', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
+                    <div class="flex items-center gap-3">
+                        <div class="avatar cursor-pointer <?php echo e(!$row->foto_karyawan ? 'placeholder' : ''); ?>" wire:click="editFoto(<?php echo e($row->id); ?>)" title="Klik untuk ganti foto">
+                            <div class="mask mask-squircle w-10 h-10 <?php echo e(!$row->foto_karyawan ? 'bg-gradient-to-br from-primary/20 to-primary/10 text-primary border border-primary/20 flex items-center justify-center font-bold text-xs' : ''); ?>">
+                                <?php if($row->foto_karyawan): ?>
+                                    <img src="<?php echo e(Storage::url($row->foto_karyawan)); ?>" alt="<?php echo e($row->nama_karyawan); ?>" />
+                                <?php else: ?>
+                                    <span><?php echo e(strtoupper(substr($row->nama_karyawan, 0, 2))); ?></span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm"><?php echo e($row->nama_karyawan); ?></div>
+                            <div class="text-xs text-base-content/50"><?php echo e($row->jabatan?->nama_jabatan ?? '-'); ?></div>
                         </div>
                     </div>
-                    <div>
-                        <div class="font-bold text-sm"><?php echo e($row->nama_karyawan); ?></div>
-                        <div class="text-xs text-base-content/50"><?php echo e($row->jabatan?->nama_jabatan ?? '-'); ?></div>
+                <?php }); ?>
+
+                <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_kontak', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
+                    <div class="text-sm">
+                        <div><?php echo e($row->telp_karyawan); ?></div>
+                        <div class="text-xs text-base-content/50"><?php echo e($row->email_karyawan); ?></div>
                     </div>
-                </div>
-            <?php }); ?>
+                <?php }); ?>
 
-            <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_kontak', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
-                <div class="text-sm">
-                    <div><?php echo e($row->telp_karyawan); ?></div>
-                    <div class="text-xs text-base-content/50"><?php echo e($row->email_karyawan); ?></div>
-                </div>
-            <?php }); ?>
+                <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_is_active', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
+                    <div class="text-sm"><?php echo e($row->status?->nama_status ?? '-'); ?></div>
+                    <div class="text-xs <?php echo e($row->is_active ? 'text-success' : 'text-error'); ?>"><?php echo e($row->is_active ? 'Aktif' : 'Nonaktif'); ?></div>
+                <?php }); ?>
 
-            <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_is_active', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
-                <div class="text-sm"><?php echo e($row->status?->nama_status ?? '-'); ?></div>
-                <div class="text-xs <?php echo e($row->is_active ? 'text-success' : 'text-error'); ?>"><?php echo e($row->is_active ? 'Aktif' : 'Nonaktif'); ?></div>
-            <?php }); ?>
-
-            <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_agama', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
-                <?php if (isset($component)) { $__componentOriginal4f015fb6508e425790bdb8f79792e6ed = $component; } ?>
+                <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('cell_agama', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
+                    <?php if (isset($component)) { $__componentOriginal4f015fb6508e425790bdb8f79792e6ed = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4f015fb6508e425790bdb8f79792e6ed = $attributes; } ?>
 <?php $component = Mary\View\Components\Badge::resolve(['value' => $row->agama_karyawan ?? '-'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('badge'); ?>
@@ -467,11 +481,11 @@ new class extends Component {
 <?php $component = $__componentOriginal4f015fb6508e425790bdb8f79792e6ed; ?>
 <?php unset($__componentOriginal4f015fb6508e425790bdb8f79792e6ed); ?>
 <?php endif; ?>
-            <?php }); ?>
+                <?php }); ?>
 
-            <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('actions', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
-                <div class="flex gap-1">
-                    <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
+                <?php $__bladeCompiler = $__bladeCompiler ?? null; $loop = null; $__env->slot('actions', function($row) use ($__env,$__bladeCompiler) { $loop = (object) $__env->getLoopStack()[0] ?>
+                    <div class="flex gap-1">
+                        <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
 <?php $component = Mary\View\Components\Button::resolve(['icon' => 'o-eye','spinner' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('button'); ?>
@@ -493,8 +507,8 @@ new class extends Component {
 <?php $component = $__componentOriginal602b228a887fab12f0012a3179e5b533; ?>
 <?php unset($__componentOriginal602b228a887fab12f0012a3179e5b533); ?>
 <?php endif; ?>
-                    <a href="<?php echo e(route('karyawan.edit', $row->id)); ?>" wire:navigate>
-                        <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
+                        <a href="<?php echo e(route('karyawan.edit', $row->id)); ?>" wire:navigate>
+                            <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
 <?php $component = Mary\View\Components\Button::resolve(['icon' => 'o-pencil'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('button'); ?>
@@ -516,9 +530,9 @@ new class extends Component {
 <?php $component = $__componentOriginal602b228a887fab12f0012a3179e5b533; ?>
 <?php unset($__componentOriginal602b228a887fab12f0012a3179e5b533); ?>
 <?php endif; ?>
-                    </a>
-                    <?php if($row->is_active): ?>
-                        <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
+                        </a>
+                        <?php if($row->is_active): ?>
+                            <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
 <?php $component = Mary\View\Components\Button::resolve(['icon' => 'o-no-symbol','spinner' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('button'); ?>
@@ -540,8 +554,8 @@ new class extends Component {
 <?php $component = $__componentOriginal602b228a887fab12f0012a3179e5b533; ?>
 <?php unset($__componentOriginal602b228a887fab12f0012a3179e5b533); ?>
 <?php endif; ?>
-                    <?php else: ?>
-                        <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
+                        <?php else: ?>
+                            <?php if (isset($component)) { $__componentOriginal602b228a887fab12f0012a3179e5b533 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal602b228a887fab12f0012a3179e5b533 = $attributes; } ?>
 <?php $component = Mary\View\Components\Button::resolve(['icon' => 'o-check-badge','spinner' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('button'); ?>
@@ -563,10 +577,10 @@ new class extends Component {
 <?php $component = $__componentOriginal602b228a887fab12f0012a3179e5b533; ?>
 <?php unset($__componentOriginal602b228a887fab12f0012a3179e5b533); ?>
 <?php endif; ?>
-                    <?php endif; ?>
-                </div>
-            <?php }); ?>
-         <?php echo $__env->renderComponent(); ?>
+                        <?php endif; ?>
+                    </div>
+                <?php }); ?>
+             <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal8fbd727209323874b055feef49197909)): ?>
 <?php $attributes = $__attributesOriginal8fbd727209323874b055feef49197909; ?>
@@ -576,7 +590,9 @@ new class extends Component {
 <?php $component = $__componentOriginal8fbd727209323874b055feef49197909; ?>
 <?php unset($__componentOriginal8fbd727209323874b055feef49197909); ?>
 <?php endif; ?>
-     <?php echo $__env->renderComponent(); ?>
+        </div>
+    </div>
+ <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7f194736b6f6432dc38786f292496c34)): ?>
 <?php $attributes = $__attributesOriginal7f194736b6f6432dc38786f292496c34; ?>
@@ -636,9 +652,13 @@ new class extends Component {
             
             <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-5 rounded-t-xl">
                 <div class="flex items-center gap-5">
-                    <div class="avatar">
-                        <div class="w-20 h-20 rounded-full ring-2 ring-white/30 ring-offset-0">
-                            <img src="<?php echo e($detail->foto_karyawan ? Storage::url($detail->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $detail->nik); ?>" />
+                    <div class="avatar <?php echo e(!$detail->foto_karyawan ? 'placeholder' : ''); ?>">
+                        <div class="w-20 h-20 rounded-full ring-2 ring-white/30 ring-offset-0 <?php echo e(!$detail->foto_karyawan ? 'bg-white/20 text-white flex items-center justify-center font-bold text-lg' : ''); ?>">
+                            <?php if($detail->foto_karyawan): ?>
+                                <img src="<?php echo e(Storage::url($detail->foto_karyawan)); ?>" />
+                            <?php else: ?>
+                                <span><?php echo e(strtoupper(substr($detail->nama_karyawan, 0, 2))); ?></span>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div>
@@ -827,9 +847,13 @@ new class extends Component {
         <?php if($nk): ?>
             <div class="bg-gradient-to-r from-red-500 to-rose-700 text-white px-6 py-5 rounded-t-xl">
                 <div class="flex items-center gap-4">
-                    <div class="avatar">
-                        <div class="w-16 h-16 rounded-full ring-2 ring-white/30 ring-offset-0">
-                            <img src="<?php echo e($nk->foto_karyawan ? Storage::url($nk->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $nk->nik); ?>" />
+                    <div class="avatar <?php echo e(!$nk->foto_karyawan ? 'placeholder' : ''); ?>">
+                        <div class="w-16 h-16 rounded-full ring-2 ring-white/30 ring-offset-0 <?php echo e(!$nk->foto_karyawan ? 'bg-white/20 text-white flex items-center justify-center font-bold text-base' : ''); ?>">
+                            <?php if($nk->foto_karyawan): ?>
+                                <img src="<?php echo e(Storage::url($nk->foto_karyawan)); ?>" />
+                            <?php else: ?>
+                                <span><?php echo e(strtoupper(substr($nk->nama_karyawan, 0, 2))); ?></span>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div>
@@ -980,9 +1004,13 @@ new class extends Component {
         <?php if($nk): ?>
             <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-5 rounded-t-xl">
                 <div class="flex items-center gap-4">
-                    <div class="avatar">
-                        <div class="w-16 h-16 rounded-full ring-2 ring-white/30 ring-offset-0">
-                            <img src="<?php echo e($nk->foto_karyawan ? Storage::url($nk->foto_karyawan) : 'https://i.pravatar.cc/150?u=' . $nk->nik); ?>" />
+                    <div class="avatar <?php echo e(!$nk->foto_karyawan ? 'placeholder' : ''); ?>">
+                        <div class="w-16 h-16 rounded-full ring-2 ring-white/30 ring-offset-0 <?php echo e(!$nk->foto_karyawan ? 'bg-white/20 text-white flex items-center justify-center font-bold text-base' : ''); ?>">
+                            <?php if($nk->foto_karyawan): ?>
+                                <img src="<?php echo e(Storage::url($nk->foto_karyawan)); ?>" />
+                            <?php else: ?>
+                                <span><?php echo e(strtoupper(substr($nk->nama_karyawan, 0, 2))); ?></span>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div>
