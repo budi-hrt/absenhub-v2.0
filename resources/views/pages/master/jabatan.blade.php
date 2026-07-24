@@ -105,7 +105,9 @@ new class extends Component {
                 icon="o-magnifying-glass" />
         </x-slot:middle>
         <x-slot:actions>
+            @can('tambah-jabatan')
             <x-button label="Tambah Jabatan" icon="o-plus" class="btn-primary" wire:click="tambah" />
+            @endcan
         </x-slot:actions>
     </x-header>
 
@@ -131,12 +133,16 @@ new class extends Component {
 
             @scope('actions', $row)
                 <div class="flex gap-1">
+                    @can('ubah-jabatan')
                     <x-button icon="o-pencil" wire:click="edit({{ $row->id }})"
                         class="btn-ghost btn-sm text-primary" spinner />
+                    @endcan
+                    @can('hapus-jabatan')
                     <x-button :icon="$row->is_active ? 'o-no-symbol' : 'o-check-badge'"
                         wire:click="toggleActive({{ $row->id }})"
                         :class="$row->is_active ? 'btn-ghost btn-sm text-error' : 'btn-ghost btn-sm text-success'"
                         spinner />
+                    @endcan
                 </div>
             @endscope
         </x-table>

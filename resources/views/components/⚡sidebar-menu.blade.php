@@ -58,14 +58,22 @@ new class extends Component
         {{-- Master Data --}}
         @hasanyrole('admin|super-admin|operator|manager')
         <x-menu-sub title="Master Data" icon="o-circle-stack">
+            @haspermission('lihat-jabatan')
             <x-menu-item title="Jabatan" icon="o-briefcase" :exact="true"
                 link="/master/jabatan" />
+            @endhaspermission
+            @haspermission('lihat-status-kerja')
             <x-menu-item title="Status Kerja" icon="o-check-badge" :exact="true"
                 link="/master/status-kerja" />
+            @endhaspermission
+            @haspermission('lihat-masa-kontrak')
             <x-menu-item title="Masa Kontrak" icon="o-clock" :exact="true"
                 link="/master/masa-kontrak" />
+            @endhaspermission
+            @haspermission('lihat-penandatangan')
             <x-menu-item title="Penandatangan" icon="o-pencil-square" :exact="true"
                 link="/master/penandatangan" />
+            @endhaspermission
         </x-menu-sub>
         @endhasanyrole
 
@@ -94,14 +102,20 @@ new class extends Component
                 link="/absen/lihat" :exact="true" />
             <x-menu-item title="Detail Harian" icon="o-document-text" icon-classes="text-info"
                 link="/absen/detail-harian" :exact="true" />
+        </x-menu-sub>
+        @endhasanyrole
+
+        {{-- Laporan --}}
+        @hasanyrole('admin|super-admin|operator|manager')
+        <x-menu-sub title="Laporan" icon="o-chart-bar">
+            <x-menu-item title="Laporan Bulanan" icon="o-chart-bar" icon-classes="text-error"
+                link="/absen/laporan-bulanan" :exact="true" />
             <x-menu-item title="Rekap Bulanan" icon="o-table-cells" icon-classes="text-accent"
                 link="/absen/rekap-bulanan" :exact="true" />
             <x-menu-item title="Rekap Tahunan" icon="o-calendar" icon-classes="text-secondary"
                 link="/absen/rekap-tahunan" :exact="true" />
             <x-menu-item title="Performa Karyawan" icon="o-chart-bar-square" icon-classes="text-primary"
                 link="/absen/performa" :exact="true" />
-            <x-menu-item title="Laporan Bulanan" icon="o-chart-bar" icon-classes="text-error"
-                link="/absen/laporan-bulanan" :exact="true" />
         </x-menu-sub>
         @endhasanyrole
 

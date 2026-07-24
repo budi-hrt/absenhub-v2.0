@@ -105,7 +105,9 @@ new class extends Component {
                 icon="o-magnifying-glass" />
         </x-slot:middle>
         <x-slot:actions>
-            <x-button label="Tambah Status Kerja" icon="o-plus" class="btn-primary" wire:click="tambah" />
+            @can('tambah-status-kerja')
+                <x-button label="Tambah Status Kerja" icon="o-plus" class="btn-primary" wire:click="tambah" />
+            @endcan
         </x-slot:actions>
     </x-header>
 
@@ -130,14 +132,22 @@ new class extends Component {
             @endscope
 
             @scope('actions', $row)
-                <div class="flex gap-1">
-                    <x-button icon="o-pencil" wire:click="edit({{ $row->id }})"
-                        class="btn-ghost btn-sm text-primary" spinner />
-                    <x-button :icon="$row->is_active ? 'o-no-symbol' : 'o-check-badge'"
-                        wire:click="toggleActive({{ $row->id }})"
-                        :class="$row->is_active ? 'btn-ghost btn-sm text-error' : 'btn-ghost btn-sm text-success'"
-                        spinner />
-                </div>
+            <div class="flex gap-1">
+                @can('ubah-status-kerja')
+                    @if(\App\Models\FeatureFlag::isEnabled('edit_status_kerja'))
+                        <x-button icon="o-pencil" wire:click="edit({{ $row->id }})"
+                            class="btn-ghost btn-sm text-primary" spinner />
+                    @endif
+                @endcan
+                @can('hapus-status-kerja')
+                    @if(\App\Models\FeatureFlag::isEnabled('toggle_status_kerja'))
+                        <x-button :icon="$row->is_active ? 'o-no-symbol' : 'o-check-badge'"
+                            wire:click="toggleActive({{ $row->id }})"
+                            :class="$row->is_active ? 'btn-ghost btn-sm text-error' : 'btn-ghost btn-sm text-success'"
+                            spinner />
+                    @endif
+                @endcan
+            </div>
             @endscope
         </x-table>
     </x-card>

@@ -231,8 +231,10 @@ new class extends Component {
         </x-slot:middle>
 
         <x-slot:actions>
+            @can('tambah-admin')
             <x-button label="Tambah User" wire:click="createUser" class="btn-primary" icon="o-plus"
                 spinner />
+            @endcan
             <x-button label="Filters" wire:click="openDrawer" responsive icon="o-funnel" spinner />
         </x-slot:actions>
     </x-header>
@@ -272,14 +274,20 @@ new class extends Component {
 
             @scope('actions', $row)
             <div class="flex gap-1">
+                @can('ubah-admin')
                 <x-button icon="o-pencil" wire:click="edit({{ $row->id }})"
                     wire:target="edit({{ $row->id }})" spinner
                     class="btn-ghost btn-sm text-primary" />
+                @endcan
+                @can('akses-admin')
                 <x-button icon="o-shield-check" wire:click="permission({{ $row->id }})"
                     wire:target="permission({{ $row->id }})" spinner
                     class="btn-ghost btn-sm text-warning" />
+                @endcan
+                @can('hapus-admin')
                 <x-button icon="o-trash" wire:click="delete({{ $row->id }})"
                     wire:confirm="Are you sure? " spinner class="btn-ghost btn-sm text-error" />
+                @endcan
             </div>
             @endscope
         </x-table>

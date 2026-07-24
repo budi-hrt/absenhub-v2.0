@@ -54,10 +54,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/karyawan/export/pdf', [KaryawanExportController::class, 'pdf'])
             ->name('karyawan.export.pdf');
 
-        Route::livewire('/master/jabatan', 'pages::master.jabatan')->name('master.jabatan');
-        Route::livewire('/master/status-kerja', 'pages::master.status-kerja')->name('master.status-kerja');
-        Route::livewire('/master/masa-kontrak', 'pages::master.masa-kontrak')->name('master.masa-kontrak');
-        Route::livewire('/master/penandatangan', 'pages::master.penandatangan')->name('master.penandatangan');
+        Route::livewire('/master/jabatan', 'pages::master.jabatan')
+            ->middleware('permission:lihat-jabatan')
+            ->name('master.jabatan');
+        Route::livewire('/master/status-kerja', 'pages::master.status-kerja')
+            ->middleware('permission:lihat-status-kerja')
+            ->name('master.status-kerja');
+        Route::livewire('/master/masa-kontrak', 'pages::master.masa-kontrak')
+            ->middleware('permission:lihat-masa-kontrak')
+            ->name('master.masa-kontrak');
+        Route::livewire('/master/penandatangan', 'pages::master.penandatangan')
+            ->middleware('permission:lihat-penandatangan')
+            ->name('master.penandatangan');
 
         // Manajemen Absensi
         Route::livewire('/absen/kelola', 'pages::absen.kelola-absen')->name('absen.kelola');

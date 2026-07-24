@@ -126,8 +126,10 @@ new class extends Component
         </x-slot:middle>
 
         <x-slot:actions>
+            @can('tambah-user-karyawan')
             <x-button label="Tambah User" link="{{ route('users.create') }}" class="btn-primary" icon="o-plus"
                 spinner />
+            @endcan
             <x-button label="Filters" wire:click="openDrawer" responsive icon="o-funnel" spinner />
         </x-slot:actions>
     </x-header>
@@ -162,13 +164,19 @@ new class extends Component
             @endscope
             @scope('cell_action', $row)
             <div class="flex gap-1">
+                @can('ubah-user-karyawan')
                 <x-button icon="o-pencil" class="btn-ghost btn-xs" tooltip="Edit" link="/users/{{ $row->id }}/edit" />
+                @endcan
                 @if ($row->is_active)
+                @can('nonaktifkan-user-karyawan')
                 <x-button icon="o-no-symbol" class="btn-ghost btn-xs text-error" tooltip="Nonaktifkan"
                     x-on:click="confirmId = {{ $row->id }}; confirmName = '{{ $row->name }}'; confirmAction = 'deactivate'; $refs.confirmModal.showModal()" />
+                @endcan
                 @else
+                @can('aktifkan-user-karyawan')
                 <x-button icon="o-check" class="btn-ghost btn-xs text-success" tooltip="Aktifkan"
                     x-on:click="confirmId = {{ $row->id }}; confirmName = '{{ $row->name }}'; confirmAction = 'activate'; $refs.confirmModal.showModal()" />
+                @endcan
                 @endif
             </div>
             @endscope

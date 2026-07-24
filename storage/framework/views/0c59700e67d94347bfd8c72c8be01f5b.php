@@ -319,6 +319,7 @@ use Livewire\Component;
 <?php $component->withAttributes([]); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
+            <?php if (\Illuminate\Support\Facades\Blade::check('haspermission', 'lihat-jabatan')): ?>
             <?php if (isset($component)) { $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $attributes; } ?>
 <?php $component = Mary\View\Components\MenuItem::resolve(['title' => 'Jabatan','icon' => 'o-briefcase','exact' => true,'link' => '/master/jabatan'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -341,6 +342,8 @@ use Livewire\Component;
 <?php $component = $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
 <?php unset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
 <?php endif; ?>
+            <?php endif; ?>
+            <?php if (\Illuminate\Support\Facades\Blade::check('haspermission', 'lihat-status-kerja')): ?>
             <?php if (isset($component)) { $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $attributes; } ?>
 <?php $component = Mary\View\Components\MenuItem::resolve(['title' => 'Status Kerja','icon' => 'o-check-badge','exact' => true,'link' => '/master/status-kerja'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -363,6 +366,8 @@ use Livewire\Component;
 <?php $component = $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
 <?php unset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
 <?php endif; ?>
+            <?php endif; ?>
+            <?php if (\Illuminate\Support\Facades\Blade::check('haspermission', 'lihat-masa-kontrak')): ?>
             <?php if (isset($component)) { $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $attributes; } ?>
 <?php $component = Mary\View\Components\MenuItem::resolve(['title' => 'Masa Kontrak','icon' => 'o-clock','exact' => true,'link' => '/master/masa-kontrak'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -385,6 +390,8 @@ use Livewire\Component;
 <?php $component = $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
 <?php unset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
 <?php endif; ?>
+            <?php endif; ?>
+            <?php if (\Illuminate\Support\Facades\Blade::check('haspermission', 'lihat-penandatangan')): ?>
             <?php if (isset($component)) { $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $attributes; } ?>
 <?php $component = Mary\View\Components\MenuItem::resolve(['title' => 'Penandatangan','icon' => 'o-pencil-square','exact' => true,'link' => '/master/penandatangan'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -407,6 +414,7 @@ use Livewire\Component;
 <?php $component = $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
 <?php unset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
 <?php endif; ?>
+            <?php endif; ?>
          <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginald82092fa13795886cb51cb7dc7d7b48e)): ?>
@@ -595,6 +603,54 @@ use Livewire\Component;
 <?php $component = $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
 <?php unset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
 <?php endif; ?>
+         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginald82092fa13795886cb51cb7dc7d7b48e)): ?>
+<?php $attributes = $__attributesOriginald82092fa13795886cb51cb7dc7d7b48e; ?>
+<?php unset($__attributesOriginald82092fa13795886cb51cb7dc7d7b48e); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginald82092fa13795886cb51cb7dc7d7b48e)): ?>
+<?php $component = $__componentOriginald82092fa13795886cb51cb7dc7d7b48e; ?>
+<?php unset($__componentOriginald82092fa13795886cb51cb7dc7d7b48e); ?>
+<?php endif; ?>
+        <?php endif; ?>
+
+        
+        <?php if (\Illuminate\Support\Facades\Blade::check('hasanyrole', 'admin|super-admin|operator|manager')): ?>
+        <?php if (isset($component)) { $__componentOriginald82092fa13795886cb51cb7dc7d7b48e = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginald82092fa13795886cb51cb7dc7d7b48e = $attributes; } ?>
+<?php $component = Mary\View\Components\MenuSub::resolve(['title' => 'Laporan','icon' => 'o-chart-bar'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('menu-sub'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\MenuSub::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+            <?php if (isset($component)) { $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $attributes; } ?>
+<?php $component = Mary\View\Components\MenuItem::resolve(['title' => 'Laporan Bulanan','icon' => 'o-chart-bar','iconClasses' => 'text-error','link' => '/absen/laporan-bulanan','exact' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('menu-item'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Mary\View\Components\MenuItem::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879)): ?>
+<?php $attributes = $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
+<?php unset($__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879)): ?>
+<?php $component = $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
+<?php unset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
+<?php endif; ?>
             <?php if (isset($component)) { $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $attributes; } ?>
 <?php $component = Mary\View\Components\MenuItem::resolve(['title' => 'Rekap Bulanan','icon' => 'o-table-cells','iconClasses' => 'text-accent','link' => '/absen/rekap-bulanan','exact' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -642,28 +698,6 @@ use Livewire\Component;
             <?php if (isset($component)) { $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $attributes; } ?>
 <?php $component = Mary\View\Components\MenuItem::resolve(['title' => 'Performa Karyawan','icon' => 'o-chart-bar-square','iconClasses' => 'text-primary','link' => '/absen/performa','exact' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('menu-item'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Mary\View\Components\MenuItem::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
-
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879)): ?>
-<?php $attributes = $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
-<?php unset($__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879)): ?>
-<?php $component = $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879; ?>
-<?php unset($__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879); ?>
-<?php endif; ?>
-            <?php if (isset($component)) { $__componentOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal7c3255ff27a5c6d076ca64dbcfc1f879 = $attributes; } ?>
-<?php $component = Mary\View\Components\MenuItem::resolve(['title' => 'Laporan Bulanan','icon' => 'o-chart-bar','iconClasses' => 'text-error','link' => '/absen/laporan-bulanan','exact' => true] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('menu-item'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>

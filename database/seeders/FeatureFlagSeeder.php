@@ -56,6 +56,20 @@ class FeatureFlagSeeder extends Seeder
                 'is_enabled' => true,
             ],
             [
+                'key' => 'edit_status_kerja',
+                'name' => 'Edit Status Kerja',
+                'description' => 'Tampilkan tombol edit status kerja di halaman Master Status Kerja',
+                'group' => 'master',
+                'is_enabled' => true,
+            ],
+            [
+                'key' => 'toggle_status_kerja',
+                'name' => 'Nonaktifkan Status Kerja',
+                'description' => 'Tampilkan tombol nonaktifkan/aktifkan status kerja di halaman Master Status Kerja',
+                'group' => 'master',
+                'is_enabled' => true,
+            ],
+            [
                 'key' => 'karyawan_export',
                 'name' => 'Export Data Karyawan',
                 'description' => 'Tampilkan tombol export data karyawan ke Excel/PDF',

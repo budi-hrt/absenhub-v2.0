@@ -142,6 +142,9 @@ new class extends Component
         <button wire:click="$set('filterGroup', 'karyawan')" class="btn btn-sm {{ $filterGroup === 'karyawan' ? 'btn-primary' : 'btn-ghost' }}">
             Karyawan
         </button>
+        <button wire:click="$set('filterGroup', 'master')" class="btn btn-sm {{ $filterGroup === 'master' ? 'btn-primary' : 'btn-ghost' }}">
+            Master
+        </button>
         <button wire:click="$set('filterGroup', 'laporan')" class="btn btn-sm {{ $filterGroup === 'laporan' ? 'btn-primary' : 'btn-ghost' }}">
             Laporan
         </button>
@@ -157,12 +160,14 @@ new class extends Component
                             $groupColors = match($groupName) {
                                 'absensi' => 'text-primary',
                                 'karyawan' => 'text-success',
+                                'master' => 'text-info',
                                 'laporan' => 'text-warning',
                                 default => 'text-base-content/60'
                             };
                             $groupIcon = match($groupName) {
                                 'absensi' => 'o-calendar-days',
                                 'karyawan' => 'o-users',
+                                'master' => 'o-circle-stack',
                                 'laporan' => 'o-chart-bar',
                                 default => 'o-cog'
                             };
