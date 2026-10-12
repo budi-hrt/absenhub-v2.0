@@ -38,6 +38,8 @@ new #[Layout('layouts.app')] #[Title('Kontrak Kerja')] class extends Component {
     public string $tanggal_surat = '';
     #[Validate('required|exists:penandatangans,id')]
     public ?int $penandatangan_id = null;
+    #[Validate('nullable|exists:penandatangans,id')]
+    public ?int $mengetahui_id = null;
     #[Validate('required|exists:masa_kontraks,id')]
     public ?int $masa_kontrak_id = null;
     #[Validate('required|date')]
@@ -83,7 +85,7 @@ new #[Layout('layouts.app')] #[Title('Kontrak Kerja')] class extends Component {
     {
         $this->selectedKaryawan = Karyawan::with(['jabatan', 'kontraks' => function($q) {
             $q->orderBy('tanggal_akhir', 'desc');
-        }, 'kontraks.masaKontrak', 'kontraks.penandatangan'])->findOrFail($karyawanId);
+        }, 'kontraks.masaKontrak', 'kontraks.penandatangan', 'kontraks.mengetahui'])->findOrFail($karyawanId);
         
         $this->showModal = true;
         $this->showForm = false;
@@ -130,6 +132,7 @@ new #[Layout('layouts.app')] #[Title('Kontrak Kerja')] class extends Component {
         $this->nomor = $kontrak->nomor;
         $this->tanggal_surat = Carbon::parse($kontrak->tanggal_surat)->format('Y-m-d');
         $this->penandatangan_id = $kontrak->penandatangan_id;
+        $this->mengetahui_id = $kontrak->mengetahui_id;
         $this->masa_kontrak_id = $kontrak->masa_kontrak_id;
         $this->tanggal_mulai = Carbon::parse($kontrak->tanggal_mulai)->format('Y-m-d');
         $this->tanggal_akhir = Carbon::parse($kontrak->tanggal_akhir)->format('Y-m-d');
@@ -150,6 +153,7 @@ new #[Layout('layouts.app')] #[Title('Kontrak Kerja')] class extends Component {
             'nomor' => $this->nomor,
             'tanggal_surat' => $this->tanggal_surat,
             'penandatangan_id' => $this->penandatangan_id,
+            'mengetahui_id' => $this->mengetahui_id,
             'masa_kontrak_id' => $this->masa_kontrak_id,
             'tanggal_mulai' => $this->tanggal_mulai,
             'tanggal_akhir' => $this->tanggal_akhir,
@@ -192,7 +196,7 @@ new #[Layout('layouts.app')] #[Title('Kontrak Kerja')] class extends Component {
     private function resetForm()
     {
         $this->reset([
-            'editingId', 'nomor', 'tanggal_surat', 'penandatangan_id', 
+            'editingId', 'nomor', 'tanggal_surat', 'penandatangan_id', 'mengetahui_id',
             'masa_kontrak_id', 'tanggal_mulai', 'tanggal_akhir', 
             'gaji', 'tunjangan', 'um_dalamkota', 'um_luarkota'
         ]);
@@ -433,6 +437,7 @@ new #[Layout('layouts.app')] #[Title('Kontrak Kerja')] class extends Component {
                                 
                                 <x-select label="Masa Kontrak" wire:model="masa_kontrak_id" :options="$masaKontraks" option-value="id" option-label="status_kontrak" placeholder="Pilih masa kontrak..." required />
                                 <x-select label="Penandatangan" wire:model="penandatangan_id" :options="$penandatangans" option-value="id" option-label="nama_penandatangan" placeholder="Pilih penandatangan..." required />
+                                <x-select label="Mengetahui" wire:model="mengetahui_id" :options="$penandatangans" option-value="id" option-label="nama_penandatangan" placeholder="Pilih yang mengetahui (opsional)..." />
                                 
                                 <x-input type="date" label="Tanggal Mulai" wire:model="tanggal_mulai" required />
                                 <x-input type="date" label="Tanggal Akhir" wire:model="tanggal_akhir" required />

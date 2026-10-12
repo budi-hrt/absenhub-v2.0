@@ -19,13 +19,14 @@ class MigrateKontrakLama extends Command
         // Tarik data status kontrak lama
         $statusLama = DB::connection('mysql_lama')->table('status_kontrak')->get();
         foreach ($statusLama as $lama) {
-            DB::table('masa_kontraks')->insertOrIgnore([
-                'id' => $lama->id, // Pertahankan ID asli agar relasi tidak putus
-                'status_kontrak' => $lama->status_kontrak,
-                'is_active' => $lama->is_active ?? 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            DB::table('masa_kontraks')->updateOrInsert(
+                ['id' => $lama->id],
+                [
+                    'status_kontrak' => $lama->status_kontrak,
+                    'is_active' => $lama->is_active ?? 1,
+                    'updated_at' => now(),
+                ]
+            );
         }
         $this->info('   Berhasil memindahkan Masa Kontrak!');
 
@@ -39,15 +40,16 @@ class MigrateKontrakLama extends Command
             $teksJabatan = trim($lama->jabatan ?? 'Tanpa Jabatan');
             $jabatan = Jabatan::firstOrCreate(['nama_jabatan' => $teksJabatan]);
 
-            DB::table('penandatangans')->insertOrIgnore([
-                'id' => $lama->id, // Pertahankan ID asli
-                'nama_penandatangan' => $lama->nama_penandatangan,
-                'alamat' => $lama->alamat ?? '-',
-                'jabatan_id' => $jabatan->id, // Hasil normalisasi
-                'is_active' => $lama->is_active ?? 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            DB::table('penandatangans')->updateOrInsert(
+                ['id' => $lama->id],
+                [
+                    'nama_penandatangan' => $lama->nama_penandatangan,
+                    'alamat' => $lama->alamat ?? '-',
+                    'jabatan_id' => $jabatan->id,
+                    'is_active' => $lama->is_active ?? 1,
+                    'updated_at' => now(),
+                ]
+            );
         }
         $this->info('   Berhasil memindahkan Penandatangan!');
 
@@ -65,31 +67,32 @@ class MigrateKontrakLama extends Command
             // Pastikan id_karyawan ada di tabel karyawans baru
             if (in_array($lama->id_karyawan, $validKaryawanIds)) {
 
-                DB::table('kontraks')->insert([
-                    'id' => $lama->id_kontrak_baru, // Pakai ID asli dari CI3
+                DB::table('kontraks')->updateOrInsert(
+                    ['id' => $lama->id_kontrak_baru],
+                    [
+                        'nomor' => empty(trim($lama->nomor ?? '')) ? null : trim($lama->nomor),
 
-                    'nomor' => empty(trim($lama->nomor)) ? null : trim($lama->nomor),
+                        // Filter tanggal fiktif (0000-00-00) menjadi null seperti sebelumnya
+                        'tanggal_surat' => ($lama->tanggal_surat === '0000-00-00' || empty($lama->tanggal_surat)) ? null : $lama->tanggal_surat,
+                        'tanggal_mulai' => ($lama->tanggal_mulai === '0000-00-00' || empty($lama->tanggal_mulai)) ? null : $lama->tanggal_mulai,
+                        'tanggal_akhir' => ($lama->tanggal_akhir === '0000-00-00' || empty($lama->tanggal_akhir)) ? null : $lama->tanggal_akhir,
 
-                    // Filter tanggal fiktif (0000-00-00) menjadi null seperti sebelumnya
-                    'tanggal_surat' => ($lama->tanggal_surat === '0000-00-00' || empty($lama->tanggal_surat)) ? null : $lama->tanggal_surat,
-                    'tanggal_mulai' => ($lama->tanggal_mulai === '0000-00-00' || empty($lama->tanggal_mulai)) ? null : $lama->tanggal_mulai,
-                    'tanggal_akhir' => ($lama->tanggal_akhir === '0000-00-00' || empty($lama->tanggal_akhir)) ? null : $lama->tanggal_akhir,
+                        // Relasi ID di-mapping langsung
+                        'penandatangan_id' => $lama->id_penandatangan,
+                        'mengetahui_id' => $lama->id_mengetahui ?? null,
+                        'karyawan_id' => $lama->id_karyawan,
+                        'masa_kontrak_id' => $lama->id_status,
 
-                    // Relasi ID di-mapping langsung
-                    'penandatangan_id' => $lama->id_penandatangan,
-                    'karyawan_id' => $lama->id_karyawan,
-                    'masa_kontrak_id' => $lama->id_status,
+                        // Angka nominal
+                        'gaji' => $lama->gaji ?? 0,
+                        'tunjangan' => $lama->tunjangan ?? 0,
+                        'um_dalamkota' => $lama->um_dalamkota ?? 0,
+                        'um_luarkota' => $lama->um_luarkota ?? 0,
 
-                    // Angka nominal
-                    'gaji' => $lama->gaji ?? 0,
-                    'tunjangan' => $lama->tunjangan ?? 0,
-                    'um_dalamkota' => $lama->um_dalamkota ?? 0,
-                    'um_luarkota' => $lama->um_luarkota ?? 0,
-
-                    'doc_ttd' => $lama->doc_ttd ?? null,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                        'doc_ttd' => $lama->doc_ttd ?? null,
+                        'updated_at' => now(),
+                    ]
+                );
                 $jumlahKontrak++;
             }
         }

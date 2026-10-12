@@ -407,5 +407,19 @@
         </tr>
     </table>
 
+    @if($kontrak->mengetahui)
+    <table class="ttd-table" style="margin-top: 20px; width: 100%;">
+        <tr>
+            <td style="text-align: center;"><strong>MENGETAHUI</strong></td>
+        </tr>
+        <tr>
+            <td style="height: 55px;"></td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">( <u><strong>{{ strtoupper($kontrak->mengetahui->nama_penandatangan) }}</strong></u> )</td>
+        </tr>
+    </table>
+    @endif
+
 </body>
 </html>

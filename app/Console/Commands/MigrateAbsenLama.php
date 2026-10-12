@@ -7,12 +7,19 @@ use Illuminate\Support\Facades\DB;
 
 class MigrateAbsenLama extends Command
 {
-    protected $signature = 'app:migrate-absen';
+    protected $signature = 'app:migrate-absen {--truncate : Kosongkan tabel absens terlebih dahulu sebelum migrasi}';
 
     protected $description = 'Menarik ratusan ribu data absensi dari CI3 ke Laravel dengan sistem pemetaan PIN Mesin';
 
     public function handle()
     {
+        if ($this->option('truncate')) {
+            $this->warn('Mengosongkan tabel absens untuk migrasi bersih...');
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            DB::table('absens')->truncate();
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
+
         $this->info('Memulai persiapan data Karyawan untuk pemetaan...');
 
         // 1. Tarik semua data Karyawan Baru, lalu jadikan 'pin_mesin' sebagai kunci array

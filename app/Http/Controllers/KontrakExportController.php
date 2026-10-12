@@ -10,7 +10,7 @@ class KontrakExportController extends Controller
 {
     public function pdf($id)
     {
-        $kontrak = Kontrak::with(['karyawan.jabatan', 'masaKontrak', 'penandatangan.jabatan'])->findOrFail($id);
+        $kontrak = Kontrak::with(['karyawan.jabatan', 'masaKontrak', 'penandatangan.jabatan', 'mengetahui.jabatan'])->findOrFail($id);
 
         // Terbilang helper untuk angka nominal atau durasi
         $terbilang = function ($angka) use (&$terbilang) {

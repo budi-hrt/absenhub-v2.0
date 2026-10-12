@@ -58,48 +58,50 @@ class MigrateDataLama extends Command
             $nikAsli = empty(trim($lama->nik)) ? null : trim($lama->nik);
 
             if ($nikAsli !== null) {
-                // Cek apakah NIK ini sudah masuk duluan ke tabel baru
-                $cekDuplikat = DB::table('karyawans')->where('nik', $nikAsli)->exists();
+                // Cek apakah NIK ini sudah dipakai karyawan LAIN
+                $cekDuplikat = DB::table('karyawans')
+                    ->where('nik', $nikAsli)
+                    ->where('id', '!=', $lama->id_karyawan)
+                    ->exists();
                 if ($cekDuplikat) {
                     // Jika duplikat, tambahkan teks -DUP- dan ID aslinya agar jadi unik
                     $nikAsli = $nikAsli . '-DUP-' . $lama->id_karyawan;
                 }
             }
             // ------------------------
-            // 3. Masukkan ke tabel karyawan Laravel yang baru
-            DB::table('karyawans')->insert([
-                'id' => $lama->id_karyawan, // ID asli dipertahankan
+            // 3. Masukkan / Update ke tabel karyawan Laravel (Idempotent)
+            DB::table('karyawans')->updateOrInsert(
+                ['id' => $lama->id_karyawan], // ID asli dipertahankan
+                [
+                    // Hasil normalisasi
+                    'jabatan_id' => $jabatan->id,
+                    'status_id' => $status->id,
 
-                // Ini hasil dari fungsi ajaib di atas, teks otomatis jadi ID!
-                'jabatan_id' => $jabatan->id,
-                'status_id' => $status->id,
+                    'nik' => $nikAsli,
+                    'nama_karyawan' => $lama->nama_karyawan,
+                    'jk_karyawan' => $lama->jk_karyawan,
+                    'tempat_lahir' => $lama->tempat_lahir ?? '-',
+                    'tanggal_lahir' => ($lama->tanggal_lahir === '0000-00-00' || empty($lama->tanggal_lahir)) ? null : $lama->tanggal_lahir,
+                    'agama_karyawan' => $lama->agama_karyawan ?? 'Islam',
+                    'status_pernikahan' => $lama->status_pernikahan ?? 'Belum Kawin',
+                    'telp_karyawan' => $lama->telp_karyawan ?? '-',
+                    'email_karyawan' => $lama->email_karyawan ?? '-',
+                    'foto_karyawan' => $lama->foto_karyawan,
+                    'alamat_karyawan' => $lama->alamat_karyawan,
+                    'npwp_karyawan' => $lama->npwp_karyawan ?? null,
+                    'pendidikan' => $lama->pendidikan ?? null,
+                    'berijazah' => $lama->berijazah ?? null,
+                    'rekening' => $lama->rekening ?? null,
+                    'tanggal_masuk' => ($lama->tanggal_masuk === '0000-00-00' || empty($lama->tanggal_masuk)) ? null : $lama->tanggal_masuk,
 
-                // Data string / angka biasa (termasuk NIK, NPWP, dll) tinggal mapping lurus
-                // Jika nik kosong atau hanya berisi spasi, jadikan null
-                'nik' => $nikAsli,
-                'nama_karyawan' => $lama->nama_karyawan,
-                'jk_karyawan' => $lama->jk_karyawan,
-                'tempat_lahir' => $lama->tempat_lahir ?? '-',
-                'tanggal_lahir' => ($lama->tanggal_lahir === '0000-00-00' || empty($lama->tanggal_lahir)) ? null : $lama->tanggal_lahir,
-                'agama_karyawan' => $lama->agama_karyawan ?? 'Islam',
-                'status_pernikahan' => $lama->status_pernikahan ?? 'Belum Kawin',
-                'telp_karyawan' => $lama->telp_karyawan ?? '-',
-                'email_karyawan' => $lama->email_karyawan ?? '-',
-                'foto_karyawan' => $lama->foto_karyawan,
-                'alamat_karyawan' => $lama->alamat_karyawan,
-                'npwp_karyawan' => $lama->npwp_karyawan ?? null, // Ini yang Anda maksud NPWP/NPM
-                'pendidikan' => $lama->pendidikan ?? null,
-                'berijazah' => $lama->berijazah ?? null,
-                'rekening' => $lama->rekening ?? null,
-                'tanggal_masuk' => ($lama->tanggal_masuk === '0000-00-00' || empty($lama->tanggal_masuk)) ? null : $lama->tanggal_masuk,
+                    // PIN Mesin dari id_absensi lama
+                    'pin_mesin' => $lama->id_absensi,
 
-                // PIN Mesin dari id_absensi lama
-                'pin_mesin' => $lama->id_absensi,
-
-                'is_active' => $lama->aktif,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+                    // Normalisasi status aktif (1 = aktif, selain itu 0)
+                    'is_active' => ((int) ($lama->aktif ?? 0) === 1) ? 1 : 0,
+                    'updated_at' => now(),
+                ]
+            );
 
             $jumlahBaris++;
         }

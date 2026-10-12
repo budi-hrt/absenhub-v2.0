@@ -60,8 +60,9 @@ composer run dev                  # runs serve + queue + logs + vite concurrentl
 
 ```bash
 composer run dev                  # dev server + queue + logs + vite (concurrent)
-php artisan app:migrate-data      # pull data from legacy CI3 db_absensi
-php artisan db:seed --class=RoleAndUserSeeder  # admin@mail.com / password
+php artisan app:migrate-all       # all-in-one setup: migrate + seeds + pull legacy CI3 data
+php artisan app:migrate-all --fresh # reset total database and re-import
+php artisan app:migrate-all --skip-legacy # clean setup without pulling legacy data
 ```
 
 ## Testing

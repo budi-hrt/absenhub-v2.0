@@ -29,16 +29,20 @@ class MigrateNonaktifLama extends Command
             // SESUAIKAN: ganti $lama->id_karyawan dengan nama kolom id karyawan di tabel nonaktif CI3 Anda
             if (in_array($lama->id_karyawan, $validKaryawanIds)) {
 
-                DB::table('nonaktifs')->insert([
-                    // SESUAIKAN: nama kolom di bawah ini dengan nama kolom di database CI3 Anda
-                    'karyawan_id' => $lama->id_karyawan,
-                    'tanggal_aktif' => ($lama->tgl_aktif === '0000-00-00' || empty($lama->tgl_aktif)) ? null : $lama->tgl_aktif,
-                    'tanggal_nonaktif' => ($lama->tgl_nonaktif === '0000-00-00' || empty($lama->tgl_nonaktif)) ? null : $lama->tgl_nonaktif,
-                    'alasan' => empty(trim($lama->alasan)) ? 'Tanpa Keterangan' : trim($lama->alasan),
+                $tglAktif = ($lama->tgl_aktif === '0000-00-00' || empty($lama->tgl_aktif)) ? null : $lama->tgl_aktif;
+                $tglNonaktif = ($lama->tgl_nonaktif === '0000-00-00' || empty($lama->tgl_nonaktif)) ? null : $lama->tgl_nonaktif;
 
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                DB::table('nonaktifs')->updateOrInsert(
+                    [
+                        'karyawan_id' => $lama->id_karyawan,
+                        'tanggal_nonaktif' => $tglNonaktif,
+                    ],
+                    [
+                        'tanggal_aktif' => $tglAktif,
+                        'alasan' => empty(trim($lama->alasan ?? '')) ? 'Tanpa Keterangan' : trim($lama->alasan),
+                        'updated_at' => now(),
+                    ]
+                );
 
                 $jumlahData++;
             }

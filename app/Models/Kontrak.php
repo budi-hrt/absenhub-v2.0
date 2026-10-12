@@ -37,4 +37,12 @@ class Kontrak extends Model
     {
         return $this->belongsTo(Penandatangan::class, 'penandatangan_id', 'id');
     }
+
+    /**
+     * RELASI KE TABEL PENANDATANGAN (MENGETAHUI)
+     */
+    public function mengetahui()
+    {
+        return $this->belongsTo(Penandatangan::class, 'mengetahui_id', 'id');
+    }
 }
